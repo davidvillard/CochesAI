@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import NextImage from "next/image";
 import { useEffect, useRef, useState } from "react";
 import styles from "./page.module.css";
@@ -76,7 +77,8 @@ import {
   MagnifierLinearIcon,
   NotesLinearIcon,
   ChatDotsLinearIcon,
-  InfoCircleLinearIcon,
+  LikeLinearIcon,
+  DislikeLinearIcon
 } from "@solar-icons/react";
 
 const IC = {
@@ -86,6 +88,8 @@ const IC = {
   cambio: TransmissionLinearIcon,
   puertas: LoginLinearIcon,
   plazas: UsersGroupTwoRoundedLinearIcon,
+  pulgarSi: LikeLinearIcon,
+  pulgarNo: DislikeLinearIcon,
 };
 
 function Icono({ d: Component }: { d: React.ElementType }) {
@@ -144,6 +148,7 @@ function useContar(objetivo: number, activo: boolean) {
   useEffect(() => {
     if (!activo) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setV(objetivo);
       return;
     }
@@ -180,6 +185,16 @@ const PREGUNTAS = [
   },
 ];
 
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: PREGUNTAS.map(({ p, r }) => ({
+    "@type": "Question",
+    name: p,
+    acceptedAnswer: { "@type": "Answer", text: r },
+  })),
+};
+
 export default function Home() {
   const cameraRef = useRef<HTMLInputElement>(null);
   const galleryRef = useRef<HTMLInputElement>(null);
@@ -193,6 +208,7 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<Resultado | null>(null);
   const [arrastrando, setArrastrando] = useState(false);
+  const [voto, setVoto] = useState<"si" | "no" | null>(null);
 
   const r = result && result.esCoche ? result : null;
   const noCoche = result !== null && !result.esCoche;
@@ -204,6 +220,7 @@ export default function Home() {
   // Avanza los pasos mientras analiza
   useEffect(() => {
     if (!loading) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setStep(0);
     const id = setInterval(
       () => setStep((s) => Math.min(s + 1, PASOS_CARGA.length - 1)),
@@ -257,6 +274,7 @@ export default function Home() {
     setUltimo(file);
     setError(null);
     setResult(null);
+    setVoto(null);
 
     if (previewRef.current) URL.revokeObjectURL(previewRef.current);
     const url = URL.createObjectURL(file);
@@ -297,6 +315,20 @@ export default function Home() {
     if (f && f.type.startsWith("image/")) analyze(f);
   }
 
+  async function votar(v: "si" | "no") {
+    if (voto) return;
+    setVoto(v);
+    try {
+      await fetch("/api/feedback", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ voto: v }),
+      });
+    } catch {
+      // si falla, no molestamos al usuario
+    }
+  }
+
   const reintentar = !!error && !!ultimo;
   const acciones = (
     <div className={styles.acciones}>
@@ -328,19 +360,25 @@ export default function Home() {
 
   const filas: [keyof typeof IC, string, string][] = r
     ? ([
-        ["carroceria", "Carrocería", r.carroceria ?? ""],
-        ["combustible", "Combustible", r.combustibles?.join(", ") ?? ""],
-        ["potencia", "Potencia", r.potenciaCvRango ?? ""],
-        ["cambio", "Cambio", r.cambio ?? ""],
-        ["puertas", "Puertas", r.puertas ? String(r.puertas) : ""],
-        ["plazas", "Plazas", r.plazas ? String(r.plazas) : ""],
-      ] as [keyof typeof IC, string, string][]).filter(([, , v]) => v)
+      ["carroceria", "Carrocería", r.carroceria ?? ""],
+      ["combustible", "Combustible", r.combustibles?.join(", ") ?? ""],
+      ["potencia", "Potencia", r.potenciaCvRango ?? ""],
+      ["cambio", "Cambio", r.cambio ?? ""],
+      ["puertas", "Puertas", r.puertas ? String(r.puertas) : ""],
+      ["plazas", "Plazas", r.plazas ? String(r.plazas) : ""],
+    ] as [keyof typeof IC, string, string][]).filter(([, , v]) => v)
     : [];
 
   const delay = (i: number) => ({ "--i": i } as React.CSSProperties);
 
   return (
     <div className={styles.app}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(faqJsonLd).replace(/</g, "\\u003c"),
+        }}
+      />
       <input
         ref={cameraRef}
         type="file"
@@ -420,9 +458,8 @@ export default function Home() {
                   </div>
 
                   <div
-                    className={`${styles.drop} ${
-                      arrastrando ? styles.dropActiva : ""
-                    }`}
+                    className={`${styles.drop} ${arrastrando ? styles.dropActiva : ""
+                      }`}
                     onDragOver={(e) => {
                       e.preventDefault();
                       setArrastrando(true);
@@ -435,15 +472,21 @@ export default function Home() {
                     </span>
                     <p className={styles.dropTitulo}>Arrastra una foto aquí</p>
                     <p className={styles.dropTexto}>
-                      o pégala con Ctrl+V. Mejor con el coche entero a la vista.
+                      o pégala con Ctrl+V.
                     </p>
+
                     {acciones}
                   </div>
                 </div>
 
                 <p className={styles.nota}>
                   <ShieldLinearIcon size={16} />
-                  Tu foto se analiza con Google Gemini y no la guardamos.
+                  <span>
+                    Tu foto se analiza con Google Gemini y no la guardamos.{" "}
+                    <Link href="/privacidad" className={styles.notaLink}>
+                      Más información
+                    </Link>
+                  </span>
                 </p>
               </>
             ) : (
@@ -477,9 +520,8 @@ export default function Home() {
                         {PASOS_CARGA.map((t, i) => (
                           <li
                             key={t}
-                            className={`${styles.pasoC} ${
-                              i < step ? styles.pasoCOk : ""
-                            } ${i === step ? styles.pasoCAct : ""}`}
+                            className={`${styles.pasoC} ${i < step ? styles.pasoCOk : ""
+                              } ${i === step ? styles.pasoCAct : ""}`}
                           >
                             <span className={styles.pasoIc}>
                               {i < step ? (
@@ -613,7 +655,33 @@ export default function Home() {
                           </div>
                         </>
                       )}
-
+                      <div className={`${styles.voto} ${styles.entra}`} style={delay(12)}>
+                        {voto ? (
+                          <p className={styles.votoGracias} role="status">
+                            Gracias, nos ayuda a mejorar.
+                          </p>
+                        ) : (
+                          <>
+                            <p className={styles.votoPregunta}>¿Ha acertado?</p>
+                            <div className={styles.votoBotones}>
+                              <button
+                                type="button"
+                                className={`${styles.btn} ${styles.btnS}`}
+                                onClick={() => votar("si")}
+                              >
+                                <Icono d={IC.pulgarSi} /> Sí
+                              </button>
+                              <button
+                                type="button"
+                                className={`${styles.btn} ${styles.btnS}`}
+                                onClick={() => votar("no")}
+                              >
+                                <Icono d={IC.pulgarNo} /> No
+                              </button>
+                            </div>
+                          </>
+                        )}
+                      </div>
                       {acciones}
                     </>
                   )}
@@ -755,11 +823,13 @@ export default function Home() {
 
       <footer className={styles.pie}>
         <div className={`${styles.cont} ${styles.pieIn}`}>
-          <span>© 2026 ¿Qué coche es? Las identificaciones y los precios los genera una IA y pueden contener errores.</span>
+          <span>© 2026 Coches AI. Las identificaciones y los precios los genera una IA y pueden contener errores.</span>
           <nav className={styles.pieLinks} aria-label="Pie">
             <a href="#como-funciona">Cómo funciona</a>
             <a href="#incluye">Qué incluye</a>
             <a href="#preguntas">Preguntas</a>
+            <Link href="/privacidad">Privacidad</Link>
+            <Link href="/aviso-legal">Aviso legal</Link>
           </nav>
         </div>
       </footer>
