@@ -125,12 +125,21 @@ export default function Privacidad() {
 
             <h2 id="cookies">6. Cookies</h2>
             <p>
-                Esta web no usa cookies publicitarias. Usamos almacenamiento local
-                estrictamente necesario para recordar tu decisión sobre las cookies
-                analíticas. Google Analytics solo se carga si aceptas expresamente
-                esas cookies; si las rechazas, no se carga ninguna etiqueta de
-                Analytics. Puedes cambiar tu decisión borrando el almacenamiento
-                local del navegador.
+                Esta web no usa cookies publicitarias. Antes de tu elección solo usamos
+                el almacenamiento local estrictamente necesario para recordar tu
+                preferencia (<code>cochesai.analytics-consent</code>). Las cookies
+                analíticas opcionales de Google Analytics solo se activan después de
+                aceptar expresamente. Si las rechazas, no se carga la etiqueta de
+                Analytics. Puedes cambiar tu decisión en cualquier momento desde el
+                botón «Cambiar preferencias de cookies».
+            </p>
+            <p>
+                Google Analytics puede crear cookies propias como <code>_ga</code> y
+                <code>_ga_*</code> para medir visitas y uso agregado del servicio. No
+                usamos cookies publicitarias ni funciones de personalización de
+                anuncios. La información sobre las cookies y sus plazos puede cambiar
+                cuando Google actualiza el servicio; consulta también su documentación
+                de Analytics.
             </p>
 
             <h2>7. Menores</h2>

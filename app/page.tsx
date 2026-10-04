@@ -5,6 +5,7 @@ import NextImage from "next/image";
 import { useEffect, useRef, useState } from "react";
 import styles from "./page.module.css";
 
+
 type Similar = { marca: string; modelo: string; motivo: string };
 
 type Resultado = {
