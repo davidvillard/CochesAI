@@ -50,23 +50,14 @@
 .logo {
   display: flex;
   align-items: center;
-  gap: 10px;
-  color: var(--tinta);
-  font-family: var(--font-display), system-ui, sans-serif;
-  font-weight: 700;
-  font-size: 1.25rem;
-  letter-spacing: -0.02em;
+  font-size: 0;
   text-decoration: none;
 }
 
-.logoMarca {
-  display: grid;
-  place-items: center;
-  width: 32px;
-  height: 32px;
-  border-radius: 10px;
-  background: var(--color);
-  color: #fff;
+.logoImagen {
+  display: block;
+  width: 68px;
+  height: auto;
 }
 
 .nav {

@@ -15,6 +15,9 @@ const text = Instrument_Sans({
 });
 
 export const metadata: Metadata = {
+  icons: {
+    icon: "/CochesAI-Logo.svg",
+  },
   title: "¿Qué coche es? Identifica un coche con una foto",
   description:
     "Sube una foto de un coche y conoce su modelo, ficha técnica, precio aproximado y alternativas.",

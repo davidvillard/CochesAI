@@ -1,5 +1,6 @@
 "use client";
 
+import NextImage from "next/image";
 import { useEffect, useRef, useState } from "react";
 import styles from "./page.module.css";
 
@@ -359,10 +360,14 @@ export default function Home() {
       <header className={styles.cab}>
         <div className={`${styles.cont} ${styles.cabIn}`}>
           <a href="#identificador" className={styles.logo}>
-            <span className={styles.logoMarca}>
-              <ScannerLinearIcon size={18} />
-            </span>
-            ¿Qué coche es?
+            <NextImage
+              className={styles.logoImagen}
+              src="/CochesAI-Logo-Completo.png"
+              alt="Coches AI"
+              width={122}
+              height={101}
+              priority
+            />
           </a>
           <nav className={styles.nav} aria-label="Principal">
             <a href="#como-funciona" className={styles.navLink}>
