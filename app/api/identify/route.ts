@@ -66,12 +66,17 @@ async function comprobar(limite: Ratelimit | null, clave: string) {
 
 // ---------- Gemini ----------
 
-// Modelos a probar en orden. El primero sale de .env.local; el resto son respaldo.
-const MODELS = [
-  process.env.GEMINI_MODEL ?? "gemini-3.8-flash",
-  "gemini-3.7-flash",
-  "gemini-3.6-flash",
-].filter((m, i, arr) => arr.indexOf(m) === i); // quita duplicados
+// Modelos a probar en orden. Se pueden cambiar con la variable GEMINI_MODELS
+// (nombres separados por comas). Si uno se queda sin cuota, pasa al siguiente.
+// Flash-Lite va primero porque en el plan gratuito admite muchas más peticiones
+// al día que los Flash normales (500 frente a 20).
+const MODELS = (
+  process.env.GEMINI_MODELS ??
+  "gemini-3.5-flash-lite,gemini-3.8-flash,gemini-3.7-flash,gemini-3.6-flash"
+)
+  .split(",")
+  .map((m) => m.trim())
+  .filter((m, i, arr) => m && arr.indexOf(m) === i); // quita vacíos y duplicados
 
 const MAX_ATTEMPTS_PER_MODEL = 2;
 
@@ -133,7 +138,10 @@ async function callGemini(
         generationConfig: {
           responseMimeType: "application/json",
           temperature: 0.2,
-          thinkingConfig: { thinkingLevel: "low" },
+          // Los modelos Lite no necesitan (ni siempre admiten) este ajuste
+          ...(model.includes("lite")
+            ? {}
+            : { thinkingConfig: { thinkingLevel: "low" } }),
         },
       }),
     }
@@ -330,23 +338,20 @@ export async function POST(req: Request) {
         const detail = await res.text();
         console.error(`[${model}] intento ${attempt} -> ${res.status}`, detail);
 
-        // 400 / 401 / 403: problema de petición o clave, no tiene sentido reintentar
-        if (res.status === 400 || res.status === 401 || res.status === 403) {
+        // 401 / 403: la clave no vale, no tiene sentido probar otros modelos
+        if (res.status === 401 || res.status === 403) {
           return NextResponse.json(
-            {
-              error:
-                res.status === 400
-                  ? "Petición inválida (imagen o parámetros)."
-                  : "API key inválida o sin permisos. Revisa GEMINI_API_KEY.",
-            },
+            { error: "API key inválida o sin permisos. Revisa GEMINI_API_KEY." },
             { status: res.status }
           );
         }
 
-        // 404: el modelo no existe para tu cuenta -> pasa al siguiente modelo
-        if (res.status === 404) break;
+        // 400 (un ajuste que ese modelo no admite), 404 (el modelo no existe) o
+        // 429 (sin cuota: reintentar no lo arregla y gasta más peticiones):
+        // pasa directamente al siguiente modelo
+        if (res.status === 400 || res.status === 404 || res.status === 429) break;
 
-        // 429 / 500 / 503: saturado o límite -> espera y reintenta
+        // 500 / 503: saturado -> espera un poco y reintenta con el mismo modelo
         if (attempt < MAX_ATTEMPTS_PER_MODEL) {
           await sleep(1500 * attempt);
         }
@@ -356,6 +361,8 @@ export async function POST(req: Request) {
     const msg =
       lastStatus === 429
         ? "Límite gratuito alcanzado. Prueba en un minuto o mañana."
+        : lastStatus === 400
+        ? "No se ha podido procesar esta imagen. Prueba con otra foto."
         : "Los servidores de Gemini están saturados. Inténtalo de nuevo en unos segundos.";
 
     return NextResponse.json({ error: msg }, { status: 503 });

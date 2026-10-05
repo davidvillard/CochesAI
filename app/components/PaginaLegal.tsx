@@ -1,6 +1,7 @@
 import Link from "next/link";
 import styles from "../legal.module.css";
 import { LEGAL } from "../datos-legales";
+import NextImage from "next/image";
 
 export default function PaginaLegal({
     titulo,
@@ -15,15 +16,25 @@ export default function PaginaLegal({
     return (
         <div className={styles.pagina}>
             <header className={styles.cab}>
-                <div className={styles.cabIn}>
+                <div className={`${styles.cont} ${styles.cabIn}`}>
                     <Link href="/" className={styles.logo}>
-                        {LEGAL.nombreWeb}
+                        <NextImage
+                            className={styles.logoImagen}
+                            src="/CochesAI-Logo-Completo.png"
+                            alt="Coches AI"
+                            width={122}
+                            height={101}
+                            priority
+                        />
                     </Link>
-                    <Link href="/" className={styles.volver}>
-                        Volver al inicio
-                    </Link>
+                    <nav className={styles.nav} aria-label="Principal">
+                        <Link href="/" className={styles.volver}>
+                            Volver al inicio
+                        </Link>
+                    </nav>
                 </div>
             </header>
+
 
             <main className={styles.texto}>
                 {pendiente && process.env.NODE_ENV !== "production" && (
