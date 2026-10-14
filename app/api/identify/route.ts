@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
 import { z } from "zod";
+import { contar } from "../../lib/contadores";
 
 // Margen para los reintentos con espera (en Vercel evita cortes a los 10 s)
 export const maxDuration = 60;
@@ -242,6 +243,7 @@ export async function POST(req: Request) {
     const ip = getIp(req);
     const porIp = await comprobar(limitePorIp, ip);
     if (!porIp.success) {
+      await contar("rechazados_ip");
       return NextResponse.json(
         {
           error: `Has hecho muchos análisis seguidos. Vuelve a intentarlo en ${minutosHasta(
@@ -277,6 +279,7 @@ export async function POST(req: Request) {
     // 4) Tope diario global: protege la cuota gratuita de Gemini
     const global = await comprobar(limiteGlobal, "global");
     if (!global.success) {
+      await contar("rechazados_global");
       return NextResponse.json(
         { error: "Hoy hemos llegado al límite gratuito de análisis. Vuelve mañana." },
         { status: 429 }
@@ -297,6 +300,7 @@ export async function POST(req: Request) {
 
           // Gemini rechaza la imagen por sus filtros de seguridad
           if (data?.promptFeedback?.blockReason) {
+            await contar("errores");
             return NextResponse.json(
               { error: "Esta imagen no se ha podido analizar. Prueba con otra foto." },
               { status: 422 }
@@ -310,6 +314,11 @@ export async function POST(req: Request) {
 
           const resultado = interpretar(text);
           if (resultado) {
+            await contar(
+              "analisis",
+              `modelo:${model}`,
+              ...(resultado.esCoche ? [] : ["nocoche"])
+            );
             return NextResponse.json(
               process.env.NODE_ENV === "production"
                 ? resultado
@@ -324,6 +333,7 @@ export async function POST(req: Request) {
           );
           invalidas++;
           if (invalidas >= MAX_RESPUESTAS_INVALIDAS) {
+            await contar("errores");
             return NextResponse.json(
               {
                 error:
@@ -358,6 +368,8 @@ export async function POST(req: Request) {
       }
     }
 
+    await contar("errores");
+
     const msg =
       lastStatus === 429
         ? "Límite gratuito alcanzado. Prueba en un minuto o mañana."
@@ -368,6 +380,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: msg }, { status: 503 });
   } catch (err) {
     console.error(err);
+    await contar("errores");
     return NextResponse.json(
       { error: "No se pudo analizar la imagen" },
       { status: 500 }

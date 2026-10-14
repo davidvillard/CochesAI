@@ -55,6 +55,17 @@ const eur = (n: number) =>
     maximumFractionDigits: 0,
   }).format(n);
 
+const NOMBRE_WEB = "Coches AI"; // cámbialo aquí cuando decidas el nombre definitivo
+
+function textoCompartir(r: Resultado) {
+  const nombre = [r.marca, r.modelo].filter(Boolean).join(" ");
+  const detalle = [r.generacion, r.anios].filter(Boolean).join(", ");
+  const precio = r.precioSegundaManoEur
+    ? ` Precio aproximado de segunda mano: ${eur(r.precioSegundaManoEur.min)} a ${eur(r.precioSegundaManoEur.max)}.`
+    : "";
+  return `He descubierto qué coche es con ${NOMBRE_WEB}: ${nombre}${detalle ? ` (${detalle})` : ""}.${precio} Pruébalo con tu foto: ${window.location.origin}`;
+}
+
 const PASOS_CARGA = [
   "Subiendo la foto",
   "Identificando el coche",
@@ -79,7 +90,9 @@ import {
   NotesLinearIcon,
   ChatDotsLinearIcon,
   LikeLinearIcon,
-  DislikeLinearIcon
+  DislikeLinearIcon,
+  ChatRoundBoldIcon,
+  CopyLinearIcon,
 } from "@solar-icons/react";
 
 const IC = {
@@ -91,6 +104,8 @@ const IC = {
   plazas: UsersGroupTwoRoundedLinearIcon,
   pulgarSi: LikeLinearIcon,
   pulgarNo: DislikeLinearIcon,
+  chat: ChatRoundBoldIcon,
+  copiar: CopyLinearIcon,
 };
 
 function Icono({ d: Component }: { d: React.ElementType }) {
@@ -217,6 +232,22 @@ export default function Home() {
   const nivel = pct >= 80 ? "alta" : pct >= 50 ? "media" : "baja";
   const min = useContar(r?.precioSegundaManoEur?.min ?? 0, !!r);
   const max = useContar(r?.precioSegundaManoEur?.max ?? 0, !!r);
+  const [copiado, setCopiado] = useState(false);
+
+  useEffect(() => {
+    if (!copiado) return;
+    const t = setTimeout(() => setCopiado(false), 2000);
+    return () => clearTimeout(t);
+  }, [copiado]);
+
+  async function copiar(texto: string) {
+    try {
+      await navigator.clipboard.writeText(texto);
+      setCopiado(true);
+    } catch {
+      window.prompt("Copia el texto:", texto);
+    }
+  }
 
   // Avanza los pasos mientras analiza
   useEffect(() => {
@@ -276,6 +307,7 @@ export default function Home() {
     setError(null);
     setResult(null);
     setVoto(null);
+    setCopiado(false);
 
     if (previewRef.current) URL.revokeObjectURL(previewRef.current);
     const url = URL.createObjectURL(file);
@@ -369,6 +401,8 @@ export default function Home() {
       ["plazas", "Plazas", r.plazas ? String(r.plazas) : ""],
     ] as [keyof typeof IC, string, string][]).filter(([, , v]) => v)
     : [];
+
+  const textoResultado = r ? textoCompartir(r) : "";
 
   const delay = (i: number) => ({ "--i": i } as React.CSSProperties);
 
@@ -664,6 +698,27 @@ export default function Home() {
                         ) : (
                           <>
                             <p className={styles.votoPregunta}>¿Ha acertado?</p>
+                            <div className={`${styles.compartir} ${styles.entra}`} style={delay(11)}>
+                              <p className={styles.compartirTitulo}>Compártelo</p>
+                              <div className={styles.compartirBotones}>
+                                <a
+                                  href={`https://wa.me/?text=${encodeURIComponent(textoResultado)}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className={`${styles.btn} ${styles.btnP} ${styles.btnS}`}
+                                >
+                                  <Icono d={IC.chat} /> WhatsApp
+                                </a>
+                                <button
+                                  type="button"
+                                  className={`${styles.btn} ${styles.btnS}`}
+                                  onClick={() => copiar(textoResultado)}
+                                >
+                                  <Icono d={copiado ? IC.chat : IC.copiar} />
+                                  <span aria-live="polite">{copiado ? "Copiado" : "Copiar"}</span>
+                                </button>
+                              </div>
+                            </div>
                             <div className={styles.votoBotones}>
                               <button
                                 type="button"
