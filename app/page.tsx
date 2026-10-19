@@ -4,28 +4,9 @@ import Link from "next/link";
 import NextImage from "next/image";
 import { useEffect, useRef, useState } from "react";
 import styles from "./page.module.css";
-
-
-type Similar = { marca: string; modelo: string; motivo: string };
-
-type Resultado = {
-  esCoche: boolean;
-  marca: string;
-  modelo: string;
-  generacion: string;
-  anios: string;
-  carroceria: string;
-  combustibles: string[];
-  potenciaCvRango: string;
-  cambio: string;
-  puertas: number;
-  plazas: number;
-  precioNuevoEurAprox: string;
-  precioSegundaManoEur: { min: number; max: number };
-  similares: Similar[];
-  confianza: number;
-  notas: string;
-};
+import FichaCoche from "./components/FichaCoche";
+import Compartir from "./components/Compartir";
+import type { Resultado } from "./lib/resultados";
 
 // Reduce la imagen a máx. 768px y la convierte a JPEG base64.
 function resizeImage(file: File, maxSize = 768): Promise<string> {
@@ -48,24 +29,6 @@ function resizeImage(file: File, maxSize = 768): Promise<string> {
   });
 }
 
-const eur = (n: number) =>
-  new Intl.NumberFormat("es-ES", {
-    style: "currency",
-    currency: "EUR",
-    maximumFractionDigits: 0,
-  }).format(n);
-
-const NOMBRE_WEB = "Coches AI"; // cámbialo aquí cuando decidas el nombre definitivo
-
-function textoCompartir(r: Resultado) {
-  const nombre = [r.marca, r.modelo].filter(Boolean).join(" ");
-  const detalle = [r.generacion, r.anios].filter(Boolean).join(", ");
-  const precio = r.precioSegundaManoEur
-    ? ` Precio aproximado de segunda mano: ${eur(r.precioSegundaManoEur.min)} a ${eur(r.precioSegundaManoEur.max)}.`
-    : "";
-  return `He descubierto qué coche es con ${NOMBRE_WEB}: ${nombre}${detalle ? ` (${detalle})` : ""}.${precio} Pruébalo con tu foto: ${window.location.origin}`;
-}
-
 const PASOS_CARGA = [
   "Subiendo la foto",
   "Identificando el coche",
@@ -80,10 +43,6 @@ import {
   DangerLinearIcon,
   ScannerLinearIcon,
   CarLinearIcon,
-  WaterdropLinearIcon,
-  BoltLinearIcon,
-  TransmissionLinearIcon,
-  LoginLinearIcon,
   UsersGroupTwoRoundedLinearIcon,
   TagLinearIcon,
   MagnifierLinearIcon,
@@ -91,95 +50,7 @@ import {
   ChatDotsLinearIcon,
   LikeLinearIcon,
   DislikeLinearIcon,
-  ChatRoundBoldIcon,
-  CopyLinearIcon,
 } from "@solar-icons/react";
-
-const IC = {
-  carroceria: CarLinearIcon,
-  combustible: WaterdropLinearIcon,
-  potencia: BoltLinearIcon,
-  cambio: TransmissionLinearIcon,
-  puertas: LoginLinearIcon,
-  plazas: UsersGroupTwoRoundedLinearIcon,
-  pulgarSi: LikeLinearIcon,
-  pulgarNo: DislikeLinearIcon,
-  chat: ChatRoundBoldIcon,
-  copiar: CopyLinearIcon,
-};
-
-function Icono({ d: Component }: { d: React.ElementType }) {
-  return <Component size={20} />;
-}
-
-// Anillo de confianza que se dibuja al aparecer
-function Anillo({ pct }: { pct: number }) {
-  const C = 2 * Math.PI * 36;
-  const color =
-    pct >= 80 ? "var(--ok)" : pct >= 50 ? "var(--aviso)" : "var(--error)";
-  return (
-    <svg
-      width="88"
-      height="88"
-      viewBox="0 0 88 88"
-      role="img"
-      aria-label={`Seguridad ${pct} %`}
-    >
-      <circle
-        cx="44"
-        cy="44"
-        r="36"
-        fill="none"
-        stroke="var(--linea)"
-        strokeWidth="8"
-      />
-      <circle
-        className={styles.anilloValor}
-        cx="44"
-        cy="44"
-        r="36"
-        fill="none"
-        strokeWidth="8"
-        strokeLinecap="round"
-        transform="rotate(-90 44 44)"
-        style={
-          {
-            stroke: color,
-            strokeDasharray: C,
-            strokeDashoffset: C * (1 - pct / 100),
-            "--c": C,
-          } as React.CSSProperties
-        }
-      />
-      <text x="44" y="50" textAnchor="middle" className={styles.anilloTxt}>
-        {pct}%
-      </text>
-    </svg>
-  );
-}
-
-// Número que sube de 0 al valor final
-function useContar(objetivo: number, activo: boolean) {
-  const [v, setV] = useState(0);
-  useEffect(() => {
-    if (!activo) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setV(objetivo);
-      return;
-    }
-    const t0 = performance.now();
-    let raf = 0;
-    const tick = (t: number) => {
-      const p = Math.min(1, (t - t0) / 900);
-      setV(Math.round(objetivo * (1 - Math.pow(1 - p, 3))));
-      if (p < 1) raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, [objetivo, activo]);
-  return v;
-}
 
 const PREGUNTAS = [
   { p: "¿Es gratis?", r: "De momento sí, y sin registro." },
@@ -197,7 +68,7 @@ const PREGUNTAS = [
   },
   {
     p: "¿Puedo buscar por matrícula?",
-    r: "Todavía no. Es lo siguiente que queremos añadir.",
+    r: "Sí: en la sección «Matrícula y etiqueta» calculas la fecha de matriculación aproximada de un coche y su etiqueta ambiental de la DGT, gratis.",
   },
 ];
 
@@ -228,26 +99,6 @@ export default function Home() {
 
   const r = result && result.esCoche ? result : null;
   const noCoche = result !== null && !result.esCoche;
-  const pct = r ? Math.round((r.confianza ?? 0) * 100) : 0;
-  const nivel = pct >= 80 ? "alta" : pct >= 50 ? "media" : "baja";
-  const min = useContar(r?.precioSegundaManoEur?.min ?? 0, !!r);
-  const max = useContar(r?.precioSegundaManoEur?.max ?? 0, !!r);
-  const [copiado, setCopiado] = useState(false);
-
-  useEffect(() => {
-    if (!copiado) return;
-    const t = setTimeout(() => setCopiado(false), 2000);
-    return () => clearTimeout(t);
-  }, [copiado]);
-
-  async function copiar(texto: string) {
-    try {
-      await navigator.clipboard.writeText(texto);
-      setCopiado(true);
-    } catch {
-      window.prompt("Copia el texto:", texto);
-    }
-  }
 
   // Avanza los pasos mientras analiza
   useEffect(() => {
@@ -307,7 +158,6 @@ export default function Home() {
     setError(null);
     setResult(null);
     setVoto(null);
-    setCopiado(false);
 
     if (previewRef.current) URL.revokeObjectURL(previewRef.current);
     const url = URL.createObjectURL(file);
@@ -391,19 +241,6 @@ export default function Home() {
     </div>
   );
 
-  const filas: [keyof typeof IC, string, string][] = r
-    ? ([
-      ["carroceria", "Carrocería", r.carroceria ?? ""],
-      ["combustible", "Combustible", r.combustibles?.join(", ") ?? ""],
-      ["potencia", "Potencia", r.potenciaCvRango ?? ""],
-      ["cambio", "Cambio", r.cambio ?? ""],
-      ["puertas", "Puertas", r.puertas ? String(r.puertas) : ""],
-      ["plazas", "Plazas", r.plazas ? String(r.plazas) : ""],
-    ] as [keyof typeof IC, string, string][]).filter(([, , v]) => v)
-    : [];
-
-  const textoResultado = r ? textoCompartir(r) : "";
-
   const delay = (i: number) => ({ "--i": i } as React.CSSProperties);
 
   return (
@@ -452,6 +289,9 @@ export default function Home() {
             <a href="#preguntas" className={styles.navLink}>
               Preguntas
             </a>
+            <Link href="/matricula" className={styles.navLink}>
+              Matrícula
+            </Link>
             <button
               type="button"
               className={`${styles.btn} ${styles.btnP} ${styles.btnS}`}
@@ -606,90 +446,8 @@ export default function Home() {
 
                   {r && !loading && (
                     <>
-                      <div className={`${styles.cabRes} ${styles.entra}`}>
-                        <div>
-                          <p className={styles.marcaR}>{r.marca}</p>
-                          <h2
-                            className={styles.modeloR}
-                            ref={tituloRef}
-                            tabIndex={-1}
-                            aria-label={`${r.marca} ${r.modelo}`}
-                          >
-                            {r.modelo}
-                          </h2>
-                          <p className={styles.genR}>
-                            {[r.generacion, r.anios].filter(Boolean).join(", ")}
-                          </p>
-                        </div>
-                        <div className={styles.seg}>
-                          <Anillo pct={pct} />
-                          <span>Seguridad {nivel}</span>
-                        </div>
-                      </div>
-
-                      {r.notas && (
-                        <p className={`${styles.notaR} ${styles.entra}`} style={delay(1)}>
-                          {r.notas}
-                        </p>
-                      )}
-
-                      <div className={styles.specs}>
-                        {filas.map(([ic, et, v], k) => (
-                          <div
-                            key={et}
-                            className={`${styles.spec} ${styles.entra}`}
-                            style={delay(k + 2)}
-                          >
-                            <span className={styles.specIc}>
-                              <Icono d={IC[ic]} />
-                            </span>
-                            <div>
-                              <span className={styles.specEt}>{et}</span>
-                              <strong className={styles.specV}>{v}</strong>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-
-                      {r.precioSegundaManoEur && (
-                        <div className={`${styles.precio} ${styles.entra}`} style={delay(8)}>
-                          <p className={styles.precioEt}>Segunda mano en España</p>
-                          <p className={styles.precioN}>
-                            {eur(min)} a {eur(max)}
-                          </p>
-                          <p className={styles.precioX}>
-                            {r.precioNuevoEurAprox
-                              ? `Nuevo: ${r.precioNuevoEurAprox}. `
-                              : ""}
-                            Estimación de la IA, no es una tasación.
-                          </p>
-                        </div>
-                      )}
-
-                      {r.similares?.length > 0 && (
-                        <>
-                          <h3 className={styles.subT}>Coches parecidos</h3>
-                          <div className={styles.similares}>
-                            {r.similares.map((s, i) => (
-                              <div
-                                key={i}
-                                className={`${styles.sim} ${styles.entra}`}
-                                style={delay(9 + i)}
-                              >
-                                <span className={styles.simIni}>
-                                  <CarLinearIcon size={22} />
-                                </span>
-                                <div>
-                                  <p className={styles.simN}>
-                                    {s.marca} {s.modelo}
-                                  </p>
-                                  <p className={styles.simM}>{s.motivo}</p>
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        </>
-                      )}
+                      <FichaCoche r={r} tituloRef={tituloRef} />
+                      <Compartir r={r} style={delay(11)} />
                       <div className={`${styles.voto} ${styles.entra}`} style={delay(12)}>
                         {voto ? (
                           <p className={styles.votoGracias} role="status">
@@ -698,41 +456,20 @@ export default function Home() {
                         ) : (
                           <>
                             <p className={styles.votoPregunta}>¿Ha acertado?</p>
-                            <div className={`${styles.compartir} ${styles.entra}`} style={delay(11)}>
-                              <p className={styles.compartirTitulo}>Compártelo</p>
-                              <div className={styles.compartirBotones}>
-                                <a
-                                  href={`https://wa.me/?text=${encodeURIComponent(textoResultado)}`}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className={`${styles.btn} ${styles.btnP} ${styles.btnS}`}
-                                >
-                                  <Icono d={IC.chat} /> WhatsApp
-                                </a>
-                                <button
-                                  type="button"
-                                  className={`${styles.btn} ${styles.btnS}`}
-                                  onClick={() => copiar(textoResultado)}
-                                >
-                                  <Icono d={copiado ? IC.chat : IC.copiar} />
-                                  <span aria-live="polite">{copiado ? "Copiado" : "Copiar"}</span>
-                                </button>
-                              </div>
-                            </div>
                             <div className={styles.votoBotones}>
                               <button
                                 type="button"
                                 className={`${styles.btn} ${styles.btnS}`}
                                 onClick={() => votar("si")}
                               >
-                                <Icono d={IC.pulgarSi} /> Sí
+                                <LikeLinearIcon size={20} /> Sí
                               </button>
                               <button
                                 type="button"
                                 className={`${styles.btn} ${styles.btnS}`}
                                 onClick={() => votar("no")}
                               >
-                                <Icono d={IC.pulgarNo} /> No
+                                <DislikeLinearIcon size={20} /> No
                               </button>
                             </div>
                           </>
@@ -830,9 +567,14 @@ export default function Home() {
                 <span className={styles.specIc}>
                   <MagnifierLinearIcon size={24} />
                 </span>
-                <h3 className={styles.tarjTit}>Matrícula, próximamente</h3>
+                <h3 className={styles.tarjTit}>
+                  <Link href="/matricula" className={styles.notaLink}>
+                    Matrícula y etiqueta
+                  </Link>
+                </h3>
                 <p className={styles.tarjTxt}>
-                  Datos básicos del vehículo a partir de su matrícula.
+                  Fecha de matriculación aproximada y etiqueta ambiental de la DGT a
+                  partir de la matrícula.
                 </p>
               </article>
             </div>
@@ -884,6 +626,7 @@ export default function Home() {
             <a href="#como-funciona">Cómo funciona</a>
             <a href="#incluye">Qué incluye</a>
             <a href="#preguntas">Preguntas</a>
+            <Link href="/matricula">Matrícula y etiqueta</Link>
             <Link href="/privacidad">Privacidad</Link>
             <Link href="/aviso-legal">Aviso legal</Link>
           </nav>

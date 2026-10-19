@@ -1049,3 +1049,18 @@
   flex-wrap: wrap;
   gap: 10px;
 }
+/* ---------- Resultado compartido ---------- */
+
+.compartida {
+  max-width: 760px;
+}
+
+.compartidaFicha {
+  margin: 28px 0 32px;
+  padding: 28px;
+  border: 1px solid var(--linea);
+  border-radius: 28px;
+  background: var(--superficie);
+  box-shadow: var(--sombra);
+  text-align: left;
+}

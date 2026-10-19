@@ -1,13 +1,6 @@
 import { NextResponse } from "next/server";
 import { Ratelimit } from "@upstash/ratelimit";
-import { Redis } from "@upstash/redis";
-
-// Acepta las variables de Upstash o las que crea la integración de Vercel
-const url = process.env.UPSTASH_REDIS_REST_URL ?? process.env.KV_REST_API_URL;
-const token =
-  process.env.UPSTASH_REDIS_REST_TOKEN ?? process.env.KV_REST_API_TOKEN;
-
-const redis = url && token ? new Redis({ url, token }) : null;
+import { redis } from "../../lib/redis";
 
 // Máximo 20 votos por hora y por IP, para que nadie infle los números
 const limite = redis

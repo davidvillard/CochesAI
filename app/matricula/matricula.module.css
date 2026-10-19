@@ -1,0 +1,232 @@
+.caja {
+  max-width: 720px;
+  margin: 40px auto 0;
+  padding: 28px;
+  border: 1px solid var(--linea);
+  border-radius: 28px;
+  background: var(--superficie);
+  box-shadow: var(--sombra);
+  text-align: left;
+}
+
+.form {
+  display: grid;
+  gap: 18px;
+  align-items: end;
+}
+
+@media (min-width: 760px) {
+  .form {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+  }
+}
+
+.campo {
+  display: grid;
+  min-width: 0;
+  gap: 8px;
+}
+
+.etiquetaCampo {
+  color: var(--suave);
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+/* Matrícula con la franja azul europea */
+.placa {
+  display: flex;
+  min-height: 50px;
+  overflow: hidden;
+  border: 2px solid var(--tinta);
+  border-radius: 10px;
+  background: #fff;
+}
+
+.placa:focus-within {
+  outline: 3px solid var(--color);
+  outline-offset: 2px;
+}
+
+.placaE {
+  display: grid;
+  place-items: end center;
+  width: 34px;
+  padding-bottom: 6px;
+  background: #1f45d6;
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.875rem;
+}
+
+.placaInput {
+  width: 100%;
+  min-width: 0;
+  padding: 0 14px;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--tinta);
+  font: 700 1.5rem/1 ui-monospace, "Cascadia Mono", Menlo, monospace;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.placaInput::placeholder {
+  color: #b8bfd0;
+}
+
+.select {
+  width: 100%;
+  min-width: 0;
+  min-height: 50px;
+  padding: 0 14px;
+  border: 1px solid var(--linea);
+  border-radius: 14px;
+  background: var(--superficie);
+  color: var(--tinta);
+  font: 500 1rem var(--font-text), system-ui, sans-serif;
+}
+
+.select:focus-visible {
+  outline: 3px solid var(--color);
+  outline-offset: 2px;
+}
+
+.resultado {
+  display: grid;
+  gap: 14px;
+  margin-top: 24px;
+  animation: entra 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+@keyframes entra {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+.dato {
+  display: grid;
+  gap: 4px;
+  padding: 18px 20px;
+  border-radius: 18px;
+  background: var(--tenue);
+}
+
+.datoEt {
+  color: var(--suave);
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+.datoV {
+  display: block;
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-size: 1.6rem;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+.datoX {
+  display: block;
+  color: var(--suave);
+}
+
+.etiqueta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.disco {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  color: #fff;
+  font: 800 1.25rem var(--font-display), system-ui, sans-serif;
+}
+
+.disco0 {
+  background: #1e6fd9;
+}
+
+.discoECO {
+  background: linear-gradient(90deg, #1e6fd9 50%, #12a150 50%);
+  font-size: 1rem;
+}
+
+.discoC {
+  background: #12a150;
+}
+
+.discoB {
+  background: #f2c200;
+  color: #3d3000;
+}
+
+.discoSIN {
+  background: #c5cbd8;
+  color: var(--tinta);
+}
+
+.letraPeq {
+  margin: 0;
+  color: var(--suave);
+  font-size: 0.9375rem;
+}
+
+.letraPeq a {
+  color: var(--color);
+  font-weight: 600;
+}
+
+/* ---------- Contenido de la página ---------- */
+
+.texto {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.texto p {
+  color: var(--suave);
+}
+
+.tablaCaja {
+  max-width: 720px;
+  margin: 32px auto 0;
+  overflow-x: auto;
+  border: 1px solid var(--linea);
+  border-radius: 20px;
+  background: var(--superficie);
+}
+
+.tabla {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tabla th,
+.tabla td {
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--linea);
+  text-align: left;
+}
+
+.tabla tr:last-child td {
+  border-bottom: 0;
+}
+
+.tabla th {
+  color: var(--suave);
+  font-size: 0.9375rem;
+}
+
+.tabla td:last-child {
+  font: 700 1rem ui-monospace, "Cascadia Mono", Menlo, monospace;
+  letter-spacing: 0.06em;
+}

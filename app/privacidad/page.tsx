@@ -47,6 +47,18 @@ export default function Privacidad() {
                     no subas fotos así.
                 </li>
                 <li>
+                    <strong>El resultado del análisis.</strong> Cuando la IA identifica un
+                    coche, guardamos su ficha (marca, modelo, datos técnicos, precio
+                    estimado y coches parecidos) durante 30 días para que funcione el
+                    enlace de «Compártelo». No incluye la foto, tu IP ni ningún dato
+                    tuyo, y cualquiera que tenga el enlace puede verla.
+                </li>
+                <li>
+                    <strong>La matrícula que consultes.</strong> El cálculo de la fecha y
+                    la etiqueta se hace en tu navegador: la matrícula no se envía a
+                    nuestro servidor.
+                </li>
+                <li>
                     <strong>Tu dirección IP.</strong> La usamos para limitar el número de
                     análisis por persona y evitar abusos que dejarían el servicio sin
                     funcionar. La base legal es nuestro interés legítimo en proteger el
@@ -65,8 +77,8 @@ export default function Privacidad() {
                 </li>
                 <li>
                     <strong>El botón «¿Ha acertado?».</strong> Si lo pulsas, sumamos 1 a un
-                    contador anónimo de síes o noes. No guardamos tu foto ni el resultado, y el
-                    contador no está asociado a ti.
+                    contador anónimo de síes o noes. El voto no se asocia a tu foto, al
+                    resultado ni a ti.
                 </li>
             </ul>
             <p>No te pedimos registro, nombre ni correo para usar la web.</p>
@@ -85,7 +97,7 @@ export default function Privacidad() {
                 </li>
                 <li>
                     <strong>Upstash:</strong> guarda temporalmente el contador de uso
-                    asociado a la IP.
+                    asociado a la IP y las fichas de los resultados compartidos.
                 </li>
             </ul>
             <p>
@@ -99,6 +111,7 @@ export default function Privacidad() {
             <h2>4. Cuánto tiempo los conservamos</h2>
             <ul>
                 <li>La foto: no la conservamos en nuestros servidores.</li>
+                <li>La ficha del resultado: 30 días; después se borra sola.</li>
                 <li>La IP en el control de uso: hasta que termina el periodo de control.</li>
                 <li>
                     Los registros técnicos: el tiempo que indique el proveedor de

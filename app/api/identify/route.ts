@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
 import { Ratelimit } from "@upstash/ratelimit";
-import { Redis } from "@upstash/redis";
 import { z } from "zod";
 import { contar } from "../../lib/contadores";
+import { redis } from "../../lib/redis";
+import { guardarResultado } from "../../lib/resultados";
 
 // Margen para los reintentos con espera (en Vercel evita cortes a los 10 s)
 export const maxDuration = 60;
@@ -19,15 +20,6 @@ const LIMITE_POR_IP = Number(process.env.LIMITE_POR_IP ?? 10); // por hora
 const LIMITE_GLOBAL = Number(process.env.LIMITE_DIARIO_GLOBAL ?? 200); // por día
 
 // Si faltan las variables de Upstash (por ejemplo en local) no se limita nada
-// Acepta las variables de Upstash o las que crea la integración de Vercel
-const redisUrl =
-  process.env.UPSTASH_REDIS_REST_URL ?? process.env.KV_REST_API_URL;
-const redisToken =
-  process.env.UPSTASH_REDIS_REST_TOKEN ?? process.env.KV_REST_API_TOKEN;
-
-const redis =
-  redisUrl && redisToken ? new Redis({ url: redisUrl, token: redisToken }) : null;
-
 if (!redis && process.env.NODE_ENV === "production") {
   console.warn("Sin Upstash configurado: la API NO tiene límite de uso.");
 }
@@ -319,10 +311,14 @@ export async function POST(req: Request) {
               `modelo:${model}`,
               ...(resultado.esCoche ? [] : ["nocoche"])
             );
+            // Solo los coches identificados tienen enlace para compartir
+            const id =
+              "marca" in resultado ? await guardarResultado(resultado) : undefined;
+            const respuesta = { ...resultado, id };
             return NextResponse.json(
               process.env.NODE_ENV === "production"
-                ? resultado
-                : { ...resultado, _modelo: model }
+                ? respuesta
+                : { ...respuesta, _modelo: model }
             );
           }
 

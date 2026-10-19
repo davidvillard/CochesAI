@@ -1,11 +1,4 @@
-import { Redis } from "@upstash/redis";
-
-// Acepta las variables de Upstash o las que crea la integración de Vercel
-const url = process.env.UPSTASH_REDIS_REST_URL ?? process.env.KV_REST_API_URL;
-const token =
-  process.env.UPSTASH_REDIS_REST_TOKEN ?? process.env.KV_REST_API_TOKEN;
-
-const redis = url && token ? new Redis({ url, token }) : null;
+import { redis } from "./redis";
 
 // Un contador por día, en hora de España: "2026-10-05"
 export const fechaES = (d = new Date()) =>
@@ -61,10 +54,11 @@ function resumir(fecha: string, datos: Record<string, number> | null) {
 }
 
 export async function leerDias(n: number) {
-  if (!redis) return [];
+  const db = redis;
+  if (!db) return [];
   const fechas = ultimosDias(n);
   const filas = await Promise.all(
-    fechas.map((f) => redis.hgetall<Record<string, number>>(claveDia(f)))
+    fechas.map((f) => db.hgetall<Record<string, number>>(claveDia(f)))
   );
   return fechas.map((fecha, i) => resumir(fecha, filas[i]));
 }
