@@ -9,6 +9,7 @@ import { eur } from "../../lib/formato";
 import Compartir from "../../components/Compartir";
 import { leerResultado } from "../../lib/resultados";
 import { buscarFicha } from "../../lib/fichas";
+import { metadatos } from "../../lib/seo";
 
 type Props = { params: Promise<{ id: string }> };
 
@@ -18,21 +19,23 @@ const obtener = cache(leerResultado);
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const r = await obtener((await params).id);
   if (!r) return { title: "Resultado no encontrado", robots: { index: false } };
+  const id = (await params).id;
 
   const nombre = `${r.marca} ${r.modelo}`;
   const precio = r.precioSegundaManoEur
     ? ` Segunda mano: ${eur(r.precioSegundaManoEur.min)} a ${eur(r.precioSegundaManoEur.max)}.`
     : "";
-  const descripcion = `${[r.generacion, r.anios].filter(Boolean).join(", ")}.${precio} Identificado con IA a partir de una foto.`;
+  const detalle = [r.generacion, r.anios].filter(Boolean).join(", ");
+  const descripcion = `${detalle ? `${detalle}.` : ""}${precio} Identificado con IA a partir de una foto.`.trim();
 
-  return {
-    title: nombre,
-    description: descripcion,
-    // Son resultados de usuarios y caducan: se comparten, pero no se indexan
-    robots: { index: false, follow: true },
-    openGraph: { title: `Es un ${nombre}`, description: descripcion },
-    twitter: { title: `Es un ${nombre}`, description: descripcion },
-  };
+  // Son resultados de usuarios y caducan: se comparten, pero no se indexan
+  return metadatos({
+    titulo: `Es un ${nombre}`,
+    descripcion: descripcion,
+    ruta: `/r/${id}`,
+    indexar: false,
+    imagenPropia: true,
+  });
 }
 
 export default async function ResultadoCompartido({ params }: Props) {

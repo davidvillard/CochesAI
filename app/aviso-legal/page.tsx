@@ -1,14 +1,15 @@
 import type { Metadata } from "next";
+import { metadatos } from "../lib/seo";
 import PaginaLegal from "../components/PaginaLegal";
 import { LEGAL } from "../datos-legales";
 import styles from "../legal.module.css";
 
-export const metadata: Metadata = {
-  title: "Aviso legal",
-  description:
+export const metadata: Metadata = metadatos({
+  titulo: "Aviso legal",
+  descripcion:
     "Datos del titular, condiciones de uso y limitaciones de responsabilidad de Coches AI, el servicio gratuito que identifica un coche a partir de una foto.",
-  alternates: { canonical: "/aviso-legal" },
-};
+  ruta: "/aviso-legal",
+});
 
 export default function AvisoLegal() {
   return (

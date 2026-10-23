@@ -3,15 +3,16 @@ import Link from "next/link";
 import base from "../page.module.css";
 import styles from "./matricula.module.css";
 import MarcoPagina from "../components/MarcoPagina";
+import { metadatos } from "../lib/seo";
 import ConsultaMatricula from "./ConsultaMatricula";
 import { PRIMERA_DEL_ANIO, ULTIMO_MES, nombreMes } from "../lib/matricula";
 
-export const metadata: Metadata = {
-  title: "¿De qué año es una matrícula? Fecha y etiqueta DGT",
-  description:
-    "Escribe una matrícula y descubre su fecha de matriculación aproximada, su antigüedad y la etiqueta ambiental de la DGT que le corresponde. Gratis y sin registro.",
-  alternates: { canonical: "/matricula" },
-};
+export const metadata: Metadata = metadatos({
+  titulo: "¿De qué año es una matrícula? Fecha y etiqueta DGT",
+  descripcion:
+    "Escribe una matrícula y descubre la fecha de matriculación aproximada del coche y qué etiqueta ambiental de la DGT le corresponde. Gratis.",
+  ruta: "/matricula",
+});
 
 const PREGUNTAS = [
   {

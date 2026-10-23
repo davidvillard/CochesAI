@@ -6,11 +6,10 @@ import base from "../../../page.module.css";
 import styles from "../../coches.module.css";
 import MarcoPagina from "../../../components/MarcoPagina";
 import { eur } from "../../../lib/formato";
-import { leerFicha, urlFicha, urlsDeFichas } from "../../../lib/fichas";
+import { leerFicha, urlFicha, urlMarca as rutaMarca, urlsDeFichas } from "../../../lib/fichas";
+import { SITE_URL, metadatos } from "../../../lib/seo";
 
 type Props = { params: Promise<{ marca: string; modelo: string }> };
-
-const BASE_URL = "https://cochesai.vercel.app";
 
 // Metadatos y página leen la misma ficha: una sola consulta a Redis
 const obtener = cache(async (params: Props["params"]) => {
@@ -24,12 +23,11 @@ const obtener = cache(async (params: Props["params"]) => {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const f = await obtener(params);
   const nombre = `${f.marca} ${f.modelo}`;
-  return {
-    title: `${nombre}: precio de segunda mano, motores y generaciones`,
-    description: f.resumen.slice(0, 160),
-    alternates: { canonical: urlFicha(f.slug) },
-    openGraph: { title: nombre, description: f.resumen, url: urlFicha(f.slug) },
-  };
+  return metadatos({
+    titulo: `${nombre}: precio de segunda mano y fallos`,
+    descripcion: f.resumen,
+    ruta: urlFicha(f.slug),
+  });
 }
 
 export default async function FichaModelo({ params }: Props) {
@@ -37,14 +35,16 @@ export default async function FichaModelo({ params }: Props) {
   const nombre = `${f.marca} ${f.modelo}`;
   const precio = f.precioSegundaManoEur.max > 0 ? f.precioSegundaManoEur : null;
   const enlacesSimilares = await urlsDeFichas(f.similares);
+  const urlMarca = rutaMarca(f.slug);
 
   const jsonLd = [
     {
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
       itemListElement: [
-        { "@type": "ListItem", position: 1, name: "Fichas", item: `${BASE_URL}/coches` },
-        { "@type": "ListItem", position: 2, name: nombre, item: `${BASE_URL}${urlFicha(f.slug)}` },
+        { "@type": "ListItem", position: 1, name: "Fichas", item: `${SITE_URL}/coches` },
+        { "@type": "ListItem", position: 2, name: f.marca, item: `${SITE_URL}${urlMarca}` },
+        { "@type": "ListItem", position: 3, name: nombre, item: `${SITE_URL}${urlFicha(f.slug)}` },
       ],
     },
     ...(f.preguntas.length
@@ -74,12 +74,13 @@ export default async function FichaModelo({ params }: Props) {
       <article className={`${base.cont} ${styles.ficha}`}>
         <nav aria-label="Migas de pan" className={styles.migas}>
           <Link href="/coches">Fichas</Link> <span aria-hidden="true">/</span>{" "}
-          <span>{f.marca}</span>
+          <Link href={urlMarca}>{f.marca}</Link>
         </nav>
 
         <header className={styles.cabecera}>
-          <p className={styles.marca}>{f.marca}</p>
-          <h1 className={styles.titulo}>{f.modelo}</h1>
+          <h1 className={styles.titulo}>
+            <span className={styles.marca}>{f.marca}</span> {f.modelo}
+          </h1>
           {(f.carroceria || f.segmento) && (
             <p className={styles.chips}>
               {[f.carroceria, f.segmento].filter(Boolean).map((c) => (

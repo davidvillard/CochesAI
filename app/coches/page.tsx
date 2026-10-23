@@ -3,14 +3,15 @@ import Link from "next/link";
 import base from "../page.module.css";
 import styles from "./coches.module.css";
 import MarcoPagina from "../components/MarcoPagina";
-import { listarModelos, urlFicha, type ModeloListado } from "../lib/fichas";
+import { metadatos } from "../lib/seo";
+import { agruparPorMarca, listarModelos, urlFicha } from "../lib/fichas";
 
-export const metadata: Metadata = {
-  title: "Fichas de coches: precios, motores y generaciones",
-  description:
-    "Fichas de los coches más identificados en Coches AI: precio de segunda mano en España, generaciones, motores, puntos fuertes y qué revisar antes de comprar.",
-  alternates: { canonical: "/coches" },
-};
+export const metadata: Metadata = metadatos({
+  titulo: "Fichas de coches de segunda mano: precios y motores",
+  descripcion:
+    "Fichas de coches con su precio de segunda mano en España, generaciones, motores, puntos fuertes y débiles, y qué revisar antes de comprar.",
+  ruta: "/coches",
+});
 
 // Se lee en cada visita: las fichas nuevas aparecen al momento
 export const dynamic = "force-dynamic";
@@ -19,13 +20,7 @@ export default async function Fichas() {
   const modelos = await listarModelos();
   const populares = modelos.slice(0, 8);
 
-  // Agrupados por marca, en orden alfabético
-  const porMarca = new Map<string, ModeloListado[]>();
-  for (const m of [...modelos].sort((a, b) =>
-    `${a.marca} ${a.modelo}`.localeCompare(`${b.marca} ${b.modelo}`, "es")
-  )) {
-    porMarca.set(m.marca, [...(porMarca.get(m.marca) ?? []), m]);
-  }
+  const marcas = agruparPorMarca(modelos);
 
   return (
     <MarcoPagina>
@@ -69,11 +64,15 @@ export default async function Fichas() {
             <section className={styles.bloque}>
               <h2 className={styles.h2}>Todas las marcas</h2>
               <div className={styles.marcas}>
-                {[...porMarca].map(([marca, lista]) => (
-                  <div key={marca} className={styles.caja}>
-                    <h3 className={styles.h3}>{marca}</h3>
+                {marcas.map((g) => (
+                  <div key={g.slug} className={styles.caja}>
+                    <h3 className={styles.h3}>
+                      <Link href={`/coches/${g.slug}`} className={styles.marcaLink}>
+                        {g.marca}
+                      </Link>
+                    </h3>
                     <ul className={styles.modelos}>
-                      {lista.map((m) => (
+                      {g.modelos.map((m) => (
                         <li key={m.slug}>
                           <Link href={urlFicha(m.slug)}>{m.modelo}</Link>
                         </li>

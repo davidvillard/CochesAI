@@ -94,7 +94,7 @@ export default function AnalyticsConsent() {
               Rechazar analítica
             </button>
             <Link href="/privacidad#cookies" className={styles.enlace}>
-              Más información
+              Política de cookies
             </Link>
           </div>
         </aside>

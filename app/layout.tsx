@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Bricolage_Grotesque, Instrument_Sans } from "next/font/google";
 import AnalyticsConsent from "./components/AnalyticsConsent";
 import "./globals.css";
+import { SITE_URL } from "./lib/seo";
 
 const display = Bricolage_Grotesque({
   subsets: ["latin"],
@@ -16,7 +17,7 @@ const text = Instrument_Sans({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://cochesai.vercel.app"),
+  metadataBase: new URL(SITE_URL),
   applicationName: "Coches AI",
   category: "automotive",
   keywords: [
@@ -31,11 +32,11 @@ export const metadata: Metadata = {
     icon: "/CochesAI-Logo.svg",
   },
   title: {
-    default: "Coches AI: identifica un coche por foto",
+    default: "¿Qué coche es? Identifica un coche por foto gratis | Coches AI",
     template: "%s | Coches AI",
   },
   description:
-    "Sube una foto de un coche y conoce su modelo, ficha técnica, precio aproximado y alternativas.",
+    "Sube una foto de un coche y descubre su marca, modelo y generación, su ficha técnica y su precio de segunda mano en España. Gratis y sin registro.",
   alternates: { canonical: "/" },
   openGraph: {
     type: "website",
@@ -88,7 +89,7 @@ export default function RootLayout({
     "@context": "https://schema.org",
     "@type": "WebApplication",
     name: "Coches AI",
-    url: "https://cochesai.vercel.app",
+    url: SITE_URL,
     description:
       "Servicio gratuito para identificar coches a partir de una foto y consultar datos orientativos sobre ellos.",
     applicationCategory: "AutomotiveApplication",
@@ -97,8 +98,8 @@ export default function RootLayout({
     publisher: {
       "@type": "Organization",
       name: "Coches AI",
-      url: "https://cochesai.vercel.app",
-      logo: "https://cochesai.vercel.app/CochesAI-Logo.png",
+      url: SITE_URL,
+      logo: `${SITE_URL}/CochesAI-Logo.png`,
     },
   };
 

@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
+import { metadatos } from "../lib/seo";
 import PaginaLegal from "../components/PaginaLegal";
 import { LEGAL } from "../datos-legales";
 
-export const metadata: Metadata = {
-    title: "Política de privacidad",
-    description:
-        "Qué datos trata Coches AI, con qué finalidad, quién los recibe y cuáles son tus derechos.",
-    alternates: { canonical: "/privacidad" },
-};
+export const metadata: Metadata = metadatos({
+  titulo: "Política de privacidad",
+  descripcion:
+    "Qué datos trata Coches AI, con qué finalidad, quién los recibe y cuáles son tus derechos.",
+  ruta: "/privacidad",
+});
 
 export default function Privacidad() {
     return (

@@ -8,7 +8,7 @@ import { MODELS, extraerJson, llamarGemini, numero, texto, textoDe } from "./gem
 // gastar cuota de Gemini pidiendo URLs inventadas.
 
 const CLAVE_MODELOS = "quecoche:modelos"; // ranking: slug -> nº de identificaciones
-const CLAVE_NOMBRES = "quecoche:modelos:nombres"; // slug -> { marca, modelo }
+const CLAVE_NOMBRES = "quecoche:modelos:nombres"; // slug -> { marca, modelo, actualizada }
 const claveFicha = (slug: string) => `quecoche:ficha:${slug}`;
 // Evita generar dos veces a la vez y, si falla, no reintenta hasta el día siguiente
 const claveIntento = (slug: string) => `quecoche:ficha-intento:${slug}`;
@@ -32,6 +32,8 @@ export function slugModelo(marca: string, modelo: string) {
 }
 
 export const urlFicha = (slug: string) => `/coches/${slug}`;
+// Página de la marca a partir del slug del modelo ("seat/leon" -> "/coches/seat")
+export const urlMarca = (slug: string) => `/coches/${slug.split("/")[0]}`;
 
 // ---------- Contenido de la ficha ----------
 
@@ -93,6 +95,10 @@ Responde SOLO con un JSON válido (sin markdown) con esta estructura exacta:
 Reglas:
 - "existe": false si ese modelo no existe o no lo reconoces; entonces el resto vacío.
 - "marca" y "modelo": nombre comercial correcto (por ejemplo "SEAT" y "León").
+- "modelo" es el modelo base, sin versión, motor ni acabado: "Golf" y no "Golf GTI",
+  "Serie 3" y no "320d". Excepción: si es un modelo distinto con su propio nombre
+  (por ejemplo "Cupra Formentor" o "Mercedes-AMG GT"), usa ese nombre.
+- La ficha describe el modelo base con todas sus versiones.
 - "resumen": 3 o 4 frases, informativo y sin frases publicitarias.
 - "generaciones": las vendidas en España, de la más reciente a la más antigua; "cambios": una frase.
 - "motores": los más habituales en España, máximo 8; "potenciaCv": por ejemplo "110 CV".
@@ -148,16 +154,21 @@ export async function registrarModelo(marca: string, modelo: string) {
     const datos = await generar(marca, modelo);
     if (!datos) return;
 
-    // El nombre corregido por la IA puede dar otro slug ("Leon" -> "León" da el mismo,
-    // "VW" -> "Volkswagen" no): se guarda con el bueno y se cuenta ahí
+    // El nombre corregido por la IA puede dar otro slug ("VW Golf GTI" ->
+    // "volkswagen/golf"): la ficha se guarda con el bueno y el original queda
+    // como alias, para que no haya dos fichas del mismo coche
     const slugFinal = slugModelo(datos.marca, datos.modelo) ?? slug;
-    const ficha: Ficha = { ...datos, slug: slugFinal, actualizada: new Date().toISOString() };
-    await redis.set(claveFicha(slugFinal), ficha);
-    await redis.hset(CLAVE_NOMBRES, {
-      [slugFinal]: { marca: ficha.marca, modelo: ficha.modelo },
-    });
-    await redis.zincrby(CLAVE_MODELOS, 1, slugFinal);
     if (slugFinal !== slug) await redis.set(claveFicha(slug), { alias: slugFinal });
+    // Si el modelo base ya tenía ficha, no se sobrescribe: solo se cuenta
+    if (!(await redis.exists(claveFicha(slugFinal)))) {
+      const actualizada = new Date().toISOString();
+      const ficha: Ficha = { ...datos, slug: slugFinal, actualizada };
+      await redis.set(claveFicha(slugFinal), ficha);
+      await redis.hset(CLAVE_NOMBRES, {
+        [slugFinal]: { marca: ficha.marca, modelo: ficha.modelo, actualizada },
+      });
+    }
+    await redis.zincrby(CLAVE_MODELOS, 1, slugFinal);
   } catch (err) {
     console.error("Error al registrar el modelo:", err);
   }
@@ -187,7 +198,13 @@ export async function buscarFicha(marca: string, modelo: string) {
   return urlFicha("alias" in f ? f.alias : slug);
 }
 
-export type ModeloListado = { slug: string; marca: string; modelo: string; veces: number };
+export type ModeloListado = {
+  slug: string;
+  marca: string;
+  modelo: string;
+  veces: number;
+  actualizada?: string;
+};
 
 // Todos los modelos con ficha, del más identificado al menos
 export async function listarModelos(): Promise<ModeloListado[]> {
@@ -199,7 +216,9 @@ export async function listarModelos(): Promise<ModeloListado[]> {
     });
     if (!ranking.length) return [];
     const nombres =
-      (await redis.hgetall<Record<string, { marca: string; modelo: string }>>(
+      (await redis.hgetall<
+        Record<string, { marca: string; modelo: string; actualizada?: string }>
+      >(
         CLAVE_NOMBRES
       )) ?? {};
     const lista: ModeloListado[] = [];
@@ -227,4 +246,19 @@ export async function urlsDeFichas(coches: { marca: string; modelo: string }[]) 
     console.error("Error al buscar fichas:", err);
     return slugs.map(() => undefined);
   }
+}
+
+// Agrupa los modelos por marca: [{ slug: "seat", marca: "SEAT", modelos }]
+export function agruparPorMarca(modelos: ModeloListado[]) {
+  const grupos = new Map<string, { slug: string; marca: string; modelos: ModeloListado[] }>();
+  const ordenados = [...modelos].sort((a, b) =>
+    `${a.marca} ${a.modelo}`.localeCompare(`${b.marca} ${b.modelo}`, "es")
+  );
+  for (const m of ordenados) {
+    const slug = m.slug.split("/")[0];
+    const g = grupos.get(slug) ?? { slug, marca: m.marca, modelos: [] };
+    g.modelos.push(m);
+    grupos.set(slug, g);
+  }
+  return [...grupos.values()];
 }
