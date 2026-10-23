@@ -22,6 +22,9 @@ export type Resultado = {
   notas: string;
   // Enlace para compartir (/r/<id>); no existe si Redis no está configurado
   id?: string;
+  // URL de la ficha del modelo (/coches/...), si ya existe. No se guarda: se
+  // calcula al mostrar el resultado porque la ficha puede crearse más tarde.
+  ficha?: string;
 };
 
 // Los resultados compartidos caducan solos: solo hacen falta mientras circula el enlace

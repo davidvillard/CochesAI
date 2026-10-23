@@ -19,6 +19,9 @@ export default function MarcoPagina({ children }: { children: React.ReactNode })
             />
           </Link>
           <nav className={styles.nav} aria-label="Principal">
+            <Link href="/coches" className={styles.navLink}>
+              Fichas
+            </Link>
             <Link href="/matricula" className={styles.navLink}>
               Matrícula y etiqueta
             </Link>
@@ -38,6 +41,7 @@ export default function MarcoPagina({ children }: { children: React.ReactNode })
           </span>
           <nav className={styles.pieLinks} aria-label="Pie">
             <Link href="/">Identificar por foto</Link>
+            <Link href="/coches">Fichas de coches</Link>
             <Link href="/matricula">Matrícula y etiqueta</Link>
             <Link href="/privacidad">Privacidad</Link>
             <Link href="/aviso-legal">Aviso legal</Link>

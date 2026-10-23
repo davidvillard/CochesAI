@@ -1,9 +1,22 @@
-import { NextResponse } from "next/server";
+import { NextResponse, after } from "next/server";
 import { Ratelimit } from "@upstash/ratelimit";
 import { z } from "zod";
 import { contar } from "../../lib/contadores";
 import { redis } from "../../lib/redis";
 import { guardarResultado } from "../../lib/resultados";
+import {
+  CONFIANZA_MINIMA,
+  buscarFicha,
+  registrarModelo,
+} from "../../lib/fichas";
+import {
+  MODELS,
+  extraerJson,
+  llamarGemini,
+  numero,
+  texto,
+  textoDe,
+} from "../../lib/gemini";
 
 // Margen para los reintentos con espera (en Vercel evita cortes a los 10 s)
 export const maxDuration = 60;
@@ -59,18 +72,6 @@ async function comprobar(limite: Ratelimit | null, clave: string) {
 
 // ---------- Gemini ----------
 
-// Modelos a probar en orden. Se pueden cambiar con la variable GEMINI_MODELS
-// (nombres separados por comas). Si uno se queda sin cuota, pasa al siguiente.
-// Flash-Lite va primero porque en el plan gratuito admite muchas más peticiones
-// al día que los Flash normales (500 frente a 20).
-const MODELS = (
-  process.env.GEMINI_MODELS ??
-  "gemini-3.5-flash-lite,gemini-3.8-flash,gemini-3.7-flash,gemini-3.6-flash"
-)
-  .split(",")
-  .map((m) => m.trim())
-  .filter((m, i, arr) => m && arr.indexOf(m) === i); // quita vacíos y duplicados
-
 const MAX_ATTEMPTS_PER_MODEL = 2;
 
 const PROMPT = `Eres un experto en automoción. Identifica el coche de la foto.
@@ -105,51 +106,7 @@ Reglas:
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
-async function callGemini(
-  model: string,
-  apiKey: string,
-  image: string,
-  mimeType: string
-) {
-  return fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-goog-api-key": apiKey,
-      },
-      body: JSON.stringify({
-        contents: [
-          {
-            parts: [
-              { text: PROMPT },
-              { inline_data: { mime_type: mimeType, data: image } },
-            ],
-          },
-        ],
-        generationConfig: {
-          responseMimeType: "application/json",
-          temperature: 0.2,
-          // Los modelos Lite no necesitan (ni siempre admiten) este ajuste
-          ...(model.includes("lite")
-            ? {}
-            : { thinkingConfig: { thinkingLevel: "low" } }),
-        },
-      }),
-    }
-  );
-}
-
 // ---------- Validación de la respuesta de la IA ----------
-
-// Cada campo se normaliza: si Gemini devuelve un tipo raro, se usa un valor
-// por defecto en vez de romper la web.
-const texto = z
-  .union([z.string(), z.number()])
-  .transform((v) => String(v).trim())
-  .catch("");
-const numero = z.coerce.number().catch(0);
 
 const RespuestaSchema = z.object({
   esCoche: z.boolean().catch(false),
@@ -176,17 +133,8 @@ const RespuestaSchema = z.object({
 
 // Devuelve el resultado limpio, o null si la respuesta no sirve
 function interpretar(text: string) {
-  const limpio = text.replace(/```json|```/g, "").trim();
-  const ini = limpio.indexOf("{");
-  const fin = limpio.lastIndexOf("}");
-  if (ini === -1 || fin <= ini) return null;
-
-  let bruto: unknown;
-  try {
-    bruto = JSON.parse(limpio.slice(ini, fin + 1));
-  } catch {
-    return null;
-  }
+  const bruto = extraerJson(text);
+  if (!bruto) return null;
 
   const parsed = RespuestaSchema.safeParse(bruto);
   if (!parsed.success) return null;
@@ -284,7 +232,10 @@ export async function POST(req: Request) {
 
     for (const model of MODELS) {
       for (let attempt = 1; attempt <= MAX_ATTEMPTS_PER_MODEL; attempt++) {
-        const res = await callGemini(model, apiKey, image, mime);
+        const res = await llamarGemini(model, apiKey, [
+          { text: PROMPT },
+          { inline_data: { mime_type: mime, data: image } },
+        ]);
         lastStatus = res.status;
 
         if (res.ok) {
@@ -299,10 +250,7 @@ export async function POST(req: Request) {
             );
           }
 
-          const text: string =
-            data?.candidates?.[0]?.content?.parts
-              ?.map((p: { text?: string }) => p.text ?? "")
-              .join("") ?? "";
+          const text = textoDe(data);
 
           const resultado = interpretar(text);
           if (resultado) {
@@ -311,10 +259,21 @@ export async function POST(req: Request) {
               `modelo:${model}`,
               ...(resultado.esCoche ? [] : ["nocoche"])
             );
-            // Solo los coches identificados tienen enlace para compartir
-            const id =
-              "marca" in resultado ? await guardarResultado(resultado) : undefined;
-            const respuesta = { ...resultado, id };
+            // Solo los coches identificados tienen enlace para compartir y ficha
+            let id: string | undefined;
+            let ficha: string | undefined;
+            if ("marca" in resultado) {
+              const { marca, modelo, confianza } = resultado;
+              [id, ficha] = await Promise.all([
+                guardarResultado(resultado),
+                buscarFicha(marca, modelo),
+              ]);
+              // Crea o puntúa la ficha del modelo sin hacer esperar al usuario
+              if (confianza >= CONFIANZA_MINIMA) {
+                after(() => registrarModelo(marca, modelo));
+              }
+            }
+            const respuesta = { ...resultado, id, ficha };
             return NextResponse.json(
               process.env.NODE_ENV === "production"
                 ? respuesta

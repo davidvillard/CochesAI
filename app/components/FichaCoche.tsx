@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import {
   CarLinearIcon,
@@ -129,6 +130,15 @@ export default function FichaCoche({
           <span>Seguridad {nivel}</span>
         </div>
       </div>
+
+      {r.ficha && (
+        <p className={`${styles.verFicha} ${styles.entra}`} style={delay(1)}>
+          <Link href={r.ficha} className={styles.notaLink}>
+            Ver la ficha completa del {r.marca} {r.modelo}: generaciones, motores y
+            qué revisar antes de comprarlo
+          </Link>
+        </p>
+      )}
 
       {r.notas && (
         <p className={`${styles.notaR} ${styles.entra}`} style={delay(1)}>

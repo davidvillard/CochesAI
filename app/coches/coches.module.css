@@ -1,0 +1,251 @@
+/* ---------- Ficha de modelo ---------- */
+
+.ficha {
+  max-width: 820px;
+  padding-top: 32px;
+  padding-bottom: 56px;
+}
+
+.migas {
+  color: var(--suave);
+  font-size: 0.9375rem;
+}
+
+.migas a {
+  color: var(--color);
+  text-decoration: none;
+}
+
+.migas a:hover {
+  text-decoration: underline;
+}
+
+.cabecera {
+  margin: 20px 0 28px;
+}
+
+.marca {
+  margin: 0;
+  color: var(--color);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.titulo {
+  margin: 4px 0 0;
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: clamp(2.6rem, 8vw, 4.25rem);
+  line-height: 1;
+  letter-spacing: -0.035em;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 16px 0 0;
+}
+
+.resumen {
+  max-width: 65ch;
+  margin: 20px 0 0;
+  color: var(--suave);
+  font-size: 1.15rem;
+}
+
+.bloque {
+  margin-top: 40px;
+}
+
+.bloque > p {
+  max-width: 65ch;
+  margin: 8px 0;
+}
+
+.h2 {
+  margin: 0 0 14px;
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 1.6rem;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+.h3 {
+  margin: 0 0 8px;
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-size: 1.2rem;
+}
+
+.generaciones {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.generaciones li {
+  padding: 16px 20px;
+  border: 1px solid var(--linea);
+  border-radius: 16px;
+  background: var(--superficie);
+}
+
+.generaciones p {
+  margin: 6px 0 0;
+  color: var(--suave);
+}
+
+.anios {
+  margin-left: 10px;
+  color: var(--suave);
+}
+
+.tablaCaja {
+  overflow-x: auto;
+  border: 1px solid var(--linea);
+  border-radius: 16px;
+  background: var(--superficie);
+}
+
+.tabla {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tabla th,
+.tabla td {
+  padding: 12px 18px;
+  border-bottom: 1px solid var(--linea);
+  text-align: left;
+}
+
+.tabla th {
+  color: var(--suave);
+  font-size: 0.9375rem;
+}
+
+.tabla tr:last-child td {
+  border-bottom: 0;
+}
+
+.dosCol {
+  display: grid;
+  gap: 16px;
+}
+
+@media (min-width: 760px) {
+  .dosCol {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.caja {
+  padding: 22px 24px;
+  border: 1px solid var(--linea);
+  border-radius: 20px;
+  background: var(--superficie);
+}
+
+.lista {
+  margin: 0;
+  padding-left: 1.2rem;
+}
+
+.lista li {
+  margin: 6px 0;
+}
+
+.simLink {
+  color: inherit;
+  text-decoration: none;
+}
+
+.simLink:focus-visible {
+  outline: 3px solid var(--color);
+  outline-offset: 2px;
+}
+
+.faq {
+  margin: 0;
+}
+
+.aviso {
+  margin: 48px 0 0;
+  color: var(--suave);
+  font-size: 0.9375rem;
+}
+
+/* ---------- Índice de fichas ---------- */
+
+.indice {
+  max-width: 980px;
+  padding-bottom: 72px;
+}
+
+.vacio {
+  color: var(--suave);
+  text-align: center;
+}
+
+.populares {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: 12px;
+}
+
+.popular {
+  display: grid;
+  gap: 2px;
+  padding: 16px 18px;
+  border: 1px solid var(--linea);
+  border-radius: 16px;
+  background: var(--superficie);
+  color: var(--tinta);
+  text-decoration: none;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.popular:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--sombra);
+}
+
+.popular:focus-visible,
+.modelos a:focus-visible {
+  outline: 3px solid var(--color);
+  outline-offset: 2px;
+}
+
+.popMarca {
+  color: var(--suave);
+  font-size: 0.875rem;
+}
+
+.marcas {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.modelos {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.modelos li {
+  margin: 4px 0;
+}
+
+.modelos a {
+  color: var(--color);
+  text-decoration: none;
+}
+
+.modelos a:hover {
+  text-decoration: underline;
+}

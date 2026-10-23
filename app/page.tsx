@@ -289,6 +289,9 @@ export default function Home() {
             <a href="#preguntas" className={styles.navLink}>
               Preguntas
             </a>
+            <Link href="/coches" className={styles.navLink}>
+              Fichas
+            </Link>
             <Link href="/matricula" className={styles.navLink}>
               Matrícula
             </Link>
@@ -626,6 +629,7 @@ export default function Home() {
             <a href="#como-funciona">Cómo funciona</a>
             <a href="#incluye">Qué incluye</a>
             <a href="#preguntas">Preguntas</a>
+            <Link href="/coches">Fichas de coches</Link>
             <Link href="/matricula">Matrícula y etiqueta</Link>
             <Link href="/privacidad">Privacidad</Link>
             <Link href="/aviso-legal">Aviso legal</Link>

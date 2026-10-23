@@ -1064,3 +1064,8 @@
   box-shadow: var(--sombra);
   text-align: left;
 }
+
+.verFicha {
+  margin: 16px 0 0;
+  font-weight: 600;
+}

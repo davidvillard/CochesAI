@@ -8,6 +8,7 @@ import FichaCoche from "../../components/FichaCoche";
 import { eur } from "../../lib/formato";
 import Compartir from "../../components/Compartir";
 import { leerResultado } from "../../lib/resultados";
+import { buscarFicha } from "../../lib/fichas";
 
 type Props = { params: Promise<{ id: string }> };
 
@@ -35,8 +36,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function ResultadoCompartido({ params }: Props) {
-  const r = await obtener((await params).id);
-  if (!r) notFound();
+  const guardado = await obtener((await params).id);
+  if (!guardado) notFound();
+  // La ficha del modelo puede haberse creado después de compartir el resultado
+  const r = { ...guardado, ficha: await buscarFicha(guardado.marca, guardado.modelo) };
 
   return (
     <MarcoPagina>
