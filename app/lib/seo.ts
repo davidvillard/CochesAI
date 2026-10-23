@@ -1,10 +1,26 @@
 import type { Metadata } from "next";
 
-// Dirección pública de la web. Al pasar a dominio propio basta con definir
-// NEXT_PUBLIC_SITE_URL en Vercel (canonical, sitemap, robots y datos estructurados).
-export const SITE_URL = (
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://cochesai.vercel.app"
-).replace(/\/$/, "");
+// Dirección pública de la web (canonical, sitemap, robots, imágenes de
+// previsualización y datos estructurados). Se detecta sola según dónde se ejecute:
+// - SITE_URL, si se define a mano (para forzar un dominio concreto).
+// - Producción en Vercel: su dominio de producción. Vercel elige el dominio propio
+//   en cuanto se añade al proyecto, o el .vercel.app si no hay ninguno.
+// - Previsualización en Vercel (otras ramas): la URL de esa rama.
+// - En local: http://localhost con el puerto del servidor.
+// Solo funciona en el servidor: en el navegador se usa window.location.origin.
+function urlDelSitio() {
+  const env = process.env;
+  if (env.SITE_URL) return env.SITE_URL;
+  const dominio =
+    env.VERCEL_ENV === "production"
+      ? env.VERCEL_PROJECT_PRODUCTION_URL
+      : env.VERCEL_ENV === "preview"
+        ? (env.VERCEL_BRANCH_URL ?? env.VERCEL_URL)
+        : undefined;
+  return dominio ? `https://${dominio}` : `http://localhost:${env.PORT ?? 3000}`;
+}
+
+export const SITE_URL = urlDelSitio().replace(/\/$/, "");
 
 export const NOMBRE_WEB = "Coches AI";
 
