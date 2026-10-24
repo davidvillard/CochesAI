@@ -102,6 +102,13 @@ export default function AvisoLegal() {
         Si el sitio incluye enlaces a páginas de terceros, no controlamos su
         contenido y no respondemos de él.
       </p>
+      <p>
+        Algunos enlaces son de afiliado y aparecen identificados como tales: si
+        contratas un servicio a través de ellos, podemos recibir una comisión sin que
+        te cueste más. No influyen en las identificaciones ni en las fichas. Al
+        pulsarlos sales de esta web y se aplican las condiciones y la política de
+        privacidad del tercero.
+      </p>
 
       <h2>8. Protección de datos</h2>
       <p>

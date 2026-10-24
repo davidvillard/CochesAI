@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   CameraLinearIcon,
   UploadLinearIcon,
@@ -14,6 +14,7 @@ import {
 import styles from "../page.module.css";
 import FichaCoche from "./FichaCoche";
 import Compartir from "./Compartir";
+import Afiliados from "./Afiliados";
 import { ENTRADA } from "./BotonFoto";
 import type { Resultado } from "../lib/resultados";
 
@@ -60,7 +61,17 @@ export default function Identificador() {
   const [arrastrando, setArrastrando] = useState(false);
   const [voto, setVoto] = useState<"si" | "no" | null>(null);
 
-  const r = result && result.esCoche ? result : null;
+  // Enlace a la ficha que llega después del resultado (se genera en segundo plano)
+  const [fichaTardia, setFichaTardia] = useState<string | null>(null);
+
+  const identificado = result && result.esCoche ? result : null;
+  const r = useMemo(
+    () =>
+      identificado && !identificado.ficha && fichaTardia
+        ? { ...identificado, ficha: fichaTardia }
+        : identificado,
+    [identificado, fichaTardia]
+  );
   const noCoche = result !== null && !result.esCoche;
 
   // Avanza los pasos mientras analiza
@@ -77,8 +88,38 @@ export default function Identificador() {
 
   // Foco en el nombre del coche al llegar el resultado
   useEffect(() => {
-    if (r) tituloRef.current?.focus({ preventScroll: true });
-  }, [r]);
+    if (identificado) tituloRef.current?.focus({ preventScroll: true });
+  }, [identificado]);
+
+  // Si el coche aún no tenía ficha, pregunta cada 3 s si ya se ha creado.
+  // Para cuando aparece, cuando el servidor dice que no se está generando
+  // o tras 45 s, y también si llega otro resultado.
+  useEffect(() => {
+    if (!identificado || identificado.ficha) return;
+    const { marca, modelo } = identificado;
+    let intentos = 0;
+    let parar = false;
+    const id = setInterval(async () => {
+      if (parar || ++intentos > 15) return clearInterval(id);
+      try {
+        const q = new URLSearchParams({ marca, modelo });
+        const res = await fetch(`/api/ficha?${q}`);
+        const data: { ficha?: string; pendiente: boolean } = await res.json();
+        if (parar) return;
+        if (data.ficha) setFichaTardia(data.ficha);
+        if (data.ficha || !data.pendiente) {
+          parar = true;
+          clearInterval(id);
+        }
+      } catch {
+        // sin red: lo intenta en la siguiente vuelta
+      }
+    }, 3000);
+    return () => {
+      parar = true;
+      clearInterval(id);
+    };
+  }, [identificado]);
 
   // Libera la URL de la foto al salir
   useEffect(() => {
@@ -104,6 +145,7 @@ export default function Identificador() {
     setUltimo(file);
     setError(null);
     setResult(null);
+    setFichaTardia(null);
     setVoto(null);
 
     if (previewRef.current) URL.revokeObjectURL(previewRef.current);
@@ -214,15 +256,15 @@ export default function Identificador() {
           {!preview ? (
             <>
               <span className={styles.chip}>
-                <span className={styles.punto} /> Reconocimiento de coches con
-                IA
+                <span className={styles.punto} /> Sin descargar ninguna app
               </span>
               <h1 className={styles.h1}>
-                Sube una foto y descubre qué coche es
+                Identifica un coche por foto
               </h1>
               <p className={styles.sub}>
-                Marca, modelo, ficha técnica, precio aproximado y alternativas.
-                Gratis y sin registro.
+                Sube la foto y descubre qué coche es: marca, modelo, ficha técnica,
+                precio de segunda mano y alternativas. Desde el navegador, gratis y
+                sin registro.
               </p>
 
               <div className={styles.zona}>
@@ -353,6 +395,7 @@ export default function Identificador() {
                   <>
                     <FichaCoche r={r} tituloRef={tituloRef} />
                     <Compartir r={r} style={delay(11)} />
+                    <Afiliados />
                     <div className={`${styles.voto} ${styles.entra}`} style={delay(12)}>
                       {voto ? (
                         <p className={styles.votoGracias} role="status">

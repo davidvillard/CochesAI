@@ -171,7 +171,7 @@ export default function FichaCoche({
             {eur(min)} a {eur(max)}
           </p>
           <p className={styles.precioX}>
-            {r.precioNuevoEurAprox ? `Nuevo: ${r.precioNuevoEurAprox}. ` : ""}
+            {r.precioNuevoEurAprox ? `Nuevo: ${r.precioNuevoEurAprox.replace(/\.$/, "")}. ` : ""}
             Estimación de la IA, no es una tasación.
           </p>
         </div>

@@ -1,66 +1,6 @@
-.pagina {
-  --fondo: #f7f8fc;
-  --tinta: #0e1220;
-  --suave: #5a6275;
-  --linea: #e4e7f0;
-  --color: #2d5bff;
-  --tenue: #eef2ff;
-
-  min-height: 100dvh;
-  background: var(--fondo);
-  color: var(--tinta);
-  font-family: var(--font-text), system-ui, sans-serif;
+.texto {
   font-size: 1.0625rem;
   line-height: 1.65;
-}
-
-.cab {
-  border-bottom: 1px solid var(--linea);
-  background: #fff;
-}
-
-.cabIn {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  max-width: 720px;
-  height: 64px;
-  margin: 0 auto;
-  padding: 0 20px;
-}
-
-.logo {
-  display: flex;
-  align-items: center;
-  font-size: 0;
-  text-decoration: none;
-}
-
-.logoImagen {
-  display: block;
-  width: 68px;
-  height: auto;
-}
-
-.volver {
-  color: var(--color);
-  font-weight: 600;
-  text-decoration: none;
-}
-
-.volver:hover {
-  text-decoration: underline;
-}
-
-.logo:focus-visible,
-.volver:focus-visible,
-.pieEnlace:focus-visible {
-  outline: 3px solid var(--color);
-  outline-offset: 3px;
-  border-radius: 6px;
-}
-
-.texto {
   max-width: 720px;
   margin: 0 auto;
   padding: 48px 20px 72px;
@@ -151,33 +91,3 @@
   font-size: 0.9375rem;
 }
 
-.pie {
-  border-top: 1px solid var(--linea);
-  background: #fff;
-}
-
-.pieIn {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 8px 24px;
-  max-width: 720px;
-  margin: 0 auto;
-  padding: 24px 20px 40px;
-  color: var(--suave);
-  font-size: 0.9375rem;
-}
-
-.pieLinks {
-  display: flex;
-  gap: 20px;
-}
-
-.pieEnlace {
-  color: var(--suave);
-  text-decoration: none;
-}
-
-.pieEnlace:hover {
-  color: var(--color);
-}

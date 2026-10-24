@@ -7,6 +7,7 @@ import MarcoPagina from "../../components/MarcoPagina";
 import FichaCoche from "../../components/FichaCoche";
 import { eur } from "../../lib/formato";
 import Compartir from "../../components/Compartir";
+import Afiliados from "../../components/Afiliados";
 import { leerResultado } from "../../lib/resultados";
 import { buscarFicha } from "../../lib/fichas";
 import { metadatos } from "../../lib/seo";
@@ -54,6 +55,7 @@ export default async function ResultadoCompartido({ params }: Props) {
           <div className={base.compartidaFicha}>
             <FichaCoche r={r} />
             <Compartir r={r} />
+            <Afiliados />
           </div>
 
           <div className={base.acciones}>

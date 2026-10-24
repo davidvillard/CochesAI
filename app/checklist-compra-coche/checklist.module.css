@@ -1,0 +1,157 @@
+.lista {
+  max-width: 820px;
+  margin: 36px auto 0;
+  text-align: left;
+}
+
+.barra {
+  position: sticky;
+  top: 88px;
+  z-index: 5;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 16px;
+  padding: 14px 18px;
+  border: 1px solid var(--linea);
+  border-radius: 18px;
+  background: var(--superficie);
+  box-shadow: var(--sombra);
+}
+
+.progreso {
+  margin: 0;
+}
+
+.medidor {
+  flex: 1 1 140px;
+  height: 8px;
+  overflow: hidden;
+  border-radius: 99px;
+  background: var(--tenue);
+}
+
+.medidor span {
+  display: block;
+  height: 100%;
+  border-radius: 99px;
+  background: var(--ok);
+  transition: width 0.3s var(--ease);
+}
+
+.acciones {
+  display: flex;
+  gap: 8px;
+}
+
+.acciones button {
+  min-height: 38px;
+  padding: 0 14px;
+  border: 1px solid var(--linea);
+  border-radius: 10px;
+  background: var(--superficie);
+  color: var(--tinta);
+  font: 600 0.9375rem var(--font-text), system-ui, sans-serif;
+  cursor: pointer;
+}
+
+.acciones button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.acciones button:focus-visible,
+.punto input:focus-visible,
+.enlace:focus-visible {
+  outline: 3px solid var(--color);
+  outline-offset: 2px;
+}
+
+.grupo {
+  margin-top: 28px;
+}
+
+.grupoT {
+  margin: 0 0 10px;
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-size: 1.4rem;
+  letter-spacing: -0.02em;
+}
+
+.puntos {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.puntos li {
+  padding: 12px 16px;
+  border: 1px solid var(--linea);
+  border-radius: 14px;
+  background: var(--superficie);
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.puntos li.hecho {
+  border-color: #b9e6cb;
+  background: #f1fbf5;
+}
+
+.punto {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.punto input {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  margin-top: 2px;
+  accent-color: var(--ok);
+}
+
+.texto {
+  display: block;
+  font-weight: 600;
+}
+
+.hecho .texto {
+  color: var(--suave);
+  text-decoration: line-through;
+}
+
+.ayuda {
+  display: block;
+  margin-top: 2px;
+  color: var(--suave);
+  font-size: 0.9375rem;
+}
+
+.enlace {
+  display: inline-block;
+  margin: 6px 0 0 32px;
+  color: var(--color);
+  font-weight: 600;
+  font-size: 0.9375rem;
+  text-decoration: none;
+}
+
+.enlace:hover {
+  text-decoration: underline;
+}
+
+@media print {
+  .barra .acciones,
+  .medidor,
+  .enlace {
+    display: none;
+  }
+  .barra {
+    position: static;
+    box-shadow: none;
+  }
+}

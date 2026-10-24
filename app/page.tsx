@@ -1,5 +1,4 @@
 import Link from "next/link";
-import NextImage from "next/image";
 import {
   CameraLinearIcon,
   CheckReadLinearIcon,
@@ -10,14 +9,28 @@ import {
   MagnifierLinearIcon,
   NotesLinearIcon,
   ChatDotsLinearIcon,
+  ArrowRightLinearIcon,
 } from "@solar-icons/react";
 import styles from "./page.module.css";
 import Identificador from "./components/Identificador";
+import Cabecera from "./components/Cabecera";
 import BotonFoto from "./components/BotonFoto";
 import Revelar from "./components/Revelar";
 
 const PREGUNTAS = [
-  { p: "¿Es gratis?", r: "De momento sí, y sin registro." },
+  {
+    p: "¿Cómo saber qué coche es el de una foto?",
+    r: "Sube la foto aquí o hazla con la cámara (también vale una captura de un anuncio o de redes). La IA reconoce la marca, el modelo y la generación en unos segundos y te muestra su ficha y su precio de segunda mano.",
+  },
+  {
+    p: "¿Tengo que descargar una app?",
+    r: "No. A diferencia de las apps para identificar coches, funciona directamente en el navegador del móvil o del ordenador, sin instalar nada, sin registro y sin email.",
+  },
+  {
+    p: "¿Sirve para autos y carros de Latinoamérica?",
+    r: "Sí. Reconoce coches, autos o carros de cualquier marca y país a partir de una foto. El precio de segunda mano que muestra es una estimación para España.",
+  },
+  { p: "¿Es gratis?", r: "De momento sí, y sin registro ni email." },
   {
     p: "¿Cómo de fiable es?",
     r: "Suele acertar la marca y el modelo cuando el coche se ve bien. La versión exacta, el motor y el precio son estimaciones, por eso cada resultado indica su nivel de seguridad.",
@@ -31,8 +44,8 @@ const PREGUNTAS = [
     r: "Se envía a Google Gemini para analizarla y nuestro servidor no la guarda. En el plan gratuito, Google puede usar las imágenes para mejorar sus modelos.",
   },
   {
-    p: "¿Puedo buscar por matrícula?",
-    r: "Sí: en la sección «Matrícula y etiqueta» calculas la fecha de matriculación aproximada de un coche y su etiqueta ambiental de la DGT, gratis.",
+    p: "¿Puedo saber qué coche es por la matrícula?",
+    r: "La matrícula no indica el modelo, pero sí su fecha de matriculación aproximada y su etiqueta ambiental: puedes calcularlas en «Matrícula y etiqueta». Para saber el modelo, lo más rápido es hacerle una foto.",
   },
 ];
 
@@ -59,61 +72,25 @@ export default function Home() {
       />
       <Revelar />
 
-      <header className={styles.cab}>
-        <div className={`${styles.cont} ${styles.cabIn}`}>
-          <a href="#identificador" className={styles.logo}>
-            <NextImage
-              className={styles.logoImagen}
-              src="/CochesAI-Logo-Completo.png"
-              alt="Coches AI"
-              width={122}
-              height={101}
-              priority
-            />
-          </a>
-          <nav className={styles.nav} aria-label="Principal">
-            <a href="#como-funciona" className={styles.navLink}>
-              Cómo funciona
-            </a>
-            <a href="#incluye" className={styles.navLink}>
-              Qué incluye
-            </a>
-            <a href="#preguntas" className={styles.navLink}>
-              Preguntas
-            </a>
-            <Link href="/coches" className={styles.navLink}>
-              Fichas
-            </Link>
-            <Link href="/matricula" className={styles.navLink}>
-              Matrícula
-            </Link>
-            <BotonFoto
-              tipo="galeria"
-              className={`${styles.btn} ${styles.btnP} ${styles.btnS}`}
-            >
-              Subir foto
-            </BotonFoto>
-          </nav>
-        </div>
-      </header>
+      <Cabecera enPortada />
 
       <main>
         <Identificador />
 
         <section id="como-funciona" className={styles.sec}>
           <div className={`${styles.cont} ${styles.revelar}`} data-reveal>
-            <span className={styles.eyebrow}>Tres pasos</span>
-            <h2 className={styles.secTit}>De la foto a la ficha en segundos</h2>
+            <span className={styles.eyebrow}>Tres pasos, sin instalar nada</span>
+            <h2 className={styles.secTit}>Cómo identificar un coche por foto</h2>
             <div className={`${styles.rej} ${styles.rej3}`}>
               {[
                 {
                   t: "Sube una foto",
-                  x: "Hazla ahora o elige una de tu galería. Funciona con fotos de la calle o de anuncios.",
+                  x: "Hazla ahora o elige una de tu galería, desde el móvil o el ordenador. Funciona con fotos de la calle, de anuncios o capturas.",
                   Icon: CameraLinearIcon,
                 },
                 {
                   t: "La IA lo identifica",
-                  x: "Analiza la forma, los faros y las proporciones para reconocer marca, modelo y generación.",
+                  x: "Reconoce el coche por su forma, sus faros y sus proporciones, y busca el modelo y la generación exactos.",
                   Icon: ScannerLinearIcon,
                 },
                 {
@@ -202,7 +179,7 @@ export default function Home() {
             <span className={styles.eyebrow}>Más herramientas</span>
             <h2 className={styles.secTit}>¿Vas a comprar un coche de segunda mano?</h2>
             <div className={`${styles.rej} ${styles.rej4}`}>
-              <Link href="/coches" className={`${styles.tarj} ${styles.span2} ${styles.tarjLink}`}>
+              <Link href="/coches" className={`${styles.tarj} ${styles.tarjLink}`}>
                 <span className={styles.specIc}>
                   <NotesLinearIcon size={24} />
                 </span>
@@ -211,8 +188,11 @@ export default function Home() {
                   Precio de segunda mano, generaciones, motores, puntos débiles y qué
                   revisar antes de comprar cada modelo.
                 </p>
+                <span className={styles.tarjAccion}>
+                  Ver fichas <ArrowRightLinearIcon size={18} />
+                </span>
               </Link>
-              <Link href="/matricula" className={`${styles.tarj} ${styles.span2} ${styles.tarjLink}`}>
+              <Link href="/matricula" className={`${styles.tarj} ${styles.tarjLink}`}>
                 <span className={styles.specIc}>
                   <MagnifierLinearIcon size={24} />
                 </span>
@@ -221,8 +201,41 @@ export default function Home() {
                   Fecha de matriculación aproximada y etiqueta ambiental de la DGT a
                   partir de la matrícula.
                 </p>
+                <span className={styles.tarjAccion}>
+                  Consultar <ArrowRightLinearIcon size={18} />
+                </span>
+              </Link>
+              <Link href="/comparar" className={`${styles.tarj} ${styles.tarjLink}`}>
+                <span className={styles.specIc}>
+                  <UsersGroupTwoRoundedLinearIcon size={24} />
+                </span>
+                <h3 className={styles.tarjTit}>Comparar coches</h3>
+                <p className={styles.tarjTxt}>
+                  Dos modelos lado a lado: precio, motores, etiqueta y puntos débiles.
+                </p>
+                <span className={styles.tarjAccion}>
+                  Comparar coches <ArrowRightLinearIcon size={18} />
+                </span>
+              </Link>
+              <Link href="/calculadora-itp" className={`${styles.tarj} ${styles.tarjLink}`}>
+                <span className={styles.specIc}>
+                  <TagLinearIcon size={24} />
+                </span>
+                <h3 className={styles.tarjTit}>Calculadora de ITP</h3>
+                <p className={styles.tarjTxt}>
+                  Cuánto pagarás de impuesto al comprárselo a un particular en tu
+                  comunidad.
+                </p>
+                <span className={styles.tarjAccion}>
+                  Calcular el ITP <ArrowRightLinearIcon size={18} />
+                </span>
               </Link>
             </div>
+            <p style={{ marginTop: 28, textAlign: "center" }}>
+              <Link href="/herramientas" className={`${styles.btn} ${styles.btnP}`}>
+                Ver todas las herramientas
+              </Link>
+            </p>
           </div>
         </section>
 
@@ -270,6 +283,7 @@ export default function Home() {
             <a href="#preguntas">Preguntas</a>
             <Link href="/coches">Fichas de coches</Link>
             <Link href="/matricula">Matrícula y etiqueta</Link>
+            <Link href="/herramientas">Herramientas</Link>
             <Link href="/privacidad">Privacidad</Link>
             <Link href="/aviso-legal">Aviso legal</Link>
           </nav>

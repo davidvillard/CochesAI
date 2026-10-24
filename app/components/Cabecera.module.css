@@ -1,0 +1,230 @@
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ---------- Escritorio ---------- */
+
+.escritorio {
+  display: none;
+  align-items: center;
+  gap: 4px;
+  margin-right: 8px;
+}
+
+@media (min-width: 860px) {
+  .escritorio {
+    display: flex;
+  }
+}
+
+.enlace {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--suave);
+  font: 500 1rem var(--font-text), system-ui, sans-serif;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.enlace:hover,
+.enlace[aria-expanded="true"] {
+  background: var(--tenue);
+  color: var(--color);
+}
+
+.enlace[aria-current="page"],
+.activo {
+  color: var(--tinta);
+  font-weight: 600;
+}
+
+.enlace:focus-visible,
+.opcion:focus-visible,
+.hamburguesa:focus-visible,
+.movilEnlace:focus-visible {
+  outline: 3px solid var(--color);
+  outline-offset: 2px;
+}
+
+.flecha {
+  transition: transform 0.25s var(--ease);
+}
+
+.enlace[aria-expanded="true"] .flecha {
+  transform: rotate(180deg);
+}
+
+.desplegable {
+  position: relative;
+}
+
+.panel {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  z-index: 30;
+  display: grid;
+  gap: 4px;
+  /* Dos columnas solo si caben con holgura; si no, una. Nunca más ancho que la ventana */
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  width: min(600px, calc(100vw - 32px));
+  padding: 8px;
+  border: 1px solid var(--linea);
+  border-radius: 18px;
+  background: var(--superficie);
+  box-shadow: var(--sombra);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-6px) scale(0.98);
+  transform-origin: top right;
+  transition: opacity 0.18s var(--ease), transform 0.22s var(--ease),
+    visibility 0s linear 0.22s;
+}
+
+.panel[data-abierto="true"] {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition: opacity 0.18s var(--ease), transform 0.22s var(--ease), visibility 0s;
+}
+
+.opcion {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  color: var(--tinta);
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+.opcion:hover,
+.opcion[aria-current="page"] {
+  background: var(--tenue);
+}
+
+.opcionIc {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: var(--tenue);
+  color: var(--color);
+}
+
+.opcion:hover .opcionIc {
+  background: var(--superficie);
+}
+
+.opcionT {
+  display: block;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.opcionX {
+  display: block;
+  color: var(--suave);
+  font-size: 0.875rem;
+}
+
+/* ---------- Móvil ---------- */
+
+.hamburguesa {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--linea);
+  border-radius: 12px;
+  background: var(--superficie);
+  color: var(--tinta);
+  cursor: pointer;
+}
+
+@media (min-width: 860px) {
+  .hamburguesa,
+  .movil {
+    display: none;
+  }
+}
+
+/* Se despliega animando la altura (0fr -> 1fr) */
+.movil {
+  display: grid;
+  grid-template-rows: 0fr;
+  border-bottom: 1px solid transparent;
+  transition: grid-template-rows 0.3s var(--ease), border-color 0.3s;
+}
+
+.movil[data-abierto="true"] {
+  grid-template-rows: 1fr;
+  border-bottom-color: var(--linea);
+}
+
+.movilIn {
+  display: grid;
+  gap: 4px;
+  min-height: 0;
+  overflow: hidden;
+  padding: 0 20px;
+  opacity: 0;
+  transition: opacity 0.2s var(--ease), padding 0.3s var(--ease);
+}
+
+.movil[data-abierto="true"] .movilIn {
+  padding: 8px 20px 20px;
+  opacity: 1;
+}
+
+.movilEnlace {
+  padding: 12px;
+  border-radius: 12px;
+  color: var(--tinta);
+  font-weight: 600;
+  font-size: 1.0625rem;
+  text-decoration: none;
+}
+
+.movilEnlace:hover,
+.movilEnlace[aria-current="page"] {
+  background: var(--tenue);
+}
+
+.movilGrupo {
+  margin: 12px 12px 4px;
+  color: var(--suave);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.todas {
+  grid-column: 1 / -1;
+  padding: 10px 12px 6px;
+  border-top: 1px solid var(--linea);
+  color: var(--color);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.todas:hover {
+  text-decoration: underline;
+}
+
+.todas:focus-visible {
+  outline: 3px solid var(--color);
+  outline-offset: 2px;
+}

@@ -265,3 +265,63 @@
   outline: 3px solid var(--color);
   outline-offset: 2px;
 }
+
+/* ---------- Fallos comunes ---------- */
+
+.intro {
+  max-width: 65ch;
+  margin: 0 0 14px;
+  color: var(--suave);
+}
+
+.fallos {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: fallo;
+}
+
+.fallo {
+  position: relative;
+  padding: 16px 20px 16px 58px;
+  border: 1px solid var(--linea);
+  border-left: 4px solid var(--aviso);
+  border-radius: 16px;
+  background: var(--superficie);
+  counter-increment: fallo;
+}
+
+.fallo::before {
+  content: counter(fallo);
+  position: absolute;
+  top: 16px;
+  left: 18px;
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #fff4e5;
+  color: #9a5800;
+  font-weight: 700;
+  font-size: 0.875rem;
+}
+
+.falloT {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.afecta {
+  margin: 4px 0 0;
+  color: var(--color-osc);
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+.falloX {
+  margin: 6px 0 0;
+  color: var(--suave);
+}

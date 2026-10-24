@@ -32,27 +32,27 @@ export const metadata: Metadata = {
     icon: "/CochesAI-Logo.svg",
   },
   title: {
-    default: "¿Qué coche es? Identifica un coche por foto gratis | Coches AI",
+    default: "Identificar coche por foto gratis y sin descargar app | Coches AI",
     template: "%s | Coches AI",
   },
   description:
-    "Sube una foto de un coche y descubre su marca, modelo y generación, su ficha técnica y su precio de segunda mano en España. Gratis y sin registro.",
+    "Reconoce cualquier coche por foto desde el navegador, sin instalar apps: descubre qué modelo es, su ficha técnica y su precio de segunda mano. Gratis.",
   alternates: { canonical: "/" },
   openGraph: {
     type: "website",
     locale: "es_ES",
     url: "/",
     siteName: "Coches AI",
-    title: "Coches AI: identifica un coche por foto",
+    title: "Identificar coche por foto gratis | Coches AI",
     description:
-      "Reconoce coches con IA y consulta su ficha técnica, precio aproximado y alternativas.",
+      "Sube la foto de un coche y descubre qué modelo es, su ficha técnica y su precio de segunda mano.",
     images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: "Coches AI: identifica un coche por foto" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Coches AI: identifica un coche por foto",
+    title: "Identificar coche por foto gratis | Coches AI",
     description:
-      "Reconoce coches con IA y consulta su ficha técnica, precio aproximado y alternativas.",
+      "Sube la foto de un coche y descubre qué modelo es, su ficha técnica y su precio de segunda mano.",
     images: ["/opengraph-image"],
   },
   robots: {
@@ -91,7 +91,15 @@ export default function RootLayout({
     name: "Coches AI",
     url: SITE_URL,
     description:
-      "Servicio gratuito para identificar coches a partir de una foto y consultar datos orientativos sobre ellos.",
+      "Web gratuita para identificar un coche por foto sin instalar ninguna app: reconoce la marca, el modelo y la generación, y muestra su ficha y su precio de segunda mano.",
+    browserRequirements: "Funciona en cualquier navegador, sin instalación",
+    featureList: [
+      "Identificar coche por foto",
+      "Buscar el modelo de un coche por foto",
+      "Precio de segunda mano estimado",
+      "Año y etiqueta ambiental por matrícula",
+      "Calculadora de ITP",
+    ],
     applicationCategory: "AutomotiveApplication",
     operatingSystem: "Web",
     offers: { "@type": "Offer", price: "0", priceCurrency: "EUR" },

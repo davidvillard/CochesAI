@@ -1071,9 +1071,34 @@
 }
 
 .tarjLink {
-  display: block;
+  display: flex;
+  flex-direction: column;
   color: inherit;
   text-decoration: none;
+}
+
+.tarjLink:hover {
+  border-color: var(--color);
+}
+
+/* "Botón" al pie de cada tarjeta para que se vea que lleva a otra página */
+.tarjAccion {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  gap: 6px;
+  margin-top: auto;
+  padding-top: 18px;
+  color: var(--color);
+  font-weight: 600;
+}
+
+.tarjAccion svg {
+  transition: transform 0.2s var(--ease);
+}
+
+.tarjLink:hover .tarjAccion svg {
+  transform: translateX(4px);
 }
 
 .tarjLink:focus-visible {

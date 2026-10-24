@@ -5,7 +5,7 @@ import styles from "./matricula.module.css";
 import MarcoPagina from "../components/MarcoPagina";
 import { metadatos } from "../lib/seo";
 import ConsultaMatricula from "./ConsultaMatricula";
-import { PRIMERA_DEL_ANIO, ULTIMO_MES, nombreMes } from "../lib/matricula";
+import { LETRAS_USADAS, PRIMERA_DEL_ANIO, ULTIMO_MES, nombreMes } from "../lib/matricula";
 
 export const metadata: Metadata = metadatos({
   titulo: "¿De qué año es una matrícula? Fecha y etiqueta DGT",
@@ -91,12 +91,25 @@ export default function Matricula() {
                 {PRIMERA_DEL_ANIO.map(({ anio, primera }) => (
                   <tr key={anio}>
                     <td>{anio === 2000 ? "2000 (septiembre)" : anio}</td>
-                    <td>0000 {primera}</td>
+                    <td>
+                      <Link href={`/matricula/${primera[0].toLowerCase()}`}>0000 {primera}</Link>
+                    </td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
+          <p className={styles.otras}>
+            Fechas exactas por letra:{" "}
+            {LETRAS_USADAS.map((l, i) => (
+              <span key={l}>
+                {i > 0 && " · "}
+                <Link href={`/matricula/${l.toLowerCase()}`}>Matrícula {l}</Link>
+              </span>
+            ))}
+            {" · "}
+            <Link href="/matricula/provinciales">Provinciales</Link>
+          </p>
         </div>
       </section>
 

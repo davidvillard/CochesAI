@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import base from "../page.module.css";
+import Afiliados from "../components/Afiliados";
 import styles from "./matricula.module.css";
 import {
   COMBUSTIBLES,
@@ -149,6 +150,7 @@ export default function ConsultaMatricula() {
               </a>
               .
             </p>
+            <Afiliados titulo="¿Vas a comprar este coche?" />
           </div>
         )}
       </div>

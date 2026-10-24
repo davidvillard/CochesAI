@@ -1,0 +1,135 @@
+.form {
+  display: grid;
+  gap: 16px;
+  align-items: end;
+  max-width: 760px;
+  margin: 36px auto 0;
+  padding: 24px;
+  border: 1px solid var(--linea);
+  border-radius: 24px;
+  background: var(--superficie);
+  box-shadow: var(--sombra);
+  text-align: left;
+}
+
+@media (min-width: 760px) {
+  .form {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+  }
+}
+
+.campo {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+
+.etiqueta {
+  color: var(--suave);
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+.select {
+  width: 100%;
+  min-height: 50px;
+  padding: 0 14px;
+  border: 1px solid var(--linea);
+  border-radius: 14px;
+  background: var(--superficie);
+  color: var(--tinta);
+  font: 500 1rem var(--font-text), system-ui, sans-serif;
+}
+
+.select:focus-visible {
+  outline: 3px solid var(--color);
+  outline-offset: 2px;
+}
+
+.vacio {
+  margin-top: 32px;
+  color: var(--suave);
+}
+
+.resultado {
+  max-width: 980px;
+  padding-bottom: 72px;
+}
+
+.tablaCaja {
+  overflow-x: auto;
+  border: 1px solid var(--linea);
+  border-radius: 20px;
+  background: var(--superficie);
+}
+
+.tabla {
+  width: 100%;
+  min-width: 560px;
+  border-collapse: collapse;
+}
+
+.tabla th,
+.tabla td {
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--linea);
+  text-align: left;
+  vertical-align: top;
+}
+
+.tabla tbody tr:last-child th,
+.tabla tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.tabla thead th {
+  width: 40%;
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-size: 1.2rem;
+}
+
+.tabla thead a {
+  color: var(--tinta);
+  text-decoration: none;
+}
+
+.tabla thead a:hover {
+  color: var(--color);
+}
+
+.tabla tbody th {
+  width: 20%;
+  color: var(--suave);
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+.lista {
+  margin: 0;
+  padding-left: 1.1rem;
+}
+
+.lista li {
+  margin: 2px 0;
+}
+
+.nota {
+  margin: 20px 0 0;
+  color: var(--suave);
+  font-size: 0.9375rem;
+}
+
+.crece {
+  max-width: 760px;
+  margin: 18px auto 0;
+  padding: 14px 18px;
+  border-radius: 16px;
+  background: var(--tenue);
+  color: var(--suave);
+  font-size: 0.9375rem;
+  text-align: left;
+}
+
+.crece strong {
+  color: var(--tinta);
+}

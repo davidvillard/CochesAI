@@ -35,12 +35,14 @@ function resumir(fecha: string, datos: Record<string, number> | null) {
   const d = datos ?? {};
   const num = (campo: string) => Number(d[campo]) || 0;
 
-  const modelos: Record<string, number> = {};
-  for (const [campo, valor] of Object.entries(d)) {
-    if (campo.startsWith("modelo:")) {
-      modelos[campo.slice("modelo:".length)] = Number(valor) || 0;
+  // Campos "prefijo:nombre" agrupados: modelo de Gemini y clics de afiliado
+  const grupo = (prefijo: string) => {
+    const r: Record<string, number> = {};
+    for (const [campo, valor] of Object.entries(d)) {
+      if (campo.startsWith(prefijo)) r[campo.slice(prefijo.length)] = Number(valor) || 0;
     }
-  }
+    return r;
+  };
 
   return {
     fecha,
@@ -49,7 +51,8 @@ function resumir(fecha: string, datos: Record<string, number> | null) {
     errores: num("errores"),
     rechazadosPorIp: num("rechazados_ip"),
     rechazadosPorTopeDiario: num("rechazados_global"),
-    modelos,
+    modelos: grupo("modelo:"),
+    clicsAfiliado: grupo("afiliado:"),
   };
 }
 

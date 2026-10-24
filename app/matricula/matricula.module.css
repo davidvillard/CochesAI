@@ -230,3 +230,34 @@
   font: 700 1rem ui-monospace, "Cascadia Mono", Menlo, monospace;
   letter-spacing: 0.06em;
 }
+
+/* ---------- Páginas por letra ---------- */
+
+.letras {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.otras {
+  max-width: 720px;
+  margin: 20px auto 0;
+  color: var(--suave);
+  text-align: center;
+}
+
+.otras a {
+  color: var(--color);
+  font-weight: 600;
+}
+
+.tabla td a {
+  color: var(--color);
+  text-decoration: none;
+}
+
+.tabla td a:hover {
+  text-decoration: underline;
+}

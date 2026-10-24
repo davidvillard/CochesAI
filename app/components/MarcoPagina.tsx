@@ -1,36 +1,12 @@
 import Link from "next/link";
-import NextImage from "next/image";
+import Cabecera from "./Cabecera";
 import styles from "../page.module.css";
 
-// Cabecera y pie de las páginas secundarias (matrícula, resultados compartidos)
+// Cabecera y pie de las páginas secundarias (todas menos la portada)
 export default function MarcoPagina({ children }: { children: React.ReactNode }) {
   return (
     <div className={styles.app}>
-      <header className={styles.cab}>
-        <div className={`${styles.cont} ${styles.cabIn}`}>
-          <Link href="/" className={styles.logo}>
-            <NextImage
-              className={styles.logoImagen}
-              src="/CochesAI-Logo-Completo.png"
-              alt="Coches AI"
-              width={122}
-              height={101}
-              priority
-            />
-          </Link>
-          <nav className={styles.nav} aria-label="Principal">
-            <Link href="/coches" className={styles.navLink}>
-              Fichas
-            </Link>
-            <Link href="/matricula" className={styles.navLink}>
-              Matrícula y etiqueta
-            </Link>
-            <Link href="/" className={`${styles.btn} ${styles.btnP} ${styles.btnS}`}>
-              Identificar por foto
-            </Link>
-          </nav>
-        </div>
-      </header>
+      <Cabecera />
 
       <main>{children}</main>
 
@@ -43,6 +19,7 @@ export default function MarcoPagina({ children }: { children: React.ReactNode })
             <Link href="/">Identificar por foto</Link>
             <Link href="/coches">Fichas de coches</Link>
             <Link href="/matricula">Matrícula y etiqueta</Link>
+            <Link href="/herramientas">Herramientas</Link>
             <Link href="/privacidad">Privacidad</Link>
             <Link href="/aviso-legal">Aviso legal</Link>
           </nav>

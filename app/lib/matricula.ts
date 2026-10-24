@@ -5,33 +5,34 @@
 // Es una tabla recopilada por terceros (no oficial), así que la fecha es aproximada.
 // Para actualizarla, añade al final los meses nuevos (fuente: seisenlinea.com/edad-matriculas).
 const TABLA = `
-2000-09 BBB BCD BCY BDR
-2001-01 BFJ BGF BHG BJC BKB BLC BMF BMW BNL BPG BRB BRT
-2002-01 BSL BTF BTZ BVW BWT BXP BYP BZF BZV CBP CCH CDC
-2003-01 CDV CFM CGJ CHF CJC CKB CLD CLV CMM CNK CPF CRC
-2004-01 CRV CSS CTT CVR CWR CXT CYY CZP DBJ DCH DDG DFF
-2005-01 DFZ DGX DHZ DKB DLD DMJ DNP DPK DRG DSC DTB DVB
-2006-01 DVW DWT DXZ DYY FBC FCJ FDP FFK FGF FHD FJD FKC
-2007-01 FKY FLV FNB FNZ FRC FSJ FTP FVJ FWC FXB FXY FYY
-2008-01 FZR GBN GCK GDH GFC GFY GGV GHG GHT GJJ GJV GKH
-2009-01 GKS GLC GLP GMC GMN GNF GNY GPJ GPW GRM GSC GSR
-2010-01 GTC GTS GVM GWC GWV GXP GYD GYM GYX GZJ GZT HBG
-2011-01 HBP HCB HCR HDC HDR HFF HFT HGC HGM HGX HHH HHT
-2012-01 HJC HJM HKB HKL HKX HLK HLW HMD HML HMT HNC HNK
-2013-01 HNT HPC HPN HPY HRK HRX HSK HSS HSZ HTK HTV HVF
-2014-01 HVN HVZ HWM HXB HXN HYD HYT HZB HZL HZZ JBL JBY
-2015-01 JCK JCY JDR JFG JFX JGR JHJ JHT JJH JJW JKK JKZ
-2016-01 JLN JMF JMY JNR JPK JRG JRZ JSK JTB JTN JVH JVZ
-2017-01 JWN JXF JYB JYT JZP KBM KCH KCT KDH KFC KFW KGN
-2018-01 KHG KHY KJV KKR KLN KMM KNK KPD KPS KRJ KRZ KSS
-2019-01 KTJ KVB KVX KWT KXR KYN KZK KZY LBN LCG LCY LDR
-2020-01 LFH LFY LGG LGH LGP LHG LJD LJR LKF LKV LLJ LMC
-2021-01 LML LMX LNN LPD LPW LRP LSF LSP LTD LTP LVD LVV
-2022-01 LWD LWR LXD LXS LYJ LYZ LZP LZZ MBN MBZ MCR MDD
-2023-01 MDS MFG MFX MGN MHG MHY MJR MKD MKP MLH MLY MMN
-2024-01 MNC MNT MPL MRD MRW MSS MTK MTV MVL MWD MWS MXP
-2025-01 MYC MYV MZS NBL NCG NDG NFC NFR NGJ NHC NHX NJS
-2026-01 NKF NKY NLZ NMW NNT NPT NRN NSG NTB
+2000-09 BBB
+2000-11 BCD BCY
+2001-01 BDR BFJ BGF BHG BJC BKB BLC BMF BMW BNL BPG BRB
+2002-01 BRT BSL BTF BTZ BVW BWT BXP BYP BZF BZV CBP CCH
+2003-01 CDC CDV CFM CGJ CHF CJC CKB CLD CLV CMM CNK CPF
+2004-01 CRC CRV CSS CTT CVR CWR CXT CYY CZP DBJ DCH DDG
+2005-01 DFF DFZ DGX DHZ DKB DLD DMJ DNP DPK DRG DSC DTB
+2006-01 DVB DVW DWT DXZ DYY FBC FCJ FDP FFK FGF FHD FJD
+2007-01 FKC FKY FLV FNB FNZ FRC FSJ FTP FVJ FWC FXB FXY
+2008-01 FYY FZR GBN GCK GDH GFC GFY GGV GHG GHT GJJ GJV
+2009-01 GKH GKS GLC GLP GMC GMN GNF GNY GPJ GPW GRM GSC
+2010-01 GSR GTC GTS GVM GWC GWV GXP GYD GYM GYX GZJ GZT
+2011-01 HBG HBP HCB HCR HDC HDR HFF HFT HGC HGM HGX HHH
+2012-01 HHT HJC HJM HKB HKL HKX HLK HLW HMD HML HMT HNC
+2013-01 HNK HNT HPC HPN HPY HRK HRX HSK HSS HSZ HTK HTV
+2014-01 HVF HVN HVZ HWM HXB HXN HYD HYT HZB HZL HZZ JBL
+2015-01 JBY JCK JCY JDR JFG JFX JGR JHJ JHT JJH JJW JKK
+2016-01 JKZ JLN JMF JMY JNR JPK JRG JRZ JSK JTB JTN JVH
+2017-01 JVZ JWN JXF JYB JYT JZP KBM KCH KCT KDH KFC KFW
+2018-01 KGN KHG KHY KJV KKR KLN KMM KNK KPD KPS KRJ KRZ
+2019-01 KSS KTJ KVB KVX KWT KXR KYN KZK KZY LBN LCG LCY
+2020-01 LDR LFH LFY LGG LGH LGP LHG LJD LJR LKF LKV LLJ
+2021-01 LMC LML LMX LNN LPD LPW LRP LSF LSP LTD LTP LVD
+2022-01 LVV LWD LWR LXD LXS LYJ LYZ LZP LZZ MBN MBZ MCR
+2023-01 MDD MDS MFG MFX MGN MHG MHY MJR MKD MKP MLH MLY
+2024-01 MMN MNC MNT MPL MRD MRW MSS MTK MTV MVL MWD MWS
+2025-01 MXP MYC MYV MZS NBL NCG NDG NFC NFR NGJ NHC NHX
+2026-01 NJT NKG NKZ NLZ NMV NNS NPS NRP NSF NSY
 `;
 
 // Las matrículas actuales solo usan estas 20 consonantes, en este orden
@@ -45,6 +46,10 @@ const MESES = [
 // Convierte "BCD" en su posición dentro de la serie (BBB = 0)
 const indice = (letras: string) =>
   [...letras].reduce((n, l) => n * LETRAS.length + LETRAS.indexOf(l), 0);
+
+// Inversa de indice(): 22 -> "BCD"
+const combinacion = (i: number) =>
+  [Math.floor(i / 400), Math.floor(i / 20) % 20, i % 20].map((n) => LETRAS[n]).join("");
 
 type Mes = { anio: number; mes: number }; // mes de 0 a 11
 
@@ -63,13 +68,106 @@ export const ULTIMO_MES = INICIOS[INICIOS.length - 1];
 
 export const nombreMes = ({ anio, mes }: Mes) => `${MESES[mes]} de ${anio}`;
 
+// ---------- Estimación de la matrícula de un día concreto ----------
+
+// Última matrícula oficial conocida (listado diario de la DGT). Actualízala junto
+// con la tabla: es el punto de partida para estimar la de hoy y las futuras.
+const ULTIMA_OFICIAL = { fecha: "2026-10-23", numero: 1057, letras: "NTM" };
+
+// Puntos conocidos: el día 1 de cada mes y la última oficial (índice con decimales:
+// la parte decimal es el número de 4 cifras / 10.000)
+const PUNTOS = [
+  ...INICIOS.map((m) => ({ t: Date.UTC(m.anio, m.mes, 1), i: m.indice })),
+  {
+    t: Date.parse(`${ULTIMA_OFICIAL.fecha}T12:00:00Z`),
+    i: indice(ULTIMA_OFICIAL.letras) + ULTIMA_OFICIAL.numero / 10000,
+  },
+];
+const DIA = 24 * 3600 * 1000;
+
+export const FECHA_ULTIMA_OFICIAL = new Date(PUNTOS[PUNTOS.length - 1].t);
+
+// Matrículas al día según los últimos 90 días de datos
+export const RITMO_DIARIO = (() => {
+  const fin = PUNTOS[PUNTOS.length - 1];
+  const ini = [...PUNTOS].reverse().find((p) => fin.t - p.t >= 90 * DIA)!;
+  return ((fin.i - ini.i) / ((fin.t - ini.t) / DIA)) * 10000;
+})();
+
+// Matrícula estimada para una fecha: interpola entre datos conocidos y, después
+// del último, sigue al ritmo de los últimos meses
+export function estimarMatricula(fecha: Date) {
+  const t = fecha.getTime();
+  const k = PUNTOS.findIndex((p) => p.t > t);
+  let i: number;
+  if (k === -1) {
+    const fin = PUNTOS[PUNTOS.length - 1];
+    i = fin.i + ((t - fin.t) / DIA) * (RITMO_DIARIO / 10000);
+  } else if (k === 0) {
+    return null; // antes de septiembre de 2000
+  } else {
+    const a = PUNTOS[k - 1];
+    const b = PUNTOS[k];
+    i = a.i + ((b.i - a.i) * (t - a.t)) / (b.t - a.t);
+  }
+  const entero = Math.floor(i);
+  if (entero >= LETRAS.length ** 3) return null; // más allá de ZZZ
+  const numero = Math.floor((i - entero) * 10000);
+  return `${String(numero).padStart(4, "0")} ${combinacion(entero)}`;
+}
+
 // Primera combinación de cada año, para la tabla de la página
-export const PRIMERA_DEL_ANIO = TABLA.trim()
-  .split("\n")
-  .map((l) => l.trim().split(/\s+/))
-  .map(([inicio, primera]) => ({ anio: Number(inicio.slice(0, 4)), primera }));
+export const PRIMERA_DEL_ANIO = INICIOS.filter(
+  (m, i) => i === 0 || m.anio !== INICIOS[i - 1].anio
+).map((m) => ({ ...m, primera: combinacion(m.indice) }));
 
 // Códigos del sistema provincial (hasta septiembre de 2000)
+// Posición en la tabla del último mes cuya primera combinación es <= i
+function mesDe(i: number) {
+  let k = 0;
+  while (k + 1 < INICIOS.length && INICIOS[k + 1].indice <= i) k++;
+  return k;
+}
+
+// ---------- Rangos por letras (páginas /matricula/<letra>) ----------
+
+// Primeras letras ya usadas: de la B a la del último mes conocido
+const ultimaLetra = LETRAS.indexOf(
+  LETRAS[Math.floor(INICIOS[INICIOS.length - 1].indice / LETRAS.length ** 2)]
+);
+export const LETRAS_USADAS = [...LETRAS.slice(0, ultimaLetra + 1)];
+
+export type Rango = {
+  prefijo: string;
+  desde: Mes;
+  hasta: Mes | null; // null: todavía se está asignando
+};
+
+// Meses en que se asignaron las matrículas que empiezan por un prefijo ("J", "JK")
+export function rangoDe(prefijo: string): Rango | null {
+  const p = prefijo.toUpperCase();
+  if (!p || p.length > 3 || ![...p].every((l) => LETRAS.includes(l))) return null;
+  const inicio = indice(p.padEnd(3, "B"));
+  const fin = indice(p.padEnd(3, "Z")); // última combinación del prefijo
+  const ultimo = INICIOS[INICIOS.length - 1];
+  if (inicio > ultimo.indice) return null; // aún no se ha empezado a asignar
+  const kDesde = mesDe(inicio);
+  // Si el final cae en el último mes de la tabla, puede que siga asignándose
+  const kHasta = mesDe(fin);
+  return {
+    prefijo: p,
+    desde: INICIOS[kDesde],
+    hasta: kHasta === INICIOS.length - 1 ? null : INICIOS[kHasta],
+  };
+}
+
+// Subrangos de una letra por su segunda letra: J -> JB, JC, JD...
+export function subrangos(letra: string) {
+  return [...LETRAS]
+    .map((l) => rangoDe(letra + l))
+    .filter((r): r is Rango => r !== null);
+}
+
 const PROVINCIAS: Record<string, string> = {
   A: "Alicante", AB: "Albacete", AL: "Almería", AV: "Ávila", B: "Barcelona",
   BA: "Badajoz", BI: "Bizkaia", BU: "Burgos", C: "A Coruña", CA: "Cádiz",
@@ -84,6 +182,11 @@ const PROVINCIAS: Record<string, string> = {
   TO: "Toledo", V: "Valencia", VA: "Valladolid", VI: "Álava", Z: "Zaragoza",
   ZA: "Zamora",
 };
+
+// Lista de códigos provinciales (sin duplicados de nombre), para su tabla
+export const CODIGOS_PROVINCIALES = Object.entries(PROVINCIAS).sort(([, a], [, b]) =>
+  a.localeCompare(b, "es")
+);
 
 export type Lectura =
   | { tipo: "actual"; texto: string; desde: Mes; posterior: boolean }
@@ -104,10 +207,7 @@ export function leerMatricula(entrada: string): Lectura {
           "Las matrículas actuales no llevan vocales, Ñ ni Q. Revisa las letras.",
       };
     }
-    const i = indice(letras);
-    // Último mes cuya primera combinación es anterior o igual a la matrícula
-    let k = 0;
-    while (k + 1 < INICIOS.length && INICIOS[k + 1].indice <= i) k++;
+    const k = mesDe(indice(letras));
     return {
       tipo: "actual",
       texto: `${numeros} ${letras}`,

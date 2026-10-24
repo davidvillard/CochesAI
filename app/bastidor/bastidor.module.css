@@ -1,0 +1,51 @@
+.form {
+  display: grid;
+  gap: 16px;
+  align-items: end;
+}
+
+@media (min-width: 640px) {
+  .form {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+}
+
+.vin,
+.mono {
+  font-family: ui-monospace, "Cascadia Mono", Menlo, monospace;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.vin {
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.boton {
+  min-height: 50px;
+  padding: 0 22px;
+  border: 0;
+  border-radius: 14px;
+  background: var(--color);
+  color: #fff;
+  font: 600 1rem var(--font-text), system-ui, sans-serif;
+  cursor: pointer;
+}
+
+.boton:hover {
+  background: var(--color-osc);
+}
+
+.boton:focus-visible {
+  outline: 3px solid var(--color);
+  outline-offset: 3px;
+}
+
+.error {
+  margin: 16px 0 0;
+  padding: 12px 16px;
+  border-left: 4px solid var(--aviso);
+  border-radius: 10px;
+  background: #fff8ec;
+}

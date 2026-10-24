@@ -5,8 +5,15 @@ import { cache } from "react";
 import base from "../../../page.module.css";
 import styles from "../../coches.module.css";
 import MarcoPagina from "../../../components/MarcoPagina";
+import Afiliados from "../../../components/Afiliados";
 import { eur } from "../../../lib/formato";
-import { leerFicha, urlFicha, urlMarca as rutaMarca, urlsDeFichas } from "../../../lib/fichas";
+import {
+  leerFicha,
+  listaFallos,
+  urlFicha,
+  urlMarca as rutaMarca,
+  urlsDeFichas,
+} from "../../../lib/fichas";
 import { SITE_URL, metadatos } from "../../../lib/seo";
 
 type Props = { params: Promise<{ marca: string; modelo: string }> };
@@ -23,9 +30,12 @@ const obtener = cache(async (params: Props["params"]) => {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const f = await obtener(params);
   const nombre = `${f.marca} ${f.modelo}`;
+  const fallos = listaFallos(f).slice(0, 3).map((x) => x.titulo.toLowerCase());
   return metadatos({
-    titulo: `${nombre}: precio de segunda mano y fallos`,
-    descripcion: f.resumen,
+    titulo: `${nombre}: fallos comunes, problemas y precio`,
+    descripcion: fallos.length
+      ? `Fallos comunes del ${nombre} por motor y generación (${fallos.join(", ")}…), qué revisar antes de comprarlo y su precio de segunda mano en España.`
+      : f.resumen,
     ruta: urlFicha(f.slug),
   });
 }
@@ -36,6 +46,7 @@ export default async function FichaModelo({ params }: Props) {
   const precio = f.precioSegundaManoEur.max > 0 ? f.precioSegundaManoEur : null;
   const enlacesSimilares = await urlsDeFichas(f.similares);
   const urlMarca = rutaMarca(f.slug);
+  const fallos = listaFallos(f);
 
   const jsonLd = [
     {
@@ -102,10 +113,29 @@ export default async function FichaModelo({ params }: Props) {
               </p>
             )}
             <p className={base.precioX}>
-              {f.precioNuevoEur ? `Nuevo: ${f.precioNuevoEur}. ` : ""}
+              {f.precioNuevoEur ? `Nuevo: ${f.precioNuevoEur.replace(/\.$/, "")}. ` : ""}
               Precios orientativos, no son una tasación.
             </p>
           </div>
+        )}
+
+        {fallos.length > 0 && (
+          <section className={styles.bloque}>
+            <h2 className={styles.h2}>Fallos comunes del {nombre}</h2>
+            <p className={styles.intro}>
+              Los problemas más conocidos y en qué versiones aparecen. Revísalos antes de
+              comprar uno de segunda mano.
+            </p>
+            <ol className={styles.fallos}>
+              {fallos.map((x) => (
+                <li key={x.titulo} className={styles.fallo}>
+                  <h3 className={styles.falloT}>{x.titulo}</h3>
+                  {x.afecta && <p className={styles.afecta}>Afecta a: {x.afecta}</p>}
+                  {x.detalle && <p className={styles.falloX}>{x.detalle}</p>}
+                </li>
+              ))}
+            </ol>
+          </section>
         )}
 
         {f.generaciones.length > 0 && (
@@ -170,16 +200,7 @@ export default async function FichaModelo({ params }: Props) {
           </section>
         )}
 
-        {f.fallosConocidos.length > 0 && (
-          <section className={styles.bloque}>
-            <h2 className={styles.h2}>Qué revisar antes de comprarlo</h2>
-            <ul className={styles.lista}>
-              {f.fallosConocidos.map((t) => (
-                <li key={t}>{t}</li>
-              ))}
-            </ul>
-          </section>
-        )}
+        <Afiliados titulo={`¿Vas a comprar un ${nombre}?`} />
 
         {f.etiquetaDgt && (
           <section className={styles.bloque}>
@@ -220,6 +241,12 @@ export default async function FichaModelo({ params }: Props) {
             </div>
           </section>
         )}
+
+        <p className={styles.bloque}>
+          <Link href={`/comparar?a=${f.slug}`} className={base.notaLink}>
+            Comparar el {nombre} con otro coche
+          </Link>
+        </p>
 
         {f.preguntas.length > 0 && (
           <section className={styles.bloque}>

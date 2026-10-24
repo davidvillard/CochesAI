@@ -59,6 +59,12 @@ const FichaSchema = z.object({
   etiquetaDgt: texto,
   puntosFuertes: lista,
   puntosDebiles: lista,
+  // Formato nuevo: fallos con detalle y a qué versiones afectan
+  fallos: z
+    .array(z.object({ titulo: texto, afecta: texto, detalle: texto }))
+    .catch([])
+    .transform((l) => l.filter((f) => f.titulo)),
+  // Formato antiguo (solo títulos): lo tienen las fichas creadas antes
   fallosConocidos: lista,
   similares: z
     .array(z.object({ marca: texto, modelo: texto, motivo: texto }))
@@ -66,7 +72,12 @@ const FichaSchema = z.object({
   preguntas: z.array(z.object({ p: texto, r: texto })).catch([]),
 });
 
-export type Ficha = Omit<z.infer<typeof FichaSchema>, "existe"> & {
+type Datos = Omit<z.infer<typeof FichaSchema>, "existe">;
+export type Fallo = Datos["fallos"][number];
+
+// Las fichas antiguas pueden no tener "fallos": por eso es opcional al leerlas
+export type Ficha = Omit<Datos, "fallos"> & {
+  fallos?: Fallo[];
   slug: string;
   actualizada: string; // fecha ISO
 };
@@ -88,7 +99,7 @@ Responde SOLO con un JSON válido (sin markdown) con esta estructura exacta:
   "etiquetaDgt": string,
   "puntosFuertes": string[],
   "puntosDebiles": string[],
-  "fallosConocidos": string[],
+  "fallos": [ { "titulo": string, "afecta": string, "detalle": string } ],
   "similares": [ { "marca": string, "modelo": string, "motivo": string } ],
   "preguntas": [ { "p": string, "r": string } ]
 }
@@ -105,9 +116,15 @@ Reglas:
 - Precios en euros para España; segunda mano: rango habitual de anuncios actuales.
 - "etiquetaDgt": qué etiquetas ambientales tienen sus versiones, en una frase.
 - Puntos fuertes y débiles: 3 a 5 cada uno, frases cortas.
-- "fallosConocidos": averías o problemas conocidos reales, máximo 5; lista vacía si no hay.
+- "fallos": los fallos comunes y averías conocidas de este modelo, de 4 a 8, los más
+  frecuentes primero. Solo problemas reales y documentados (foros, revisiones, llamadas a
+  revisión); no inventes. "titulo": el fallo en pocas palabras (por ejemplo "Válvula EGR
+  obstruida"). "afecta": motor, generación y años concretos (por ejemplo "1.6 TDI 105 CV,
+  León III, 2012-2016"). "detalle": 1 o 2 frases con el síntoma, la causa y cómo
+  detectarlo o qué revisar antes de comprar.
 - Exactamente 3 similares; "motivo": máximo 8 palabras.
-- 4 preguntas frecuentes que haría un comprador, con respuestas de 1 o 2 frases.
+- 4 preguntas frecuentes que haría un comprador, con respuestas de 1 o 2 frases. Al menos
+  dos sobre fiabilidad: qué motor da menos problemas y qué revisar antes de comprarlo.
 - No inventes datos: si dudas de una cifra, da un rango.
 - Todo en español.`;
 
@@ -261,4 +278,26 @@ export function agruparPorMarca(modelos: ModeloListado[]) {
     grupos.set(slug, g);
   }
   return [...grupos.values()];
+}
+
+// Para el resultado recién identificado: la ficha se crea con after() unos
+// segundos después de responder, así que el navegador pregunta hasta que aparece.
+// "pendiente" es true mientras se está generando (hay intento pero aún no ficha).
+export async function estadoFicha(marca: string, modelo: string) {
+  const ficha = await buscarFicha(marca, modelo);
+  if (ficha) return { ficha, pendiente: false };
+  const slug = slugModelo(marca, modelo);
+  if (!redis || !slug) return { pendiente: false };
+  try {
+    return { pendiente: Boolean(await redis.exists(claveIntento(slug))) };
+  } catch {
+    return { pendiente: false };
+  }
+}
+
+// Fallos de una ficha en el formato nuevo, aunque sea antigua (solo títulos)
+export function listaFallos(f: Ficha): Fallo[] {
+  return f.fallos?.length
+    ? f.fallos
+    : f.fallosConocidos.map((titulo) => ({ titulo, afecta: "", detalle: "" }));
 }
