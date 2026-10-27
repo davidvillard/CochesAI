@@ -1,9 +1,15 @@
 // Cálculos a partir de la matrícula. Todo se hace en el navegador:
 // la matrícula no se envía a ningún servidor.
 
-// Primera combinación de letras de cada mes desde septiembre de 2000.
-// Es una tabla recopilada por terceros (no oficial), así que la fecha es aproximada.
-// Para actualizarla, añade al final los meses nuevos (fuente: seisenlinea.com/edad-matriculas).
+import DGT from "./matriculas-dgt.json";
+
+// Primera combinación de letras de cada mes.
+// - Desde 2015: datos abiertos de la DGT (matriculas-dgt.json). Cada fichero de la
+//   DGT dice la última matrícula asignada; la del final de un mes es la primera del
+//   siguiente. Se actualiza con "npm run matriculas".
+// - De septiembre de 2000 a 2014 (la DGT no publica esos ficheros): tabla pública
+//   de fechas de matrículas, ya expresada como primera combinación de cada mes.
+// Las fechas son aproximadas, con un margen de unos días.
 const TABLA = `
 2000-09 BBB
 2000-11 BCD BCY
@@ -21,18 +27,6 @@ const TABLA = `
 2012-01 HHT HJC HJM HKB HKL HKX HLK HLW HMD HML HMT HNC
 2013-01 HNK HNT HPC HPN HPY HRK HRX HSK HSS HSZ HTK HTV
 2014-01 HVF HVN HVZ HWM HXB HXN HYD HYT HZB HZL HZZ JBL
-2015-01 JBY JCK JCY JDR JFG JFX JGR JHJ JHT JJH JJW JKK
-2016-01 JKZ JLN JMF JMY JNR JPK JRG JRZ JSK JTB JTN JVH
-2017-01 JVZ JWN JXF JYB JYT JZP KBM KCH KCT KDH KFC KFW
-2018-01 KGN KHG KHY KJV KKR KLN KMM KNK KPD KPS KRJ KRZ
-2019-01 KSS KTJ KVB KVX KWT KXR KYN KZK KZY LBN LCG LCY
-2020-01 LDR LFH LFY LGG LGH LGP LHG LJD LJR LKF LKV LLJ
-2021-01 LMC LML LMX LNN LPD LPW LRP LSF LSP LTD LTP LVD
-2022-01 LVV LWD LWR LXD LXS LYJ LYZ LZP LZZ MBN MBZ MCR
-2023-01 MDD MDS MFG MFX MGN MHG MHY MJR MKD MKP MLH MLY
-2024-01 MMN MNC MNT MPL MRD MRW MSS MTK MTV MVL MWD MWS
-2025-01 MXP MYC MYV MZS NBL NCG NDG NFC NFR NGJ NHC NHX
-2026-01 NJT NKG NKZ NLZ NMV NNS NPS NRP NSF NSY
 `;
 
 // Las matrículas actuales solo usan estas 20 consonantes, en este orden
@@ -53,7 +47,7 @@ const combinacion = (i: number) =>
 
 type Mes = { anio: number; mes: number }; // mes de 0 a 11
 
-const INICIOS: (Mes & { indice: number })[] = TABLA.trim()
+const DE_LA_TABLA = TABLA.trim()
   .split("\n")
   .flatMap((linea) => {
     const [inicio, ...combos] = linea.trim().split(/\s+/);
@@ -64,25 +58,37 @@ const INICIOS: (Mes & { indice: number })[] = TABLA.trim()
     });
   });
 
+// Final de cada mes según la DGT = primera combinación del mes siguiente
+const DE_LA_DGT = Object.entries(DGT.finDeMes).map(([clave, letras]) => {
+  const [anio, mes] = clave.split("-").map(Number); // mes de 1 a 12
+  return { anio: anio + Math.floor(mes / 12), mes: mes % 12, indice: indice(letras) };
+});
+
+const INICIOS: (Mes & { indice: number })[] = [...DE_LA_TABLA, ...DE_LA_DGT]
+  .sort((a, b) => a.anio - b.anio || a.mes - b.mes)
+  // si un mes viene de las dos fuentes, manda la DGT (la última en aparecer)
+  .filter((m, i, l) => !(l[i + 1] && l[i + 1].anio === m.anio && l[i + 1].mes === m.mes));
+
 export const ULTIMO_MES = INICIOS[INICIOS.length - 1];
 
 export const nombreMes = ({ anio, mes }: Mes) => `${MESES[mes]} de ${anio}`;
 
+// Para citar la fuente en las páginas que usan estos datos
+export const FUENTE_DGT = "https://www.dgt.es/menusecundario/dgt-en-cifras/dgt-en-cifras-resultados/dgt-en-cifras-detalle/Microdatos-de-Matriculaciones-de-Vehiculos-mensual/";
+
 // ---------- Estimación de la matrícula de un día concreto ----------
 
-// Última matrícula oficial conocida (listado diario de la DGT). Actualízala junto
-// con la tabla: es el punto de partida para estimar la de hoy y las futuras.
-const ULTIMA_OFICIAL = { fecha: "2026-10-23", numero: 1057, letras: "NTM" };
-
-// Puntos conocidos: el día 1 de cada mes y la última oficial (índice con decimales:
-// la parte decimal es el número de 4 cifras / 10.000)
+// Puntos conocidos (índice con decimales: la parte decimal es el número de
+// 4 cifras / 10.000): el día 1 de cada mes y el final de cada día del mes en
+// curso según los ficheros diarios de la DGT. De esos solo se conocen las letras,
+// así que se toma la mitad de la serie (número 5000).
 const PUNTOS = [
   ...INICIOS.map((m) => ({ t: Date.UTC(m.anio, m.mes, 1), i: m.indice })),
-  {
-    t: Date.parse(`${ULTIMA_OFICIAL.fecha}T12:00:00Z`),
-    i: indice(ULTIMA_OFICIAL.letras) + ULTIMA_OFICIAL.numero / 10000,
-  },
-];
+  ...Object.entries(DGT.diario).map(([fecha, letras]) => ({
+    t: Date.parse(`${fecha}T23:59:00Z`),
+    i: indice(letras) + 0.5,
+  })),
+].sort((a, b) => a.t - b.t);
 const DIA = 24 * 3600 * 1000;
 
 export const FECHA_ULTIMA_OFICIAL = new Date(PUNTOS[PUNTOS.length - 1].t);

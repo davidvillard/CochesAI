@@ -5,7 +5,7 @@ import styles from "./matricula.module.css";
 import MarcoPagina from "../components/MarcoPagina";
 import { metadatos } from "../lib/seo";
 import ConsultaMatricula from "./ConsultaMatricula";
-import { LETRAS_USADAS, PRIMERA_DEL_ANIO, ULTIMO_MES, nombreMes } from "../lib/matricula";
+import { FUENTE_DGT, LETRAS_USADAS, PRIMERA_DEL_ANIO, ULTIMO_MES, nombreMes } from "../lib/matricula";
 
 export const metadata: Metadata = metadatos({
   titulo: "¿De qué año es una matrícula? Fecha y etiqueta DGT",
@@ -109,6 +109,13 @@ export default function Matricula() {
             ))}
             {" · "}
             <Link href="/matricula/provinciales">Provinciales</Link>
+          </p>
+          <p className={styles.otras}>
+            Fuente desde 2015:{" "}
+            <a href={FUENTE_DGT} target="_blank" rel="noopener noreferrer">
+              microdatos de matriculaciones de la DGT
+            </a>
+            . Antes de 2015, tablas públicas de fechas de matrículas.
           </p>
         </div>
       </section>

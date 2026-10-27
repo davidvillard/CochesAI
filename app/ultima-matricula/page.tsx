@@ -6,6 +6,7 @@ import MarcoPagina from "../components/MarcoPagina";
 import Predictor from "./Predictor";
 import {
   FECHA_ULTIMA_OFICIAL,
+  FUENTE_DGT,
   PRIMERA_DEL_ANIO,
   RITMO_DIARIO,
   estimarMatricula,
@@ -56,8 +57,11 @@ export default function UltimaMatricula() {
                   (media de los últimos 3 meses).
                 </li>
                 <li>
-                  Último dato oficial: {fechaLarga(FECHA_ULTIMA_OFICIAL)}. Desde entonces es
-                  una estimación con un margen de unos días.
+                  Último dato oficial: {fechaLarga(FECHA_ULTIMA_OFICIAL)}, de los{" "}
+                  <a href={FUENTE_DGT} target="_blank" rel="noopener noreferrer" style={{ color: "#fff" }}>
+                    microdatos de matriculaciones de la DGT
+                  </a>
+                  . Desde entonces es una estimación con un margen de unos días.
                 </li>
                 <li>
                   En {anioActual.anio} la serie empezó por la {anioActual.primera}.{" "}
