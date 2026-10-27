@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { after } from "next/server";
+import { contar } from "../lib/contadores";
 import base from "../page.module.css";
 import styles from "./comparar.module.css";
 import MarcoPagina from "../components/MarcoPagina";
@@ -80,6 +82,11 @@ function Lista({ items }: { items: string[] }) {
 export default async function Comparar({ searchParams }: Props) {
   const { a, b } = await searchParams;
   const [modelos, fa, fb] = await Promise.all([listarModelos(), ficha(a), ficha(b)]);
+  // Qué parejas compara la gente: candidatas a una comparativa propia
+  if (fa && fb && fa.slug !== fb.slug) {
+    const par = [fa.slug, fb.slug].sort().join("|");
+    after(() => contar(`ev:comparar:${par}`));
+  }
   const ordenados = [...modelos].sort((x, y) =>
     `${x.marca} ${x.modelo}`.localeCompare(`${y.marca} ${y.modelo}`, "es")
   );

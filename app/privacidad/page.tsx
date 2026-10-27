@@ -81,6 +81,23 @@ export default function Privacidad() {
                     contador anónimo de síes o noes. El voto no se asocia a tu foto, al
                     resultado ni a ti.
                 </li>
+                <li>
+                    <strong>Estadísticas de uso anónimas.</strong> Para saber qué
+                    contenidos interesan y mejorar la web, al ver una página o usar una
+                    herramienta tu navegador nos avisa de forma anónima y sumamos 1 a
+                    contadores diarios: la página vista, la web de la que vienes (solo el
+                    dominio, por ejemplo google.com), el tipo de dispositivo (móvil,
+                    tablet u ordenador), la hora y datos generales del uso de las
+                    herramientas, como la comunidad elegida en la calculadora de ITP, un
+                    tramo de precio o la primera letra de la matrícula consultada (nunca
+                    la matrícula, el bastidor ni los importes exactos). Si identificas un
+                    coche, contamos qué modelo es. No usamos cookies ni guardamos nada en
+                    tu navegador para esto, y los contadores no incluyen tu IP ni ningún
+                    identificador, así que no permiten saber quién eres. Tu IP solo se
+                    usa durante un minuto para limitar avisos repetidos. La base legal es
+                    nuestro interés legítimo en conocer el uso agregado del servicio
+                    (art. 6.1.f del RGPD).
+                </li>
             </ul>
             <p>No te pedimos registro, nombre ni correo para usar la web.</p>
 
@@ -98,7 +115,8 @@ export default function Privacidad() {
                 </li>
                 <li>
                     <strong>Upstash:</strong> guarda temporalmente el contador de uso
-                    asociado a la IP y las fichas de los resultados compartidos.
+                    asociado a la IP, las fichas de los resultados compartidos y las
+                    estadísticas de uso anónimas.
                 </li>
             </ul>
             <p>
@@ -114,6 +132,7 @@ export default function Privacidad() {
                 <li>La foto: no la conservamos en nuestros servidores.</li>
                 <li>La ficha del resultado: 30 días; después se borra sola.</li>
                 <li>La IP en el control de uso: hasta que termina el periodo de control.</li>
+                <li>Las estadísticas de uso anónimas: 90 días; después se borran solas.</li>
                 <li>
                     Los registros técnicos: el tiempo que indique el proveedor de
                     alojamiento.
@@ -139,7 +158,8 @@ export default function Privacidad() {
 
             <h2 id="cookies">6. Cookies</h2>
             <p>
-                Esta web no usa cookies publicitarias. Antes de tu elección solo usamos
+                Esta web no usa cookies publicitarias. Las estadísticas propias del
+                punto 2 no usan cookies. Antes de tu elección solo usamos
                 el almacenamiento local estrictamente necesario para recordar tu
                 preferencia (<code>cochesai.analytics-consent</code>). Las cookies
                 analíticas opcionales de Google Analytics solo se activan después de

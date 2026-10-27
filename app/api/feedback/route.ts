@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import { Ratelimit } from "@upstash/ratelimit";
+import { contar } from "../../lib/contadores";
+import { slugModelo } from "../../lib/fichas";
 import { redis } from "../../lib/redis";
 
 // Máximo 20 votos por hora y por IP, para que nadie infle los números
@@ -26,13 +28,21 @@ export async function POST(req: Request) {
       if (!success) return NextResponse.json({ ok: false }, { status: 429 });
     }
 
-    const { voto } = await req.json();
+    const { voto, marca, modelo } = await req.json();
     if (voto !== "si" && voto !== "no") {
       return NextResponse.json({ ok: false }, { status: 400 });
     }
 
-    // Solo suma 1 a un contador: no se guarda foto, resultado ni IP
-    await redis.incr(`quecoche:feedback:${voto}`);
+    // Solo suma 1 a contadores: el total y, por día, qué coche se acertó o falló.
+    // No se guarda foto, resultado ni IP.
+    const slug =
+      typeof marca === "string" && typeof modelo === "string"
+        ? slugModelo(marca.slice(0, 40), modelo.slice(0, 60))
+        : null;
+    await Promise.all([
+      redis.incr(`quecoche:feedback:${voto}`),
+      contar(`voto:${voto}`, ...(slug ? [`${voto === "si" ? "acierto" : "fallo"}:${slug}`] : [])),
+    ]);
     return NextResponse.json({ ok: true });
   } catch (err) {
     console.error("Error en feedback:", err);

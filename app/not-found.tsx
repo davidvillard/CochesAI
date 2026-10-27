@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import base from "./page.module.css";
 import MarcoPagina from "./components/MarcoPagina";
+import Medir404 from "./components/Medir404";
 
 export const metadata: Metadata = {
   title: "Página no encontrada",
@@ -13,6 +14,7 @@ export const metadata: Metadata = {
 export default function NoEncontrada() {
   return (
     <MarcoPagina>
+      <Medir404 />
       <section className={base.hero}>
         <div className={base.cont}>
           <span className={base.chip}>Error 404</span>

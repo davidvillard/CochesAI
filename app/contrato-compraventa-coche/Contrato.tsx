@@ -3,6 +3,7 @@
 import { useState } from "react";
 import styles from "./contrato.module.css";
 import { eurExacto } from "../lib/formato";
+import { medir } from "../lib/medir";
 
 // Los datos solo viven en esta página: no se envían ni se guardan en ningún sitio
 type Persona = { nombre: string; dni: string; domicilio: string };
@@ -87,7 +88,10 @@ export default function Contrato() {
           Rellena lo que sepas: los huecos vacíos salen en blanco para escribirlos a mano.
           Imprime dos copias y firmad las dos.
         </p>
-        <button type="button" onClick={() => window.print()}>
+        <button type="button" onClick={() => {
+          medir(["imprimir", "contrato"]);
+          window.print();
+        }}>
           Imprimir o guardar en PDF
         </button>
       </div>

@@ -5,6 +5,7 @@ import styles from "../calculadora-itp/itp.module.css";
 import propios from "./bastidor.module.css";
 import Afiliados from "../components/Afiliados";
 import { leerVin, type LecturaVin } from "../lib/vin";
+import { medir } from "../lib/medir";
 
 export default function DecodificadorVin() {
   const [texto, setTexto] = useState("");
@@ -16,7 +17,12 @@ export default function DecodificadorVin() {
         className={propios.form}
         onSubmit={(e) => {
           e.preventDefault();
-          setLectura(leerVin(texto));
+          const l = leerVin(texto);
+          setLectura(l);
+          medir(
+            ["vin", l.valido ? (l.fabricante ?? "desconocido") : "invalido"],
+            ...(l.valido && l.pais ? [["vin-pais", l.pais] as [string, string]] : [])
+          );
         }}
       >
         <label className={styles.campo}>

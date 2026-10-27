@@ -1,0 +1,216 @@
+.panel {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 32px 16px 80px;
+}
+
+.cabeza {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.titulo {
+  margin: 0;
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-size: 1.75rem;
+  letter-spacing: -0.02em;
+}
+
+.nota {
+  margin: 4px 0 0;
+  color: var(--suave);
+  font-size: 0.9rem;
+}
+
+.rangos {
+  display: flex;
+  gap: 6px;
+}
+
+.rango {
+  padding: 6px 12px;
+  border: 1px solid var(--linea);
+  border-radius: 999px;
+  background: var(--superficie);
+  color: var(--tinta);
+  font-size: 0.9rem;
+  text-decoration: none;
+}
+
+.rango[aria-current="page"] {
+  border-color: var(--color);
+  background: var(--color);
+  color: #fff;
+}
+
+.kpis {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 12px;
+  margin-bottom: 32px;
+}
+
+.kpi {
+  padding: 16px;
+  border: 1px solid var(--linea);
+  border-radius: 14px;
+  background: var(--superficie);
+}
+
+.kpiN {
+  margin: 0;
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-size: 1.9rem;
+  font-weight: 700;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+
+.kpiEt {
+  margin: 4px 0 0;
+  color: var(--suave);
+  font-size: 0.85rem;
+}
+
+.bloque {
+  margin: 40px 0 12px;
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-size: 1.3rem;
+}
+
+.rejilla {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(340px, 100%), 1fr));
+  gap: 12px;
+}
+
+.tarjeta {
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid var(--linea);
+  border-radius: 14px;
+  background: var(--superficie);
+}
+
+.ancha {
+  grid-column: 1 / -1;
+}
+
+.tarjeta h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.para {
+  margin: 2px 0 12px;
+  color: var(--suave);
+  font-size: 0.82rem;
+  line-height: 1.4;
+}
+
+.vacio {
+  margin: 0;
+  color: var(--suave);
+  font-size: 0.9rem;
+}
+
+/* Lista con barras horizontales: nombre, barra y número */
+.lista {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.fila {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 56px;
+  gap: 2px 10px;
+  align-items: center;
+  font-size: 0.88rem;
+}
+
+.nombre {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.valor {
+  grid-row: span 2;
+  color: var(--suave);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.pista {
+  height: 6px;
+  border-radius: 4px;
+  background: var(--tenue);
+}
+
+.barra {
+  height: 100%;
+  min-width: 2px;
+  border-radius: 4px;
+  background: var(--color);
+}
+
+.fila:hover .barra {
+  background: var(--color-osc);
+}
+
+/* Columnas por día o por hora */
+.columnas {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 140px;
+  padding-bottom: 2px;
+  border-bottom: 1px solid var(--linea);
+}
+
+.col {
+  display: flex;
+  flex: 1;
+  align-items: flex-end;
+  height: 100%;
+}
+
+.col span {
+  width: 100%;
+  min-height: 1px;
+  border-radius: 4px 4px 0 0;
+  background: var(--color);
+}
+
+.col:hover span {
+  background: var(--color-osc);
+}
+
+.ejes {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 6px;
+  color: var(--suave);
+  font-size: 0.75rem;
+}
+
+.mas {
+  margin-top: 8px;
+  font-size: 0.85rem;
+}
+
+.mas summary {
+  color: var(--color);
+  cursor: pointer;
+}
+
+.mas .lista {
+  margin-top: 8px;
+}

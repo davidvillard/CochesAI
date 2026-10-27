@@ -8,6 +8,7 @@ import {
   CONFIANZA_MINIMA,
   buscarFicha,
   registrarModelo,
+  slugModelo,
 } from "../../lib/fichas";
 import {
   MODELS,
@@ -254,10 +255,20 @@ export async function POST(req: Request) {
 
           const resultado = interpretar(text);
           if (resultado) {
+            // Qué coches identifica la gente: dice qué fichas y comparativas crear
+            const slug =
+              "marca" in resultado ? slugModelo(resultado.marca, resultado.modelo) : null;
             await contar(
               "analisis",
               `modelo:${model}`,
-              ...(resultado.esCoche ? [] : ["nocoche"])
+              ...(resultado.esCoche ? [] : ["nocoche"]),
+              ...(slug && "confianza" in resultado
+                ? [
+                    `coche:${slug}`,
+                    `marca:${slug.split("/")[0]}`,
+                    `confianza:${resultado.confianza >= 0.85 ? "alta" : resultado.confianza >= CONFIANZA_MINIMA ? "media" : "baja"}`,
+                  ]
+                : [])
             );
             // Solo los coches identificados tienen enlace para compartir y ficha
             let id: string | undefined;

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import styles from "./checklist.module.css";
 import { GRUPOS, TOTAL } from "./puntos";
+import { medir } from "../lib/medir";
 
 const CLAVE = "cochesai.checklist";
 
@@ -53,7 +54,10 @@ export default function Checklist() {
           <span style={{ width: `${(hechos.size / TOTAL) * 100}%` }} />
         </div>
         <div className={styles.acciones}>
-          <button type="button" onClick={() => window.print()}>
+          <button type="button" onClick={() => {
+            medir(["imprimir", "checklist"]);
+            window.print();
+          }}>
             Imprimir
           </button>
           <button type="button" onClick={vaciar} disabled={!hechos.size}>

@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Bricolage_Grotesque, Instrument_Sans } from "next/font/google";
 import AnalyticsConsent from "./components/AnalyticsConsent";
+import Visitas from "./components/Visitas";
 import "./globals.css";
 import { SITE_URL } from "./lib/seo";
 
@@ -121,6 +122,7 @@ export default function RootLayout({
           }}
         />
         <AnalyticsConsent />
+        <Visitas />
         {children}
       </body>
     </html>

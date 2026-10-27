@@ -31,18 +31,24 @@ function ultimosDias(n: number) {
   });
 }
 
+// Campo "prefijo:valor" -> grupo y valor. Los eventos llevan dos niveles:
+// "ev:itp:madrid" es el grupo "ev:itp" con el valor "madrid".
+function partir(campo: string): [string, string] | null {
+  const i = campo.indexOf(":", campo.startsWith("ev:") ? 3 : 0);
+  return i > 0 ? [campo.slice(0, i), campo.slice(i + 1)] : null;
+}
+
+export type Grupos = Record<string, Record<string, number>>;
+
 function resumir(fecha: string, datos: Record<string, number> | null) {
   const d = datos ?? {};
   const num = (campo: string) => Number(d[campo]) || 0;
 
-  // Campos "prefijo:nombre" agrupados: modelo de Gemini y clics de afiliado
-  const grupo = (prefijo: string) => {
-    const r: Record<string, number> = {};
-    for (const [campo, valor] of Object.entries(d)) {
-      if (campo.startsWith(prefijo)) r[campo.slice(prefijo.length)] = Number(valor) || 0;
-    }
-    return r;
-  };
+  const grupos: Grupos = {};
+  for (const [campo, valor] of Object.entries(d)) {
+    const p = partir(campo);
+    if (p) (grupos[p[0]] ??= {})[p[1]] = Number(valor) || 0;
+  }
 
   return {
     fecha,
@@ -51,10 +57,13 @@ function resumir(fecha: string, datos: Record<string, number> | null) {
     errores: num("errores"),
     rechazadosPorIp: num("rechazados_ip"),
     rechazadosPorTopeDiario: num("rechazados_global"),
-    modelos: grupo("modelo:"),
-    clicsAfiliado: grupo("afiliado:"),
+    modelos: grupos.modelo ?? {},
+    clicsAfiliado: grupos.afiliado ?? {},
+    grupos,
   };
 }
+
+export type Dia = ReturnType<typeof resumir>;
 
 export async function leerDias(n: number) {
   const db = redis;

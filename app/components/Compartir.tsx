@@ -9,6 +9,7 @@ import {
 import styles from "../page.module.css";
 import { eur } from "../lib/formato";
 import type { Resultado } from "../lib/resultados";
+import { medir } from "../lib/medir";
 
 const NOMBRE_WEB = "Coches AI"; // cámbialo aquí cuando decidas el nombre definitivo
 
@@ -42,6 +43,7 @@ export default function Compartir({ r, style }: { r: Resultado; style?: React.CS
   }, [copiado]);
 
   async function copiar() {
+    medir(["compartir", "copiar"]);
     try {
       await navigator.clipboard.writeText(texto);
       setCopiado(true);
@@ -58,6 +60,7 @@ export default function Compartir({ r, style }: { r: Resultado; style?: React.CS
           href={`https://wa.me/?text=${encodeURIComponent(texto)}`}
           target="_blank"
           rel="noopener noreferrer"
+          onClick={() => medir(["compartir", "whatsapp"])}
           className={`${styles.btn} ${styles.btnP} ${styles.btnS}`}
         >
           <ChatRoundBoldIcon size={20} /> WhatsApp

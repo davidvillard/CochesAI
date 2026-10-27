@@ -3,6 +3,8 @@
 import { useMemo, useState } from "react";
 import styles from "../calculadora-itp/itp.module.css";
 import { TIPOS_ITV, proximaItv, type TipoItv } from "../lib/itv";
+import { tramo } from "../lib/medir";
+import { useMedirResultado } from "../lib/useMedirResultado";
 
 const fechaLarga = (d: Date) =>
   d.toLocaleDateString("es-ES", { day: "numeric", month: "long", year: "numeric" });
@@ -19,6 +21,20 @@ export default function CalculadoraItv() {
     if (!m || m > new Date()) return null;
     return proximaItv(tipo, m, leerFecha(ultima));
   }, [tipo, matriculacion, ultima]);
+
+  // Años del coche, en tramos, para la analítica propia
+  const anios = useMemo(() => {
+    const m = leerFecha(matriculacion);
+    return m ? (new Date().getTime() - m.getTime()) / 31_557_600_000 : null;
+  }, [matriculacion]);
+  useMedirResultado(
+    resultado && anios !== null
+      ? [
+          ["itv", tipo],
+          ["antiguedad", tramo(anios, [3, 5, 8, 12, 15], "-anios")],
+        ]
+      : null
+  );
 
   return (
     <div className={styles.caja}>

@@ -4,6 +4,8 @@ import { useMemo, useState } from "react";
 import styles from "./itp.module.css";
 import Afiliados from "../components/Afiliados";
 import { eur, eurExacto } from "../lib/formato";
+import { tramo } from "../lib/medir";
+import { useMedirResultado } from "../lib/useMedirResultado";
 import { COMUNIDADES, TASA_TRANSFERENCIA, calcularItp, type Distintivo } from "../lib/itp";
 
 const BOE_TABLAS = "https://www.boe.es/diario_boe/txt.php?id=BOE-A-2025-26357";
@@ -54,6 +56,17 @@ export default function CalculadoraItp({
           })
         : null,
     [comunidad, precio, valorNuevo, anios, cc, cv, distintivo]
+  );
+
+  // Qué comunidades, precios y antigüedades calcula la gente (en tramos)
+  useMedirResultado(
+    resultado && anios !== null
+      ? [
+          [transferencia ? "transferencia" : "itp", comunidad],
+          ["precio", tramo(num(precio), [3000, 6000, 10000, 15000, 20000, 30000])],
+          ["antiguedad", tramo(anios, [3, 5, 8, 12, 15], "-anios")],
+        ]
+      : null
   );
 
   return (

@@ -15,6 +15,7 @@ import {
   type Combustible,
   type Lectura,
 } from "../lib/matricula";
+import { medir } from "../lib/medir";
 
 const DGT_DISTINTIVO =
   "https://sede.dgt.gob.es/es/vehiculos/informacion-de-vehiculos/distintivo-ambiental";
@@ -31,7 +32,14 @@ export default function ConsultaMatricula() {
 
   function consultar(e: React.FormEvent) {
     e.preventDefault();
-    setLectura(leerMatricula(texto));
+    const l = leerMatricula(texto);
+    setLectura(l);
+    // Qué años consulta la gente (solo la primera letra, nunca la matrícula)
+    const f = l.tipo === "actual" ? l.desde : l.tipo === "provincial" ? FIN_PROVINCIAL : null;
+    medir(
+      ["matricula", l.tipo === "actual" ? l.texto.slice(5, 6) : l.tipo],
+      ...(f && combustible ? [["etiqueta", etiqueta(combustible, f)] as [string, string]] : [])
+    );
   }
 
   const fecha =

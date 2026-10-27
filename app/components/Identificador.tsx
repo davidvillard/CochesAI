@@ -17,6 +17,7 @@ import Compartir from "./Compartir";
 import Afiliados from "./Afiliados";
 import { ENTRADA } from "./BotonFoto";
 import type { Resultado } from "../lib/resultados";
+import { medir } from "../lib/medir";
 
 // Reduce la imagen a máx. 768px y la convierte a JPEG base64.
 function resizeImage(file: File, maxSize = 768): Promise<string> {
@@ -135,13 +136,14 @@ export default function Identificador() {
       const f = Array.from(e.clipboardData?.files ?? []).find((x) =>
         x.type.startsWith("image/")
       );
-      if (f) analyze(f);
+      if (f) analyze(f, "pegar");
     };
     window.addEventListener("paste", onPaste);
     return () => window.removeEventListener("paste", onPaste);
   });
 
-  async function analyze(file: File) {
+  async function analyze(file: File, origen?: string) {
+    if (origen) medir(["foto", origen]);
     setUltimo(file);
     setError(null);
     setResult(null);
@@ -176,7 +178,7 @@ export default function Identificador() {
 
   function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
-    if (file) analyze(file);
+    if (file) analyze(file, e.target.id === ENTRADA.camara ? "camara" : "galeria");
     e.target.value = "";
   }
 
@@ -184,7 +186,7 @@ export default function Identificador() {
     e.preventDefault();
     setArrastrando(false);
     const f = e.dataTransfer.files?.[0];
-    if (f && f.type.startsWith("image/")) analyze(f);
+    if (f && f.type.startsWith("image/")) analyze(f, "arrastrar");
   }
 
   async function votar(v: "si" | "no") {
@@ -194,7 +196,7 @@ export default function Identificador() {
       await fetch("/api/feedback", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ voto: v }),
+        body: JSON.stringify({ voto: v, marca: result?.marca, modelo: result?.modelo }),
       });
     } catch {
       // si falla, no molestamos al usuario
