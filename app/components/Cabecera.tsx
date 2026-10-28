@@ -12,6 +12,7 @@ import {
 import base from "../page.module.css";
 import styles from "./Cabecera.module.css";
 import BotonFoto from "./BotonFoto";
+import BotonInstalar from "./BotonInstalar";
 import { HERRAMIENTAS as TODAS } from "../lib/herramientas";
 
 const PRINCIPALES = [
@@ -176,6 +177,7 @@ export default function Cabecera({ enPortada = false }: { enPortada?: boolean })
               </span>
             </Link>
           ))}
+          <BotonInstalar className={styles.instalar} ayudaClassName={styles.instalarAyuda} />
         </div>
       </div>
     </header>

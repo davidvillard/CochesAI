@@ -43,6 +43,7 @@ const NOMBRES: Record<string, string> = {
   galeria: "Galería",
   arrastrar: "Arrastrar",
   pegar: "Pegar (Ctrl+V)",
+  compartir: "Compartida desde otra app",
   "/": "/ (portada)",
 };
 

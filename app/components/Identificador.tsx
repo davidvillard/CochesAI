@@ -44,6 +44,7 @@ const PASOS_CARGA = [
   "Subiendo la foto",
   "Identificando el coche",
   "Estimando precio y alternativas",
+  "Preparando su ficha",
 ];
 
 // La parte interactiva de la portada: subida de la foto, análisis y resultado
@@ -140,6 +141,28 @@ export default function Identificador() {
     };
     window.addEventListener("paste", onPaste);
     return () => window.removeEventListener("paste", onPaste);
+  });
+
+  // Foto compartida desde otra app (Android): public/sw.js la deja en la caché
+  // y abre "/?compartida=1". Se analiza una sola vez y se borra.
+  const compartidaLeida = useRef(false);
+  useEffect(() => {
+    if (compartidaLeida.current) return;
+    compartidaLeida.current = true;
+    if (new URLSearchParams(location.search).get("compartida") !== "1") return;
+    history.replaceState(null, "", "/");
+    (async () => {
+      try {
+        const cache = await caches.open("compartido");
+        const res = await cache.match("/foto-compartida");
+        if (!res) return;
+        const blob = await res.blob();
+        await cache.delete("/foto-compartida");
+        analyze(new File([blob], "compartida", { type: blob.type || "image/jpeg" }), "compartir");
+      } catch {
+        // Si no se puede leer, el usuario la sube a mano
+      }
+    })();
   });
 
   async function analyze(file: File, origen?: string) {
