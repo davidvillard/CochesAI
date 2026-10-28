@@ -37,6 +37,21 @@ export default function Cabecera({ enPortada = false }: { enPortada?: boolean })
     setMovil(false);
   }, [ruta]);
 
+  // Con el menú móvil abierto, la página de detrás no se mueve
+  useEffect(() => {
+    if (!movil) return;
+    const html = document.documentElement;
+    html.style.overflow = "hidden";
+    // Si la pantalla se ensancha (girar la tablet), el menú móvil desaparece: se cierra
+    const ancho = matchMedia("(min-width: 860px)");
+    const cerrar = () => ancho.matches && setMovil(false);
+    ancho.addEventListener("change", cerrar);
+    return () => {
+      html.style.overflow = "";
+      ancho.removeEventListener("change", cerrar);
+    };
+  }, [movil]);
+
   // Cierra con Escape o al pulsar fuera del desplegable
   useEffect(() => {
     if (!herramientas && !movil) return;

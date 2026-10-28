@@ -183,8 +183,14 @@
   transition: opacity 0.2s var(--ease), padding 0.3s var(--ease);
 }
 
+/* Abierto: como mucho el alto de la pantalla bajo la cabecera, con scroll
+   propio que no se pasa a la página de detrás */
 .movil[data-abierto="true"] .movilIn {
+  max-height: calc(100dvh - 80px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
   padding: 8px 20px 20px;
+  padding-bottom: calc(20px + env(safe-area-inset-bottom));
   opacity: 1;
 }
 
