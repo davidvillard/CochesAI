@@ -152,9 +152,9 @@ async function generar(marca: string, modelo: string) {
 
 // ---------- Registro ----------
 
-// Se llama tras cada identificación (con after(), sin hacer esperar al usuario).
-// Si el modelo ya tiene ficha, suma una visita; si no, intenta crearla.
-export async function registrarModelo(marca: string, modelo: string) {
+// Se llama tras cada identificación. Si el modelo ya tiene ficha, suma una
+// visita; si no, intenta crearla. Devuelve la URL de la ficha si la hay.
+export async function registrarModelo(marca: string, modelo: string): Promise<string | undefined> {
   const slug = slugModelo(marca, modelo);
   if (!redis || !slug) return;
   try {
@@ -162,7 +162,7 @@ export async function registrarModelo(marca: string, modelo: string) {
     if (existente) {
       const real = "alias" in existente ? existente.alias : slug;
       await redis.zincrby(CLAVE_MODELOS, 1, real);
-      return;
+      return urlFicha(real);
     }
     // Solo un intento al día por modelo
     const libre = await redis.set(claveIntento(slug), 1, { nx: true, ex: 60 * 60 * 24 });
@@ -186,6 +186,7 @@ export async function registrarModelo(marca: string, modelo: string) {
       });
     }
     await redis.zincrby(CLAVE_MODELOS, 1, slugFinal);
+    return urlFicha(slugFinal);
   } catch (err) {
     console.error("Error al registrar el modelo:", err);
   }

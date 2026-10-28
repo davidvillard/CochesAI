@@ -22,6 +22,9 @@ import {
 // Margen para los reintentos con espera (en Vercel evita cortes a los 10 s)
 export const maxDuration = 60;
 
+// Lo que se espera como mucho a que se cree la ficha de un coche nuevo
+const ESPERA_MAXIMA_FICHA = 35_000;
+
 // ---------- Protección ----------
 
 // La imagen llega en base64. Con 768 px y JPEG pesa ~100 KB, así que 600.000
@@ -279,9 +282,19 @@ export async function POST(req: Request) {
                 guardarResultado(resultado),
                 buscarFicha(marca, modelo),
               ]);
-              // Crea o puntúa la ficha del modelo sin hacer esperar al usuario
+              // Crea o puntúa la ficha del modelo. Si aún no existe, se espera a
+              // que esté lista para dar el resultado y la ficha a la vez. Con un
+              // tope: si tarda demasiado, se responde y la ficha se termina
+              // igualmente (after) y llega con la consulta a /api/ficha.
               if (confianza >= CONFIANZA_MINIMA) {
-                after(() => registrarModelo(marca, modelo));
+                const registro = registrarModelo(marca, modelo);
+                after(() => registro);
+                if (!ficha) {
+                  ficha = await Promise.race([
+                    registro,
+                    sleep(ESPERA_MAXIMA_FICHA).then(() => undefined),
+                  ]);
+                }
               }
             }
             const respuesta = { ...resultado, id, ficha };
