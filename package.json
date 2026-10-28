@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "matriculas": "node scripts/actualizar-matriculas.mjs"
+    "matriculas": "node scripts/actualizar-matriculas.mjs && node scripts/actualizar-ventas.mjs"
   },
   "dependencies": {
     "@solar-icons/react": "^2.3.2",

@@ -6,6 +6,7 @@ import base from "../../../page.module.css";
 import styles from "../../coches.module.css";
 import MarcoPagina from "../../../components/MarcoPagina";
 import Afiliados from "../../../components/Afiliados";
+import VentasModelo from "../../../components/VentasModelo";
 import { eur } from "../../../lib/formato";
 import {
   leerFicha,
@@ -199,6 +200,8 @@ export default async function FichaModelo({ params }: Props) {
             </div>
           </section>
         )}
+
+        <VentasModelo slug={f.slug} nombre={nombre} />
 
         <Afiliados titulo={`¿Vas a comprar un ${nombre}?`} />
 

@@ -4,6 +4,7 @@ import { SITE_URL } from "./lib/seo";
 import { LETRAS_USADAS } from "./lib/matricula";
 import { COMUNIDADES } from "./lib/itp";
 import { HERRAMIENTAS } from "./lib/herramientas";
+import { LISTA_PROVINCIAS } from "./lib/ventas";
 
 // Se genera en cada petición para incluir las fichas nuevas
 // (Upstash no deja cachear sus lecturas en el build)
@@ -27,6 +28,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/coches`, lastModified: fecha(ultima), priority: 0.8 },
     ...LETRAS_USADAS.map((l) => ({ url: `${SITE_URL}/matricula/${l.toLowerCase()}`, priority: 0.7 })),
     { url: `${SITE_URL}/matricula/provinciales`, priority: 0.6 },
+    ...LISTA_PROVINCIAS.map((p) => ({ url: `${SITE_URL}/mas-vendidos/${p.slug}`, priority: 0.6 })),
     ...COMUNIDADES.map((c) => ({ url: `${SITE_URL}/calculadora-itp/${c.id}`, priority: 0.7 })),
     ...agruparPorMarca(modelos).map((g) => ({
       url: `${SITE_URL}/coches/${g.slug}`,

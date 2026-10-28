@@ -1,0 +1,222 @@
+/* Datos de matriculaciones de la DGT: fichas y páginas de más vendidos */
+
+.cifras {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+  margin: 16px 0 24px;
+}
+
+.cifra {
+  padding: 16px;
+  border: 1px solid var(--linea);
+  border-radius: 14px;
+  background: var(--superficie);
+}
+
+.cifraN {
+  margin: 0;
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+
+.cifraEt {
+  margin: 4px 0 0;
+  color: var(--suave);
+  font-size: 0.875rem;
+}
+
+.dos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+  gap: 24px;
+  margin-top: 8px;
+}
+
+.subtit {
+  margin: 0 0 10px;
+  font-size: 1rem;
+}
+
+/* Columnas por mes */
+.columnas {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  height: 140px;
+  border-bottom: 1px solid var(--linea);
+}
+
+.col {
+  display: flex;
+  flex: 1;
+  align-items: flex-end;
+  height: 100%;
+}
+
+.col span {
+  width: 100%;
+  min-height: 2px;
+  border-radius: 4px 4px 0 0;
+  background: var(--color);
+}
+
+.col:hover span {
+  background: var(--color-osc);
+}
+
+.ejes {
+  display: flex;
+  gap: 4px;
+  margin-top: 6px;
+  color: var(--suave);
+  font-size: 0.7rem;
+}
+
+.ejes span {
+  flex: 1;
+  overflow: hidden;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* Barras horizontales: nombre, barra y cifra */
+.barras {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.barra {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 4px 12px;
+  font-size: 0.9375rem;
+}
+
+.barraV {
+  color: var(--suave);
+  font-variant-numeric: tabular-nums;
+}
+
+.pista {
+  grid-column: 1 / -1;
+  height: 8px;
+  border-radius: 4px;
+  background: var(--tenue);
+}
+
+.pista span {
+  display: block;
+  height: 100%;
+  min-width: 2px;
+  border-radius: 4px;
+  background: var(--color);
+}
+
+.fuente {
+  margin-top: 16px;
+  color: var(--suave);
+  font-size: 0.85rem;
+}
+
+.fuente a {
+  color: inherit;
+}
+
+/* Ranking */
+.tabla {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9375rem;
+}
+
+.tabla th,
+.tabla td {
+  padding: 10px 8px;
+  border-bottom: 1px solid var(--linea);
+  text-align: left;
+}
+
+.tabla th {
+  color: var(--suave);
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.tabla td:first-child,
+.tabla th:first-child {
+  width: 3ch;
+  color: var(--suave);
+  font-variant-numeric: tabular-nums;
+}
+
+.num {
+  text-align: right !important;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.tabla a {
+  color: var(--color);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.tabla a:hover {
+  text-decoration: underline;
+}
+
+.tablaCaja {
+  overflow-x: auto;
+  border: 1px solid var(--linea);
+  border-radius: 14px;
+  background: var(--superficie);
+  padding: 4px 12px;
+}
+
+.provincias {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.provincias a {
+  display: inline-block;
+  padding: 6px 12px;
+  border: 1px solid var(--linea);
+  border-radius: 999px;
+  background: var(--superficie);
+  color: var(--tinta);
+  font-size: 0.9rem;
+  text-decoration: none;
+}
+
+.provincias a:hover {
+  border-color: var(--color);
+  color: var(--color);
+}
+
+.bloque {
+  margin-top: 40px;
+}
+
+.h2 {
+  margin: 0 0 6px;
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-size: 1.5rem;
+  letter-spacing: -0.02em;
+}
+
+.intro {
+  margin: 0 0 16px;
+  color: var(--suave);
+}
