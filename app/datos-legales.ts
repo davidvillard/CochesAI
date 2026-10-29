@@ -2,9 +2,10 @@
 // Mientras algún valor empiece por "[", en local verás un aviso en la página.
 
 import { SITE_URL } from "./lib/seo";
+import { NOMBRE_WEB } from "./lib/marca";
 
 export const LEGAL = {
-    nombreWeb: "Coches AI",
+    nombreWeb: NOMBRE_WEB,
     // Tu nombre completo, o la razón social si lo haces a través de una empresa
     titular: "David Villar Durán",
     nif: "39468161T",

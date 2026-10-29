@@ -1,4 +1,4 @@
-// Service worker de Coches AI. Solo hace una cosa: recibir la foto que se
+// Service worker de ¿Qué coche es?. Solo hace una cosa: recibir la foto que se
 // comparte desde otra app (manifest -> share_target), guardarla un momento y
 // abrir la portada, que la analiza (components/Identificador.tsx).
 // No cachea páginas: todo lo demás va a la red como siempre.

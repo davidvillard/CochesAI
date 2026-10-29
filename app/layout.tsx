@@ -5,6 +5,7 @@ import Visitas from "./components/Visitas";
 import RegistrarSW from "./components/RegistrarSW";
 import "./globals.css";
 import { SITE_URL } from "./lib/seo";
+import { NOMBRE_CORTO, NOMBRE_WEB } from "./lib/marca";
 
 const display = Bricolage_Grotesque({
   subsets: ["latin"],
@@ -20,8 +21,8 @@ const text = Instrument_Sans({
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  applicationName: "Coches AI",
-  appleWebApp: { capable: true, title: "Coches AI", statusBarStyle: "default" },
+  applicationName: NOMBRE_CORTO,
+  appleWebApp: { capable: true, title: NOMBRE_CORTO, statusBarStyle: "default" },
   category: "automotive",
   keywords: [
     "identificar coche por foto",
@@ -35,8 +36,8 @@ export const metadata: Metadata = {
     icon: "/CochesAI-Logo.svg",
   },
   title: {
-    default: "Identificar coche por foto gratis y sin descargar app | Coches AI",
-    template: "%s | Coches AI",
+    default: "Identificar coche por foto gratis y sin descargar app | ¿Qué coche es?",
+    template: "%s | ¿Qué coche es?",
   },
   description:
     "Reconoce cualquier coche por foto desde el navegador, sin instalar apps: descubre qué modelo es, su ficha técnica y su precio de segunda mano. Gratis.",
@@ -45,15 +46,15 @@ export const metadata: Metadata = {
     type: "website",
     locale: "es_ES",
     url: "/",
-    siteName: "Coches AI",
-    title: "Identificar coche por foto gratis | Coches AI",
+    siteName: NOMBRE_WEB,
+    title: "Identificar coche por foto gratis | ¿Qué coche es?",
     description:
       "Sube la foto de un coche y descubre qué modelo es, su ficha técnica y su precio de segunda mano.",
-    images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: "Coches AI: identifica un coche por foto" }],
+    images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: "¿Qué coche es? Identifica un coche por foto" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Identificar coche por foto gratis | Coches AI",
+    title: "Identificar coche por foto gratis | ¿Qué coche es?",
     description:
       "Sube la foto de un coche y descubre qué modelo es, su ficha técnica y su precio de segunda mano.",
     images: ["/opengraph-image"],
@@ -69,9 +70,9 @@ export const metadata: Metadata = {
       "max-video-preview": -1,
     },
   },
-  authors: [{ name: "Coches AI" }],
-  creator: "Coches AI",
-  publisher: "Coches AI",
+  authors: [{ name: NOMBRE_WEB }],
+  creator: NOMBRE_WEB,
+  publisher: NOMBRE_WEB,
   verification: {
     google: "gFf5Yx-WKMqeVB9tL1ZoBHpDn84roE32XKY4qD2je2A",
   },
@@ -91,7 +92,7 @@ export default function RootLayout({
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    name: "Coches AI",
+    name: NOMBRE_WEB,
     url: SITE_URL,
     description:
       "Web gratuita para identificar un coche por foto sin instalar ninguna app: reconoce la marca, el modelo y la generación, y muestra su ficha y su precio de segunda mano.",
@@ -108,7 +109,7 @@ export default function RootLayout({
     offers: { "@type": "Offer", price: "0", priceCurrency: "EUR" },
     publisher: {
       "@type": "Organization",
-      name: "Coches AI",
+      name: NOMBRE_WEB,
       url: SITE_URL,
       logo: `${SITE_URL}/CochesAI-Logo.png`,
     },

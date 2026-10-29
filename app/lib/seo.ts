@@ -22,7 +22,8 @@ function urlDelSitio() {
 
 export const SITE_URL = urlDelSitio().replace(/\/$/, "");
 
-export const NOMBRE_WEB = "Coches AI";
+import { NOMBRE_WEB } from "./marca";
+export { NOMBRE_WEB };
 
 // Corta un texto sin partir palabras, para meta descripciones (~155 caracteres)
 export function recortar(texto: string, max = 155) {

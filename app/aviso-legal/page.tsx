@@ -7,7 +7,7 @@ import styles from "../legal.module.css";
 export const metadata: Metadata = metadatos({
   titulo: "Aviso legal",
   descripcion:
-    "Datos del titular, condiciones de uso y limitaciones de responsabilidad de Coches AI, el servicio gratuito que identifica un coche a partir de una foto.",
+    "Datos del titular, condiciones de uso y limitaciones de responsabilidad de ¿Qué coche es?, el servicio gratuito que identifica un coche a partir de una foto.",
   ruta: "/aviso-legal",
 });
 

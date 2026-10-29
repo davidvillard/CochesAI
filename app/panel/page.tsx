@@ -164,7 +164,7 @@ export default async function Panel({ searchParams }: Props) {
       <main className={styles.panel}>
         <div className={styles.cabeza}>
           <div>
-            <h1 className={styles.titulo}>Panel de Coches AI</h1>
+            <h1 className={styles.titulo}>Panel de ¿Qué coche es?</h1>
             <p className={styles.nota}>
               Últimos {n} días, hora de España. Analítica propia sin cookies: cuenta también a quien
               rechaza Google Analytics. Pasa el ratón por una barra para ver el detalle.

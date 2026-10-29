@@ -6,7 +6,7 @@ import { LEGAL } from "../datos-legales";
 export const metadata: Metadata = metadatos({
   titulo: "Política de privacidad",
   descripcion:
-    "Qué datos trata Coches AI, con qué finalidad, quién los recibe y cuáles son tus derechos.",
+    "Qué datos trata ¿Qué coche es?, con qué finalidad, quién los recibe y cuáles son tus derechos.",
   ruta: "/privacidad",
 });
 

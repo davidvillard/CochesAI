@@ -1,11 +1,12 @@
 import type { MetadataRoute } from "next";
+import { NOMBRE_CORTO, NOMBRE_WEB } from "./lib/marca";
 
 // Hace la web instalable ("Añadir a pantalla de inicio") y, en Android, la
 // añade a la lista de "Compartir": la foto llega a /compartir (public/sw.js)
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Coches AI: identificar coche por foto",
-    short_name: "Coches AI",
+    name: `${NOMBRE_WEB} Identificar coche por foto`,
+    short_name: NOMBRE_CORTO,
     description: "Identifica cualquier coche con una foto y consulta su ficha, su precio y su matrícula.",
     start_url: "/",
     scope: "/",

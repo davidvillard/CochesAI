@@ -11,7 +11,6 @@ import { eur } from "../lib/formato";
 import type { Resultado } from "../lib/resultados";
 import { medir } from "../lib/medir";
 
-const NOMBRE_WEB = "Coches AI"; // cámbialo aquí cuando decidas el nombre definitivo
 
 // Con id enlaza a la ficha compartida; sin él (Redis sin configurar), a la portada
 function textoCompartir(r: Resultado) {
@@ -23,7 +22,7 @@ function textoCompartir(r: Resultado) {
   const enlace = r.id
     ? `${window.location.origin}/r/${r.id}`
     : window.location.origin;
-  return `He descubierto qué coche es con ${NOMBRE_WEB}: ${nombre}${detalle ? ` (${detalle})` : ""}.${precio} Míralo aquí: ${enlace}`;
+  return `¿Qué coche es? Un ${nombre}${detalle ? ` (${detalle})` : ""}.${precio} Lo he descubierto con una foto: ${enlace}`;
 }
 
 export default function Compartir({ r, style }: { r: Resultado; style?: React.CSSProperties }) {

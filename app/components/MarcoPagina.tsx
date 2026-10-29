@@ -13,7 +13,7 @@ export default function MarcoPagina({ children }: { children: React.ReactNode })
       <footer className={styles.pie}>
         <div className={`${styles.cont} ${styles.pieIn}`}>
           <span>
-            © 2026 Coches AI. Los datos son orientativos y pueden contener errores.
+            © 2026 ¿Qué coche es?. Los datos son orientativos y pueden contener errores.
           </span>
           <nav className={styles.pieLinks} aria-label="Pie">
             <Link href="/">Identificar por foto</Link>

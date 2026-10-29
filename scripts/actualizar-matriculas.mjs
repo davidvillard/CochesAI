@@ -20,7 +20,7 @@ const dos = (n) => String(n).padStart(2, "0");
 // undefined si no trae esa cabecera (pasa con algunos ficheros diarios)
 async function letras(url) {
   const res = await fetch(url, {
-    headers: { Range: "bytes=0-65535", "User-Agent": "CochesAI (actualizacion de tabla de matriculas)" },
+    headers: { Range: "bytes=0-65535", "User-Agent": "QueCocheEs (actualizacion de tabla de matriculas)" },
   });
   if (res.status === 404) return null;
   if (!res.ok) throw new Error(`${res.status} en ${url}`);

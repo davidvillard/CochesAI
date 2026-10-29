@@ -2,7 +2,7 @@ import { ImageResponse } from "next/og";
 import { leerResultado } from "../../lib/resultados";
 import { eur } from "../../lib/formato";
 
-export const alt = "Coche identificado con Coches AI";
+export const alt = "Coche identificado por foto";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -32,7 +32,7 @@ export default async function Image({ params }: { params: Promise<{ id: string }
       }}
     >
       <div style={{ color: "#2d5bff", display: "flex", fontSize: 34, fontWeight: 700 }}>
-        {r ? "Coches AI ha identificado este coche" : "Coches AI"}
+        {r ? "¿Qué coche es? Identificado por foto" : "¿Qué coche es?"}
       </div>
       <div style={{ display: "flex", fontSize: 84, fontWeight: 800, marginTop: 24, lineHeight: 1 }}>
         {titulo}

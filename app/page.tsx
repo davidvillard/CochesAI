@@ -276,7 +276,7 @@ export default function Home() {
 
       <footer className={styles.pie}>
         <div className={`${styles.cont} ${styles.pieIn}`}>
-          <span>© 2026 Coches AI. Las identificaciones y los precios los genera una IA y pueden contener errores.</span>
+          <span>© 2026 ¿Qué coche es?. Las identificaciones y los precios los genera una IA y pueden contener errores.</span>
           <nav className={styles.pieLinks} aria-label="Pie">
             <a href="#como-funciona">Cómo funciona</a>
             <a href="#incluye">Qué incluye</a>

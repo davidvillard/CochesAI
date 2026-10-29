@@ -93,7 +93,7 @@ export default function Cabecera({ enPortada = false }: { enPortada?: boolean })
           <NextImage
             className={base.logoImagen}
             src="/CochesAI-Logo-Completo.png"
-            alt="Coches AI, ir a la portada"
+            alt="¿Qué coche es?, ir a la portada"
             width={122}
             height={101}
             priority

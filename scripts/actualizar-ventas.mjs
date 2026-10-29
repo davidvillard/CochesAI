@@ -13,7 +13,7 @@ import { inflateRawSync } from "node:zlib";
 
 const DESTINO = new URL("../app/lib/ventas-dgt.json", import.meta.url);
 const BASE = "https://www.dgt.es/microdatos/salida";
-const UA = { "User-Agent": "CochesAI (estadisticas de matriculaciones)" };
+const UA = { "User-Agent": "QueCocheEs (estadisticas de matriculaciones)" };
 const dos = (n) => String(n).padStart(2, "0");
 const urlMes = (a, m) => `${BASE}/${a}/${m}/vehiculos/matriculaciones/export_mensual_mat_${a}${dos(m)}.zip`;
 

@@ -1,6 +1,7 @@
 import { ImageResponse } from "next/og";
+import { NOMBRE_WEB } from "./lib/marca";
 
-export const alt = "Coches AI: identifica un coche por foto";
+export const alt = `${NOMBRE_WEB} Identifica un coche por foto`;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -19,7 +20,7 @@ export default function Image() {
       }}
     >
       <div style={{ color: "#3155d9", display: "flex", fontSize: 34, fontWeight: 700 }}>
-        Coches AI
+        {NOMBRE_WEB}
       </div>
       <div style={{ display: "flex", fontSize: 68, fontWeight: 800, marginTop: 28 }}>
         Identifica un coche por foto
