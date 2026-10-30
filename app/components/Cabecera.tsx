@@ -92,10 +92,10 @@ export default function Cabecera({ enPortada = false }: { enPortada?: boolean })
         <Link href="/" className={base.logo}>
           <NextImage
             className={base.logoImagen}
-            src="/CochesAI-Logo-Completo.png"
+            src="/logo-quecochees.svg"
             alt="¿Qué coche es?, ir a la portada"
-            width={122}
-            height={101}
+            width={217}
+            height={122}
             priority
           />
         </Link>
