@@ -32,9 +32,6 @@ export const metadata: Metadata = {
     "ficha técnica coche",
     "inteligencia artificial coches",
   ],
-  icons: {
-    icon: "/CochesAI-Logo.svg",
-  },
   title: {
     default: "Identificar coche por foto gratis y sin descargar app | ¿Qué coche es?",
     template: "%s | ¿Qué coche es?",
