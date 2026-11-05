@@ -2,15 +2,20 @@ import { z } from "zod";
 
 // Modelos a probar en orden. Se pueden cambiar con la variable GEMINI_MODELS
 // (nombres separados por comas). Si uno se queda sin cuota, pasa al siguiente.
-// Flash-Lite va primero porque en el plan gratuito admite muchas más peticiones
-// al día que los Flash normales (500 frente a 20).
+// Los Flash-Lite van primero porque en el plan gratuito admiten muchas más
+// peticiones al día que los Flash normales (500 cada uno frente a 20), y cada
+// modelo tiene su propia cuota: con dos Lite hay 1.000 al día.
 export const MODELS = (
   process.env.GEMINI_MODELS ??
-  "gemini-3.5-flash-lite,gemini-3.8-flash,gemini-3.7-flash,gemini-3.6-flash"
+  "gemini-3.5-flash-lite,gemini-3.1-flash-lite,gemini-3.8-flash,gemini-3.7-flash,gemini-3.6-flash"
 )
   .split(",")
   .map((m) => m.trim())
   .filter((m, i, arr) => m && arr.indexOf(m) === i); // quita vacíos y duplicados
+
+// Solo los de cuota grande: para trabajos en lote, que no deben gastar los de
+// 20 al día que quedan de respaldo para los usuarios
+export const MODELOS_LITE = MODELS.filter((m) => m.includes("lite"));
 
 type Parte =
   | { text: string }

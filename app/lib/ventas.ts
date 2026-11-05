@@ -59,6 +59,26 @@ export const COMBUSTIBLES: Record<string, string> = {
 
 export const modelo = (clave: string) => MODELOS[clave];
 
+// Modelos con ventas de coches nuevos, del más vendido al menos
+export const POR_PUESTO = Object.entries(MODELOS)
+  .filter(([, m]) => m.nuevos > 0)
+  .sort((a, b) => a[1].puesto - b[1].puesto)
+  .map(([clave]) => clave);
+
+// "toyota/c-hr" + "Toyota C-HR" -> { marca: "Toyota", modelo: "C-HR" }.
+// Si el nombre no empieza por la marca ("MG3"), la marca va aparte.
+export function marcaYModelo(clave: string) {
+  const [marcaSlug] = clave.split("/");
+  const palabras = MODELOS[clave].nombre.split(" ");
+  const slug = (s: string) => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-");
+  for (let i = 1; i < palabras.length; i++) {
+    if (slug(palabras.slice(0, i).join(" ")) === marcaSlug) {
+      return { marca: palabras.slice(0, i).join(" "), modelo: palabras.slice(i).join(" ") };
+    }
+  }
+  return { marca: marcaSlug.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()), modelo: MODELOS[clave].nombre };
+}
+
 // ---------- Cruce con las fichas ----------
 
 const marcaBase = (m: string) => (m.startsWith("mercedes") ? "mercedes-benz" : m);

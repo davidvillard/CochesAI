@@ -1,11 +1,12 @@
 import { z } from "zod";
 import { redis } from "./redis";
-import { MODELS, extraerJson, llamarGemini, numero, texto, textoDe } from "./gemini";
+import { MODELS, MODELOS_LITE, extraerJson, llamarGemini, numero, texto, textoDe } from "./gemini";
 
 // Fichas de modelo (/coches/<marca>/<modelo>). Se crean con Gemini la primera vez
 // que alguien identifica ese coche con buena seguridad y se guardan para siempre.
-// Solo existen páginas de modelos que la web ya ha identificado: así nadie puede
-// gastar cuota de Gemini pidiendo URLs inventadas.
+// Solo existen páginas de modelos que la web ya ha identificado, o que se han
+// creado a propósito desde /api/admin/fichas (protegida con STATS_KEY): así nadie
+// puede gastar cuota de Gemini pidiendo URLs inventadas.
 
 const CLAVE_MODELOS = "quecoche:modelos"; // ranking: slug -> nº de identificaciones
 const CLAVE_NOMBRES = "quecoche:modelos:nombres"; // slug -> { marca, modelo, actualizada }
@@ -128,11 +129,11 @@ Reglas:
 - No inventes datos: si dudas de una cifra, da un rango.
 - Todo en español.`;
 
-async function generar(marca: string, modelo: string) {
+async function generar(marca: string, modelo: string, modelos = MODELS) {
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) return null;
 
-  for (const model of MODELS) {
+  for (const model of modelos) {
     const res = await llamarGemini(model, apiKey, [{ text: prompt(marca, modelo) }]);
     if (!res.ok) {
       console.error(`[ficha ${model}] ${res.status}`, await res.text());
@@ -154,27 +155,38 @@ async function generar(marca: string, modelo: string) {
 
 // Se llama tras cada identificación. Si el modelo ya tiene ficha, suma una
 // visita; si no, intenta crearla. Devuelve la URL de la ficha si la hay.
-export async function registrarModelo(marca: string, modelo: string): Promise<string | undefined> {
-  const slug = slugModelo(marca, modelo);
+// Opciones (para crear fichas por adelantado, sin que nadie haya identificado
+// el coche): slug fija la dirección de la ficha aunque la IA corrija el nombre,
+// contar: false la añade al listado sin sumar una identificación, y lote: true
+// usa solo los modelos de cuota grande (para no gastar los de respaldo).
+export async function registrarModelo(
+  marca: string,
+  modelo: string,
+  opciones: { slug?: string; contar?: boolean; lote?: boolean } = {}
+): Promise<string | undefined> {
+  const { contar = true } = opciones;
+  const slug = opciones.slug ?? slugModelo(marca, modelo);
   if (!redis || !slug) return;
+  const anotar = (s: string) =>
+    contar ? redis!.zincrby(CLAVE_MODELOS, 1, s) : redis!.zadd(CLAVE_MODELOS, { nx: true }, { score: 0, member: s });
   try {
     const existente = await leerFicha(slug);
     if (existente) {
       const real = "alias" in existente ? existente.alias : slug;
-      await redis.zincrby(CLAVE_MODELOS, 1, real);
+      await anotar(real);
       return urlFicha(real);
     }
     // Solo un intento al día por modelo
     const libre = await redis.set(claveIntento(slug), 1, { nx: true, ex: 60 * 60 * 24 });
     if (!libre) return;
 
-    const datos = await generar(marca, modelo);
+    const datos = await generar(marca, modelo, opciones.lote ? MODELOS_LITE : MODELS);
     if (!datos) return;
 
     // El nombre corregido por la IA puede dar otro slug ("VW Golf GTI" ->
     // "volkswagen/golf"): la ficha se guarda con el bueno y el original queda
     // como alias, para que no haya dos fichas del mismo coche
-    const slugFinal = slugModelo(datos.marca, datos.modelo) ?? slug;
+    const slugFinal = opciones.slug ?? slugModelo(datos.marca, datos.modelo) ?? slug;
     if (slugFinal !== slug) await redis.set(claveFicha(slug), { alias: slugFinal });
     // Si el modelo base ya tenía ficha, no se sobrescribe: solo se cuenta
     if (!(await redis.exists(claveFicha(slugFinal)))) {
@@ -185,7 +197,7 @@ export async function registrarModelo(marca: string, modelo: string): Promise<st
         [slugFinal]: { marca: ficha.marca, modelo: ficha.modelo, actualizada },
       });
     }
-    await redis.zincrby(CLAVE_MODELOS, 1, slugFinal);
+    await anotar(slugFinal);
     return urlFicha(slugFinal);
   } catch (err) {
     console.error("Error al registrar el modelo:", err);

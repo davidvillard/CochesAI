@@ -57,20 +57,30 @@ function marcaDe(texto) {
 }
 
 // Primeras palabras que no bastan para nombrar el modelo
-const DOBLES = new Set(["model", "serie", "series", "clase", "range", "grand", "santa", "new", "e", "mustang"]);
+const DOBLES = new Set(["model", "serie", "series", "clase", "range", "grand", "santa", "new", "e", "mustang", "tourneo", "transit"]);
+// Palabras de motorización que no forman parte del nombre del modelo
+const MOTOR = new Set(["hev", "phev", "mhev", "ev", "hybrid", "e-hybrid", "hibrido", "electric", "electrico", "gasolina", "diesel"]);
 
 // Modelo de la DGT -> familia: "SEAT LEON SP E-HYBRID" -> "leon", "X1 SDRIVE20D" -> "x1",
-// "A 250 E" (Mercedes) -> "clase-a", "120D" (BMW) -> "serie-1"
+// "A 250 E" (Mercedes) -> "clase-a", "120D" (BMW) -> "serie-1", "OMODA5 HEV" -> "5"
 function familiaDe(marca, texto) {
-  let palabras = texto.toLowerCase().replace(/[(),]/g, " ").split(/[\s ]+/).filter(Boolean);
+  // Cualquier carácter raro separa palabras ("BERLINGO­TALLA M" -> "berlingo talla m")
+  let palabras = texto.toLowerCase().replace(/[^a-z0-9ëüñ.+&-]+/g, " ").split(" ").filter(Boolean);
   // Quita la marca repetida y "nuevo" del principio ("NUEVO CITROËN C3", "VW GOLF")
   const sobra = new Set([...marca.split("-"), marca, "nuevo", "nueva", "new", ...(marca === "volkswagen" ? ["vw"] : [])]);
-  while (palabras.length > 1 && sobra.has(trozo(palabras[0]))) palabras.shift();
+  // Sin signos sueltos ("LYNK & CO 08": el "&" no es una palabra)
   palabras = palabras.map(trozo).filter(Boolean);
+  while (palabras.length > 1 && sobra.has(palabras[0])) palabras.shift();
+  palabras = palabras.filter((p) => !MOTOR.has(p));
   if (!palabras.length) return null;
-  const [p1, p2] = palabras;
+  let [p1, p2] = palabras;
+  // "omoda5" -> "5", "mg3" -> "3", "jaecoo7" -> "7": la marca pegada al número
+  const pegada = p1.startsWith(marca.replace(/-/g, "")) ? p1.slice(marca.replace(/-/g, "").length).replace(/^-/, "") : "";
+  if (/^\d+$/.test(pegada)) p1 = pegada;
   if (marca === "mercedes-benz" && /^[a-z]$/.test(p1)) return `clase-${p1}`;
   if (marca === "bmw" && /^\d{3}/.test(p1)) return `serie-${p1[0]}`;
+  if (marca === "lexus" && /^[a-z]{2,3}\d/.test(p1)) return p1.replace(/\d.*$/, ""); // "nx450h" -> "nx"
+  if (/^[a-z]$/.test(p1) && /^\d+$/.test(p2 ?? "")) return `${p1}${p2}`; // "i 30" -> "i30"
   if ((DOBLES.has(p1) || p1.length === 1) && p2) return `${p1}-${p2}`;
   return p1;
 }
@@ -91,7 +101,7 @@ function combustibleDe(propulsion, electrico) {
 const MARCAS = {
   bmw: "BMW", mg: "MG", ds: "DS", kia: "Kia", seat: "Seat", cupra: "Cupra", byd: "BYD",
   "mercedes-benz": "Mercedes-Benz", "land-rover": "Land Rover", "alfa-romeo": "Alfa Romeo",
-  volkswagen: "Volkswagen", "ssangyong": "SsangYong", kgm: "KGM", jaecoo: "Jaecoo",
+  volkswagen: "Volkswagen", "ssangyong": "SsangYong", kgm: "KGM", jaecoo: "Jaecoo", "lynk-co": "Lynk & Co", dr: "DR", citroen: "Citroën",
 };
 const bonito = (s) => s.charAt(0).toUpperCase() + s.slice(1);
 const nombreMarca = (m) => MARCAS[m] ?? m.split("-").map(bonito).join(" ");
