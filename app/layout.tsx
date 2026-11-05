@@ -5,7 +5,12 @@ import Visitas from "./components/Visitas";
 import RegistrarSW from "./components/RegistrarSW";
 import "./globals.css";
 import { SITE_URL } from "./lib/seo";
-import { NOMBRE_CORTO, NOMBRE_WEB } from "./lib/marca";
+import {
+  NOMBRE_CORTO,
+  NOMBRE_WEB,
+  NOMBRES_ALTERNATIVOS,
+  REDES,
+} from "./lib/marca";
 
 const display = Bricolage_Grotesque({
   subsets: ["latin"],
@@ -22,7 +27,11 @@ const text = Instrument_Sans({
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   applicationName: NOMBRE_CORTO,
-  appleWebApp: { capable: true, title: NOMBRE_CORTO, statusBarStyle: "default" },
+  appleWebApp: {
+    capable: true,
+    title: NOMBRE_CORTO,
+    statusBarStyle: "default",
+  },
   category: "automotive",
   keywords: [
     "identificar coche por foto",
@@ -33,7 +42,8 @@ export const metadata: Metadata = {
     "inteligencia artificial coches",
   ],
   title: {
-    default: "Identificar coche por foto gratis y sin descargar app | ¿Qué coche es?",
+    default:
+      "Identificar coche por foto gratis y sin descargar app | ¿Qué coche es?",
     template: "%s | ¿Qué coche es?",
   },
   description:
@@ -47,7 +57,14 @@ export const metadata: Metadata = {
     title: "Identificar coche por foto gratis | ¿Qué coche es?",
     description:
       "Sube la foto de un coche y descubre qué modelo es, su ficha técnica y su precio de segunda mano.",
-    images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: "¿Qué coche es? Identifica un coche por foto" }],
+    images: [
+      {
+        url: "/opengraph-image",
+        width: 1200,
+        height: 630,
+        alt: "¿Qué coche es? Identifica un coche por foto",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
@@ -86,30 +103,57 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  // La marca como una sola entidad: organización, web y aplicación enlazadas
+  // por @id, para que buscadores e IAs la reconozcan y la citen bien
+  const organizacion = `${SITE_URL}/#organizacion`;
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "WebApplication",
-    name: NOMBRE_WEB,
-    url: SITE_URL,
-    description:
-      "Web gratuita para identificar un coche por foto sin instalar ninguna app: reconoce la marca, el modelo y la generación, y muestra su ficha y su precio de segunda mano.",
-    browserRequirements: "Funciona en cualquier navegador, sin instalación",
-    featureList: [
-      "Identificar coche por foto",
-      "Buscar el modelo de un coche por foto",
-      "Precio de segunda mano estimado",
-      "Año y etiqueta ambiental por matrícula",
-      "Calculadora de ITP",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": organizacion,
+        name: NOMBRE_WEB,
+        alternateName: NOMBRES_ALTERNATIVOS,
+        url: SITE_URL,
+        logo: {
+          "@type": "ImageObject",
+          url: `${SITE_URL}/icono-512.png`,
+          width: 512,
+          height: 512,
+        },
+        description:
+          "Web española gratuita para identificar coches por foto y consultar fichas, fallos comunes, ventas oficiales de la DGT, matrículas, ITP e ITV.",
+        ...(REDES.length ? { sameAs: REDES } : {}),
+      },
+      {
+        "@type": "WebSite",
+        "@id": `${SITE_URL}/#web`,
+        name: NOMBRE_WEB,
+        alternateName: NOMBRES_ALTERNATIVOS,
+        url: SITE_URL,
+        inLanguage: "es-ES",
+        publisher: { "@id": organizacion },
+      },
+      {
+        "@type": "WebApplication",
+        name: NOMBRE_WEB,
+        url: SITE_URL,
+        description:
+          "Web gratuita para identificar un coche por foto sin instalar ninguna app: reconoce la marca, el modelo y la generación, y muestra su ficha y su precio de segunda mano.",
+        browserRequirements: "Funciona en cualquier navegador, sin instalación",
+        featureList: [
+          "Identificar coche por foto",
+          "Buscar el modelo de un coche por foto",
+          "Precio de segunda mano estimado",
+          "Año y etiqueta ambiental por matrícula",
+          "Calculadora de ITP",
+        ],
+        applicationCategory: "AutomotiveApplication",
+        operatingSystem: "Web",
+        offers: { "@type": "Offer", price: "0", priceCurrency: "EUR" },
+        publisher: { "@id": organizacion },
+      },
     ],
-    applicationCategory: "AutomotiveApplication",
-    operatingSystem: "Web",
-    offers: { "@type": "Offer", price: "0", priceCurrency: "EUR" },
-    publisher: {
-      "@type": "Organization",
-      name: NOMBRE_WEB,
-      url: SITE_URL,
-      logo: `${SITE_URL}/CochesAI-Logo.png`,
-    },
   };
 
   return (

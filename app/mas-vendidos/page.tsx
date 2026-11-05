@@ -7,13 +7,16 @@ import TablaRanking from "../components/TablaRanking";
 import { Barras } from "../components/GraficasVentas";
 import { listarModelos } from "../lib/fichas";
 import { SITE_URL, metadatos } from "../lib/seo";
+import { fechaLarga } from "../lib/formato";
 import {
+  ACTUALIZADO,
   COMBUSTIBLE_ESPANA,
   FUENTE_DGT,
   HASTA,
   LISTA_PROVINCIAS,
   MARCAS,
   PERIODO,
+  PERIODO_ISO,
   RANKING,
   RANKING_IMPORTADOS,
   RANKING_ULTIMO_MES,
@@ -43,17 +46,35 @@ export default async function MasVendidos() {
     (COMBUSTIBLE_ESPANA.electrico ?? 0) + (COMBUSTIBLE_ESPANA.enchufable ?? 0) + (COMBUSTIBLE_ESPANA.hibrido ?? 0);
   const totalMarcas = Object.values(MARCAS).reduce((a, b) => a + b, 0);
 
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "ItemList",
-    name: `Coches más vendidos en España (${PERIODO})`,
-    itemListElement: RANKING.slice(0, 10).map((k, i) => ({
-      "@type": "ListItem",
-      position: i + 1,
-      name: modelo(k)?.nombre,
-      ...(fichas.get(k) ? { url: `${SITE_URL}/coches/${fichas.get(k)}` } : {}),
-    })),
-  };
+  const jsonLd = [
+    {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      name: `Coches más vendidos en España (${PERIODO})`,
+      itemListElement: RANKING.slice(0, 10).map((k, i) => ({
+        "@type": "ListItem",
+        position: i + 1,
+        name: modelo(k)?.nombre,
+        ...(fichas.get(k) ? { url: `${SITE_URL}/coches/${fichas.get(k)}` } : {}),
+      })),
+    },
+    // Los datos como conjunto de datos: así buscadores e IAs los reconocen como fuente
+    {
+      "@context": "https://schema.org",
+      "@type": "Dataset",
+      name: "Turismos matriculados en España por modelo, provincia y combustible",
+      description: `Turismos y todoterrenos matriculados en España ${PERIODO}, agrupados por modelo, provincia, combustible y marca, a partir de los microdatos oficiales de la DGT. Incluye coches nuevos y usados importados. Se actualiza cada mes.`,
+      url: `${SITE_URL}/mas-vendidos`,
+      isBasedOn: FUENTE_DGT,
+      creator: { "@id": `${SITE_URL}/#organizacion` },
+      temporalCoverage: PERIODO_ISO,
+      spatialCoverage: { "@type": "Place", name: "España" },
+      dateModified: ACTUALIZADO,
+      inLanguage: "es-ES",
+      variableMeasured: ["Unidades matriculadas", "Combustible", "Provincia", "Marca", "Nuevo o usado importado"],
+      keywords: ["coches más vendidos", "matriculaciones", "DGT", "ventas de coches en España"],
+    },
+  ];
 
   return (
     <MarcoPagina>
@@ -152,7 +173,8 @@ export default async function MasVendidos() {
               microdatos de matriculaciones de la DGT
             </a>{" "}
             (turismos y todoterrenos, matriculación ordinaria). Cada modelo agrupa todas sus versiones. Se
-            actualiza cada mes.
+            actualiza cada mes; última actualización: {fechaLarga(ACTUALIZADO)}.{" "}
+            <Link href="/metodologia">Cómo elaboramos estos datos</Link>.
           </p>
         </div>
       </section>

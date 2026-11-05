@@ -284,6 +284,7 @@ export default function Home() {
             <Link href="/coches">Fichas de coches</Link>
             <Link href="/matricula">Matrícula y etiqueta</Link>
             <Link href="/herramientas">Herramientas</Link>
+            <Link href="/metodologia">Metodología</Link>
             <Link href="/privacidad">Privacidad</Link>
             <Link href="/aviso-legal">Aviso legal</Link>
           </nav>

@@ -7,7 +7,7 @@ import styles from "../../coches.module.css";
 import MarcoPagina from "../../../components/MarcoPagina";
 import Afiliados from "../../../components/Afiliados";
 import VentasModelo from "../../../components/VentasModelo";
-import { eur } from "../../../lib/formato";
+import { eur, fechaLarga } from "../../../lib/formato";
 import {
   leerFicha,
   listaFallos,
@@ -58,6 +58,16 @@ export default async function FichaModelo({ params }: Props) {
         { "@type": "ListItem", position: 2, name: f.marca, item: `${SITE_URL}${urlMarca}` },
         { "@type": "ListItem", position: 3, name: nombre, item: `${SITE_URL}${urlFicha(f.slug)}` },
       ],
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      name: `${nombre}: fallos comunes, problemas y precio`,
+      url: `${SITE_URL}${urlFicha(f.slug)}`,
+      dateModified: f.actualizada,
+      inLanguage: "es-ES",
+      about: { "@type": "Car", name: nombre, brand: { "@type": "Brand", name: f.marca }, model: f.modelo },
+      publisher: { "@id": `${SITE_URL}/#organizacion` },
     },
     ...(f.preguntas.length
       ? [
@@ -266,8 +276,10 @@ export default async function FichaModelo({ params }: Props) {
         )}
 
         <p className={styles.aviso}>
-          Ficha elaborada con inteligencia artificial a partir de información pública.
-          Puede contener errores: comprueba los datos antes de comprar.
+          Ficha elaborada con inteligencia artificial a partir de información pública
+          {f.actualizada ? <> y actualizada el {fechaLarga(f.actualizada)}</> : null}. Puede contener
+          errores: comprueba los datos antes de comprar.{" "}
+          <Link href="/metodologia">Cómo elaboramos las fichas</Link>.
         </p>
       </article>
 

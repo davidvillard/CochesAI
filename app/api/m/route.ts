@@ -31,7 +31,7 @@ const EVENTOS = new Set([
 const SECCIONES = new Set([
   "", "matricula", "ultima-matricula", "bastidor", "coches", "comparar",
   "calculadora-itp", "coste-transferencia", "itv", "checklist-compra-coche",
-  "contrato-compraventa-coche", "herramientas", "mas-vendidos", "r", "privacidad", "aviso-legal",
+  "contrato-compraventa-coche", "herramientas", "mas-vendidos", "metodologia", "r", "privacidad", "aviso-legal",
 ]);
 
 // Texto libre -> valor corto y seguro: "Comunidad de Madrid" -> "comunidad-de-madrid"

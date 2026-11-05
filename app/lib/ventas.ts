@@ -38,6 +38,10 @@ const mes = (s: string) => ({ anio: Number(s.slice(0, 4)), mes: Number(s.slice(5
 export const DESDE = nombreMes(mes(VENTAS.desde));
 export const HASTA = nombreMes(mes(VENTAS.hasta));
 export const PERIODO = `de ${DESDE} a ${HASTA}`;
+// Día en que se descargaron los datos de la DGT ("2026-10-28")
+export const ACTUALIZADO = VENTAS.actualizado;
+// Periodo de los datos en formato ISO 8601 ("2025-10/2026-09")
+export const PERIODO_ISO = `${VENTAS.desde}/${VENTAS.hasta}`;
 
 // Las 12 etiquetas de mes cortas para las gráficas: "oct", "nov"...
 export const MESES_CORTOS = Array.from({ length: 12 }, (_, i) => {

@@ -8,7 +8,9 @@ import TablaRanking from "../../components/TablaRanking";
 import { Barras } from "../../components/GraficasVentas";
 import { listarModelos } from "../../lib/fichas";
 import { SITE_URL, metadatos } from "../../lib/seo";
+import { fechaLarga } from "../../lib/formato";
 import {
+  ACTUALIZADO,
   COMBUSTIBLE_ESPANA,
   FUENTE_DGT,
   HASTA,
@@ -131,8 +133,9 @@ export default async function MasVendidosProvincia({ params }: Props) {
             <a href={FUENTE_DGT} target="_blank" rel="noopener noreferrer">
               microdatos de matriculaciones de la DGT
             </a>
-            . Los coches de empresas de alquiler y renting cuentan en la provincia donde están domiciliados, por eso
-            Madrid suele salir muy alta.
+            , actualizados el {fechaLarga(ACTUALIZADO)}. Los coches de empresas de alquiler y renting cuentan en la
+            provincia donde están domiciliados, por eso Madrid suele salir muy alta.{" "}
+            <Link href="/metodologia">Cómo elaboramos estos datos</Link>.
           </p>
         </div>
       </section>
