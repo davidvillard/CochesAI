@@ -1,0 +1,56 @@
+# Actualiza los datos de la DGT (fechas de matrículas y ventas de coches) y,
+# si han cambiado, los guarda en main y en develop. Vercel publica la web sola
+# al recibir el cambio en main.
+#
+# Se ejecuta cada lunes por la mañana: el script de ventas solo descarga cuando
+# la DGT ha publicado un mes nuevo (hacia el día 15), y el de matrículas
+# mantiene al día la "última matrícula de hoy".
+# También se puede lanzar a mano: pestaña Actions -> Datos DGT -> Run workflow.
+
+name: Datos DGT
+
+on:
+  schedule:
+    - cron: "0 6 * * 1" # lunes a las 6:00 UTC (7:00 u 8:00 en España)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: datos-dgt
+  cancel-in-progress: false
+
+jobs:
+  actualizar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # Los scripts solo usan módulos de Node: no hace falta npm install
+      - name: Descargar datos de la DGT
+        run: npm run matriculas
+
+      - name: Guardar y publicar si hay cambios
+        run: |
+          if git diff --quiet -- app/lib/matriculas-dgt.json app/lib/ventas-dgt.json; then
+            echo "Sin datos nuevos de la DGT"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add app/lib/matriculas-dgt.json app/lib/ventas-dgt.json
+          git commit -m "datos DGT actualizados automaticamente"
+          git push origin main
+          # develop recibe los mismos datos para que no se quede atrás
+          git checkout develop
+          git merge --no-edit main
+          git push origin develop
