@@ -196,6 +196,7 @@ export async function registrarModelo(
       await redis.hset(CLAVE_NOMBRES, {
         [slugFinal]: { marca: ficha.marca, modelo: ficha.modelo, actualizada },
       });
+      cache.delete(CACHE_LISTADO);
     }
     await anotar(slugFinal);
     return urlFicha(slugFinal);
@@ -204,6 +205,24 @@ export async function registrarModelo(
   }
 }
 
+// ---------- Caché en memoria ----------
+
+// Las fichas casi nunca cambian y los robots piden las mismas páginas una y otra
+// vez. Upstash cobra por datos transferidos, así que cada instancia del servidor
+// recuerda lo leído unos minutos en vez de volver a pedirlo. Solo se guarda lo
+// que existe: una ficha recién creada aparece al momento.
+const cache = new Map<string, { valor: unknown; caduca: number }>();
+
+async function conCache<T>(clave: string, minutos: number, leer: () => Promise<T>, guardar: (v: T) => boolean) {
+  const c = cache.get(clave);
+  if (c && c.caduca > Date.now()) return c.valor as T;
+  const valor = await leer();
+  if (guardar(valor)) cache.set(clave, { valor, caduca: Date.now() + minutos * 60_000 });
+  return valor;
+}
+
+const CACHE_LISTADO = "listado";
+
 // ---------- Lectura ----------
 
 type Guardado = Ficha | { alias: string };
@@ -211,12 +230,20 @@ type Guardado = Ficha | { alias: string };
 // Devuelve la ficha, o { alias } si ese nombre redirige a otra ficha
 export async function leerFicha(slug: string) {
   if (!redis || !/^[a-z0-9-]+\/[a-z0-9-]+$/.test(slug)) return null;
-  try {
-    return await redis.get<Guardado>(claveFicha(slug));
-  } catch (err) {
-    console.error("Error al leer la ficha:", err);
-    return null;
-  }
+  const db = redis;
+  return conCache(
+    `ficha:${slug}`,
+    10,
+    async () => {
+      try {
+        return await db.get<Guardado>(claveFicha(slug));
+      } catch (err) {
+        console.error("Error al leer la ficha:", err);
+        return null;
+      }
+    },
+    (f) => f !== null
+  );
 }
 
 // URL de la ficha de ese coche, si existe (siguiendo el alias)
@@ -236,8 +263,13 @@ export type ModeloListado = {
   actualizada?: string;
 };
 
-// Todos los modelos con ficha, del más identificado al menos
+// Todos los modelos con ficha, del más identificado al menos.
+// Se guarda 5 minutos en memoria (ver conCache): lo leen muchas páginas
 export async function listarModelos(): Promise<ModeloListado[]> {
+  return conCache(CACHE_LISTADO, 5, leerListado, (l) => l.length > 0);
+}
+
+async function leerListado(): Promise<ModeloListado[]> {
   if (!redis) return [];
   try {
     const ranking = await redis.zrange<(string | number)[]>(CLAVE_MODELOS, 0, -1, {
