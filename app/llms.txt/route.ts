@@ -22,10 +22,10 @@ export async function GET() {
   const texto = [
     `# ${NOMBRE_WEB}`,
     "",
-    `> ${NOMBRE_WEB} (${SITE_URL.replace(/^https?:\/\//, "")}) es una web española gratuita para identificar un coche por foto desde el navegador, sin instalar apps, y para informarse antes de comprar un coche: fichas con fallos comunes y precios de segunda mano, ventas oficiales de la DGT, año y etiqueta por matrícula, ITP, ITV y transferencia.`,
+    `> ${NOMBRE_WEB} (${SITE_URL.replace(/^https?:\/\//, "")}) es una web española gratuita para identificar un coche por foto desde el navegador, sin instalar apps, y para informarse antes de comprar un coche: fichas con fallos comunes y precios de segunda mano, ventas de coches con datos abiertos de la DGT, año y etiqueta por matrícula, ITP, ITV y transferencia.`,
     "",
     "Datos clave:",
-    `- Ventas de coches: microdatos oficiales de matriculaciones de la DGT (${PERIODO}), actualizados cada mes. Fuente: ${FUENTE_DGT}`,
+    `- Ventas de coches: elaboración propia a partir de los microdatos de matriculaciones de la Dirección General de Tráfico (DGT), ${PERIODO}, actualizados cada mes. La DGT no participa en este análisis ni lo respalda. Origen de los datos: ${FUENTE_DGT}`,
     "- Fecha de matriculación por letras de la matrícula: datos abiertos de la DGT (desde 2015) y tablas públicas (2000-2014).",
     "- ITP: tipos de cada comunidad autónoma y tablas de Hacienda (Orden HAC/1501/2025).",
     "- Fichas de modelos: elaboradas con IA a partir de información pública; pueden contener errores y se indica en cada ficha.",

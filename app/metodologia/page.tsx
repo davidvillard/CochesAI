@@ -11,7 +11,7 @@ import { FECHA_ULTIMA_OFICIAL } from "../lib/matricula";
 export const metadata: Metadata = metadatos({
   titulo: "Metodología y fuentes de los datos",
   descripcion:
-    "De dónde salen los datos de ¿Qué coche es?: ventas oficiales de la DGT, fechas de matrículas, ITP, ITV y fichas de coches elaboradas con IA. Cómo se hacen y sus limitaciones.",
+    "De dónde salen los datos de ¿Qué coche es?: ventas de coches con datos abiertos de la DGT, fechas de matrículas, ITP, ITV y fichas de coches elaboradas con IA. Cómo se hacen y sus limitaciones.",
   ruta: "/metodologia",
 });
 
@@ -31,8 +31,10 @@ export default function Metodologia() {
         <a href={FUENTE_DGT} target="_blank" rel="noopener noreferrer">
           microdatos de matriculaciones de la DGT
         </a>
-        , que la Dirección General de Tráfico publica cada mes como datos abiertos. Cada fichero
-        recoge todos los vehículos matriculados ese mes, uno por línea.
+        , que la Dirección General de Tráfico publica cada mes como datos abiertos y que se pueden
+        reutilizar citando su origen (Ley 37/2007). Cada fichero recoge todos los vehículos
+        matriculados ese mes, uno por línea. Los rankings y cálculos son elaboración propia de{" "}
+        {NOMBRE_WEB}: la DGT no participa en ellos ni los respalda.
       </p>
       <ul>
         <li>

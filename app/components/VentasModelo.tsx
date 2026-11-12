@@ -1,8 +1,8 @@
 import Link from "next/link";
 import styles from "./Ventas.module.css";
 import { Barras, PorMes } from "./GraficasVentas";
+import FuenteDgt from "./FuenteDgt";
 import {
-  FUENTE_DGT,
   PERIODO,
   pct,
   provinciaPorCodigo,
@@ -29,7 +29,7 @@ export default function VentasModelo({ slug, nombre }: { slug: string; nombre: s
         ¿Cuántos {nombre} se venden en España?
       </h2>
       <p className={styles.intro}>
-        Turismos de la familia {v.nombre} matriculados {PERIODO}, según los datos oficiales de la DGT.
+        Turismos de la familia {v.nombre} matriculados {PERIODO}, según nuestro análisis de los datos abiertos de la DGT.
       </p>
 
       <div className={styles.cifras}>
@@ -79,11 +79,8 @@ export default function VentasModelo({ slug, nombre }: { slug: string; nombre: s
       </div>
 
       <p className={styles.fuente}>
-        Fuente:{" "}
-        <a href={FUENTE_DGT} target="_blank" rel="noopener noreferrer">
-          microdatos de matriculaciones de la DGT
-        </a>
-        . Incluye todas las versiones y carrocerías del modelo, nuevos y usados importados.
+        Incluye todas las versiones y carrocerías del modelo, nuevos y usados importados.{" "}
+        <FuenteDgt datos="ventas" />
       </p>
     </section>
   );

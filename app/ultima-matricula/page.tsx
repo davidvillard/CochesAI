@@ -43,8 +43,8 @@ export default function UltimaMatricula() {
           </span>
           <h1 className={base.h1}>Última matrícula de España hoy</h1>
           <p className={base.sub}>
-            Estimación de la matrícula que se está asignando ahora mismo, a partir de los
-            datos oficiales de la DGT.
+            Estimación de la matrícula que se está asignando ahora mismo, calculada a partir
+            de los datos abiertos de la DGT.
           </p>
 
           <div className={styles.caja}>
@@ -57,11 +57,11 @@ export default function UltimaMatricula() {
                   (media de los últimos 3 meses).
                 </li>
                 <li>
-                  Último dato oficial: {fechaLarga(FECHA_ULTIMA_OFICIAL)}, de los{" "}
+                  Último dato publicado por la DGT: {fechaLarga(FECHA_ULTIMA_OFICIAL)}, en sus{" "}
                   <a href={FUENTE_DGT} target="_blank" rel="noopener noreferrer" style={{ color: "#fff" }}>
                     microdatos de matriculaciones de la DGT
                   </a>
-                  . Desde entonces es una estimación con un margen de unos días.
+                  . Desde entonces es una estimación propia con un margen de unos días; la DGT no participa en este cálculo.
                 </li>
                 <li>
                   En {anioActual.anio} la serie empezó por la {anioActual.primera}.{" "}

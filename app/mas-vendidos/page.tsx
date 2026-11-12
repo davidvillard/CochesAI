@@ -5,9 +5,9 @@ import styles from "../components/Ventas.module.css";
 import MarcoPagina from "../components/MarcoPagina";
 import TablaRanking from "../components/TablaRanking";
 import { Barras } from "../components/GraficasVentas";
+import FuenteDgt from "../components/FuenteDgt";
 import { listarModelos } from "../lib/fichas";
 import { SITE_URL, metadatos } from "../lib/seo";
-import { fechaLarga } from "../lib/formato";
 import {
   ACTUALIZADO,
   COMBUSTIBLE_ESPANA,
@@ -36,7 +36,7 @@ const anio = HASTA.slice(-4);
 
 export const metadata: Metadata = metadatos({
   titulo: `Coches más vendidos en España ${anio}: ranking DGT`,
-  descripcion: `Los 50 coches más vendidos en España ${PERIODO} según los datos oficiales de la DGT. El nº 1 es el ${primero?.nombre}. Ranking por provincia, por combustible y de usados importados.`,
+  descripcion: `Los 50 coches más vendidos en España ${PERIODO}, elaborado con los datos abiertos de matriculaciones de la DGT. El nº 1 es el ${primero?.nombre}. Ranking por provincia, por combustible y de usados importados.`,
   ruta: "/mas-vendidos",
 });
 
@@ -63,7 +63,7 @@ export default async function MasVendidos() {
       "@context": "https://schema.org",
       "@type": "Dataset",
       name: "Turismos matriculados en España por modelo, provincia y combustible",
-      description: `Turismos y todoterrenos matriculados en España ${PERIODO}, agrupados por modelo, provincia, combustible y marca, a partir de los microdatos oficiales de la DGT. Incluye coches nuevos y usados importados. Se actualiza cada mes.`,
+      description: `Turismos y todoterrenos matriculados en España ${PERIODO}, agrupados por modelo, provincia, combustible y marca, elaborado por ¿Qué coche es? a partir de los microdatos de matriculaciones que publica la DGT. Incluye coches nuevos y usados importados. Se actualiza cada mes.`,
       url: `${SITE_URL}/mas-vendidos`,
       isBasedOn: FUENTE_DGT,
       creator: { "@id": `${SITE_URL}/#organizacion` },
@@ -86,7 +86,7 @@ export default async function MasVendidos() {
       <section className={base.hero}>
         <div className={base.cont}>
           <span className={base.chip}>
-            <span className={base.punto} /> Datos oficiales de la DGT
+            <span className={base.punto} /> Con datos abiertos de la DGT
           </span>
           <h1 className={base.h1}>Coches más vendidos en España</h1>
           <p className={base.sub}>
@@ -168,12 +168,8 @@ export default async function MasVendidos() {
           </div>
 
           <p className={styles.fuente}>
-            Fuente:{" "}
-            <a href={FUENTE_DGT} target="_blank" rel="noopener noreferrer">
-              microdatos de matriculaciones de la DGT
-            </a>{" "}
-            (turismos y todoterrenos, matriculación ordinaria). Cada modelo agrupa todas sus versiones. Se
-            actualiza cada mes; última actualización: {fechaLarga(ACTUALIZADO)}.{" "}
+            Turismos y todoterrenos con matriculación ordinaria; cada modelo agrupa todas sus versiones y se
+            actualiza cada mes. <FuenteDgt datos="ventas" />{" "}
             <Link href="/metodologia">Cómo elaboramos estos datos</Link>.
           </p>
         </div>

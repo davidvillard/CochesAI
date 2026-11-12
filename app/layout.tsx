@@ -122,7 +122,7 @@ export default function RootLayout({
           height: 512,
         },
         description:
-          "Web española gratuita para identificar coches por foto y consultar fichas, fallos comunes, ventas oficiales de la DGT, matrículas, ITP e ITV.",
+          "Web española gratuita para identificar coches por foto y consultar fichas, fallos comunes, ventas de coches con datos abiertos de la DGT, matrículas, ITP e ITV.",
         ...(REDES.length ? { sameAs: REDES } : {}),
       },
       {

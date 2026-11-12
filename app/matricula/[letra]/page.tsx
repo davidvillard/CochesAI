@@ -5,7 +5,8 @@ import base from "../../page.module.css";
 import styles from "../matricula.module.css";
 import MarcoPagina from "../../components/MarcoPagina";
 import ConsultaMatricula from "../ConsultaMatricula";
-import { FUENTE_DGT, LETRAS_USADAS, nombreMes, rangoDe, subrangos, type Rango } from "../../lib/matricula";
+import FuenteDgt from "../../components/FuenteDgt";
+import { LETRAS_USADAS, nombreMes, rangoDe, subrangos, type Rango } from "../../lib/matricula";
 import { SITE_URL, metadatos } from "../../lib/seo";
 
 type Props = { params: Promise<{ letra: string }> };
@@ -151,11 +152,7 @@ export default async function LetraMatricula({ params }: Props) {
           </p>
           <p className={styles.otras}>
             Las fechas son aproximadas: un coche importado recibe matrícula española al
-            llegar, aunque sea más antiguo. Fuente desde 2015:{" "}
-            <a href={FUENTE_DGT} target="_blank" rel="noopener noreferrer">
-              datos abiertos de la DGT
-            </a>
-            .
+            llegar, aunque sea más antiguo. <FuenteDgt datos="matriculas" />
           </p>
         </div>
       </section>

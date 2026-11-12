@@ -6,13 +6,11 @@ import styles from "../../components/Ventas.module.css";
 import MarcoPagina from "../../components/MarcoPagina";
 import TablaRanking from "../../components/TablaRanking";
 import { Barras } from "../../components/GraficasVentas";
+import FuenteDgt from "../../components/FuenteDgt";
 import { listarModelos } from "../../lib/fichas";
 import { SITE_URL, metadatos } from "../../lib/seo";
-import { fechaLarga } from "../../lib/formato";
 import {
-  ACTUALIZADO,
   COMBUSTIBLE_ESPANA,
-  FUENTE_DGT,
   HASTA,
   LISTA_PROVINCIAS,
   PERIODO,
@@ -43,7 +41,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const primero = modelo(p.ranking[0][0])?.nombre;
   return metadatos({
     titulo: `Coches más vendidos en ${p.nombre} ${anio}`,
-    descripcion: `Ranking de los coches nuevos más vendidos en ${p.nombre} ${PERIODO}, con datos oficiales de la DGT. El nº 1 es el ${primero}. Además, qué porcentaje son híbridos, eléctricos o diésel.`,
+    descripcion: `Ranking de los coches nuevos más vendidos en ${p.nombre} ${PERIODO}, elaborado con los datos abiertos de matriculaciones de la DGT. El nº 1 es el ${primero}. Además, qué porcentaje son híbridos, eléctricos o diésel.`,
     ruta: `/mas-vendidos/${p.slug}`,
   });
 }
@@ -73,7 +71,7 @@ export default async function MasVendidosProvincia({ params }: Props) {
       <section className={base.hero}>
         <div className={base.cont}>
           <span className={base.chip}>
-            <span className={base.punto} /> Datos oficiales de la DGT
+            <span className={base.punto} /> Con datos abiertos de la DGT
           </span>
           <h1 className={base.h1}>Coches más vendidos en {p.nombre}</h1>
           <p className={base.sub}>
@@ -129,12 +127,8 @@ export default async function MasVendidosProvincia({ params }: Props) {
           </div>
 
           <p className={styles.fuente}>
-            Fuente:{" "}
-            <a href={FUENTE_DGT} target="_blank" rel="noopener noreferrer">
-              microdatos de matriculaciones de la DGT
-            </a>
-            , actualizados el {fechaLarga(ACTUALIZADO)}. Los coches de empresas de alquiler y renting cuentan en la
-            provincia donde están domiciliados, por eso Madrid suele salir muy alta.{" "}
+            Los coches de empresas de alquiler y renting cuentan en la provincia donde están domiciliados, por eso
+            Madrid suele salir muy alta. <FuenteDgt datos="ventas" />{" "}
             <Link href="/metodologia">Cómo elaboramos estos datos</Link>.
           </p>
         </div>
