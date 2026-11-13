@@ -10,7 +10,7 @@ export const LEGAL = {
     titular: "David Villar Durán",
     nif: "39468161T",
     // Domicilio completo: calle, número, código postal, ciudad y provincia
-    domicilio: "Avenida de Marin, 36940, Cangas, Pontevedra, España",
+    domicilio: "Avenida de Marín, 20, 36940, Cangas, Pontevedra, España",
     email: "davidvillarduran@icloud.com",
     // Se detecta sola: será tu dominio propio cuando lo conectes en Vercel
     web: SITE_URL,

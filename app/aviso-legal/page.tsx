@@ -16,7 +16,7 @@ export default function AvisoLegal() {
     <PaginaLegal titulo="Aviso legal">
       <h2>1. Datos del titular</h2>
       <p>
-        En cumplimiento de la Ley 34/2002, de servicios de la sociedad de la
+        En cumplimiento del artículo 10 de la Ley 34/2002, de servicios de la sociedad de la
         información y de comercio electrónico, te informamos de que este sitio
         web es titularidad de:
       </p>
@@ -35,13 +35,26 @@ export default function AvisoLegal() {
         </div>
         <div className={styles.fila}>
           <dt>Email</dt>
-          <dd>{LEGAL.email}</dd>
+          <dd>
+            <a href={`mailto:${LEGAL.email}`}>{LEGAL.email}</a>
+          </dd>
         </div>
         <div className={styles.fila}>
           <dt>Sitio web</dt>
           <dd>{LEGAL.web}</dd>
         </div>
+        <div className={styles.fila}>
+          <dt>Datos registrales</dt>
+          <dd>Persona física, sin inscripción en el Registro Mercantil</dd>
+        </div>
       </dl>
+      <p>
+        La actividad de esta web no necesita autorización administrativa previa ni
+        corresponde a una profesión regulada, y su titular no está adherido a ningún
+        código de conducta. El servicio es gratuito: no se vende ningún producto ni
+        servicio en la web. Puedes escribir al email indicado para cualquier consulta;
+        te responderemos lo antes posible.
+      </p>
 
       <h2>2. Objeto del sitio</h2>
       <p>

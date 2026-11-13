@@ -31,7 +31,7 @@ export default function Privacidad() {
                         <strong>Domicilio:</strong> {LEGAL.domicilio}
                     </li>
                     <li>
-                        <strong>Contacto:</strong> {LEGAL.email}
+                        <strong>Contacto:</strong> <a href={`mailto:${LEGAL.email}`}>{LEGAL.email}</a>
                     </li>
                 </ul>
             </div>
