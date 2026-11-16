@@ -1,6 +1,6 @@
 {
   "fuente": "DGT, microdatos de matriculaciones (DGT en cifras): letras de la última matrícula asignada",
-  "actualizado": "2026-11-09",
+  "actualizado": "2026-11-16",
   "finDeMes": {
     "2014-12": "JBY",
     "2015-01": "JCK",
@@ -143,13 +143,19 @@
     "2026-06": "NPT",
     "2026-07": "NRR",
     "2026-08": "NSG",
-    "2026-09": "NTB"
+    "2026-09": "NTB",
+    "2026-10": "NTW"
   },
   "diario": {
     "2026-11-02": "NTW",
     "2026-11-03": "NTX",
     "2026-11-04": "NTX",
     "2026-11-05": "NTY",
-    "2026-11-06": "NTY"
+    "2026-11-06": "NTY",
+    "2026-11-09": "NTY",
+    "2026-11-10": "NTZ",
+    "2026-11-11": "NVB",
+    "2026-11-12": "NVB",
+    "2026-11-13": "NVC"
   }
 }
