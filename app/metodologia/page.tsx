@@ -108,7 +108,7 @@ export default function Metodologia() {
 
       <h2>6. Contacto y correcciones</h2>
       <p>
-        Para avisar de un error o proponer una mejora, escríbenos a {LEGAL.email}. Los datos del
+        Para avisar de un error o proponer una mejora, escríbenos a <a href={`mailto:${LEGAL.email}`}>{LEGAL.email}</a>. Los datos del
         titular están en el <Link href="/aviso-legal">aviso legal</Link> y el tratamiento de datos
         personales, en la <Link href="/privacidad">política de privacidad</Link>.
       </p>

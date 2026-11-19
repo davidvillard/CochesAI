@@ -5,16 +5,18 @@ import { useEffect, useState } from "react";
 type AvisoInstalar = Event & { prompt: () => Promise<void>; userChoice: Promise<{ outcome: string }> };
 
 // "Instalar la app": solo aparece cuando el navegador permite instalar la web
-// (Chrome, Edge, Samsung Internet). En iPhone se explica cómo hacerlo a mano.
+// (Chrome, Edge, Samsung Internet). En iPhone y en el resto de Android se explica cómo hacerlo a mano.
 export default function BotonInstalar({ className, ayudaClassName }: { className?: string; ayudaClassName?: string }) {
   const [aviso, setAviso] = useState<AvisoInstalar | null>(null);
   const [iphone, setIphone] = useState(false);
+  const [android, setAndroid] = useState(false);
 
   useEffect(() => {
     const instalada = matchMedia("(display-mode: standalone)").matches;
     if (instalada) return;
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setIphone(/iphone|ipad/i.test(navigator.userAgent));
+    setAndroid(/android/i.test(navigator.userAgent));
     const guardar = (e: Event) => {
       e.preventDefault();
       setAviso(e as AvisoInstalar);
@@ -47,6 +49,14 @@ export default function BotonInstalar({ className, ayudaClassName }: { className
     return (
       <p className={ayudaClassName}>
         Para tenerla como app: pulsa Compartir y luego «Añadir a pantalla de inicio».
+      </p>
+    );
+  }
+  // Android sin aviso de instalación (Firefox, o Chrome antes de que lo ofrezca)
+  if (android) {
+    return (
+      <p className={ayudaClassName}>
+        Para tenerla como app: abre el menú ⋮ del navegador y pulsa «Instalar app» o «Añadir a pantalla de inicio».
       </p>
     );
   }

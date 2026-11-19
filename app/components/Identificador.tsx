@@ -12,6 +12,7 @@ import {
   DislikeLinearIcon,
 } from "@solar-icons/react";
 import styles from "../page.module.css";
+import BotonInstalar from "./BotonInstalar";
 import FichaCoche from "./FichaCoche";
 import Compartir from "./Compartir";
 import Afiliados from "./Afiliados";
@@ -317,9 +318,13 @@ export default function Identificador() {
                   <span className={styles.dropIcono}>
                     <CameraLinearIcon size={34} />
                   </span>
-                  <p className={styles.dropTitulo}>Arrastra una foto aquí</p>
-                  <p className={styles.dropTexto}>
+                  <p className={`${styles.dropTitulo} ${styles.soloRaton}`}>Arrastra una foto aquí</p>
+                  <p className={`${styles.dropTexto} ${styles.soloRaton}`}>
                     o pégala con Ctrl+V.
+                  </p>
+                  <p className={`${styles.dropTitulo} ${styles.soloTactil}`}>Haz una foto al coche</p>
+                  <p className={`${styles.dropTexto} ${styles.soloTactil}`}>
+                    o elige una de tu galería.
                   </p>
 
                   {acciones}
@@ -335,6 +340,7 @@ export default function Identificador() {
                   </Link>
                 </span>
               </p>
+              <BotonInstalar className={styles.instalar} ayudaClassName={styles.instalarAyuda} />
             </>
           ) : (
             <div className={styles.res}>

@@ -25,7 +25,7 @@ const PREGUNTAS = [
   },
   {
     p: "¿Dónde y cuándo se paga?",
-    r: "En la hacienda de la comunidad donde vive el comprador, con el modelo 620 o el que indique la comunidad, normalmente en un plazo de 30 días hábiles o un mes desde la compra. Sin el justificante no se puede hacer el cambio de titular en la DGT.",
+    r: "En la hacienda de la comunidad donde vive el comprador, con el modelo 620 o el que indique la comunidad, en un plazo de 30 días hábiles o un mes desde la compra en la mayoría de comunidades (dos meses en Andalucía y Navarra). Sin el justificante no se puede hacer el cambio de titular en la DGT.",
   },
   {
     p: "¿Es exacto el resultado?",

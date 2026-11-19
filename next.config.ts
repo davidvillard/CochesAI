@@ -13,6 +13,14 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  // Nombres de comunidad que la gente escribe a mano y que no son el slug de la calculadora
+  async redirects() {
+    return ["comunitat-valenciana", "comunidad-valenciana"].map((slug) => ({
+      source: `/calculadora-itp/${slug}`,
+      destination: "/calculadora-itp/valencia",
+      permanent: true,
+    }));
+  },
 };
 
 export default nextConfig;

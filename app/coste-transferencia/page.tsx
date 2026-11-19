@@ -25,7 +25,7 @@ const PREGUNTAS = [
   },
   {
     p: "¿Qué plazo hay para hacerla?",
-    r: "El comprador debe pedir el cambio de titular en la DGT en los 30 días siguientes a la compra. El ITP tiene su propio plazo, que depende de la comunidad (30 días hábiles o un mes en la mayoría).",
+    r: "El comprador debe pedir el cambio de titular en la DGT en los 30 días siguientes a la compra. El ITP tiene su propio plazo, que depende de la comunidad (30 días hábiles o un mes en la mayoría; dos meses en Andalucía y Navarra).",
   },
   {
     p: "¿Puedo hacerla yo sin gestoría?",

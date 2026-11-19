@@ -35,7 +35,9 @@ export default function VentasModelo({ slug, nombre }: { slug: string; nombre: s
       <div className={styles.cifras}>
         <div className={styles.cifra}>
           <p className={styles.cifraN}>{unidades(v.total)}</p>
-          <p className={styles.cifraEt}>matriculados en 12 meses</p>
+          <p className={styles.cifraEt}>
+            matriculados en 12 meses ({unidades(v.nuevos)} nuevos y {unidades(v.usados)} usados importados)
+          </p>
         </div>
         <div className={styles.cifra}>
           <p className={styles.cifraN}>{v.nuevos ? `${v.puesto}º` : "—"}</p>

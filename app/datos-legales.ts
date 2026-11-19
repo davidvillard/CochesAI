@@ -14,5 +14,5 @@ export const LEGAL = {
     email: "davidvillarduran@icloud.com",
     // Se detecta sola: será tu dominio propio cuando lo conectes en Vercel
     web: SITE_URL,
-    fecha: "octubre de 2026",
+    fecha: "noviembre de 2026",
 };

@@ -105,7 +105,13 @@ const MARCAS = {
 };
 const bonito = (s) => s.charAt(0).toUpperCase() + s.slice(1);
 const nombreMarca = (m) => MARCAS[m] ?? m.split("-").map(bonito).join(" ");
+// Nombres que la regla general escribe mal (acentos y minúsculas de la marca)
+const FAMILIAS = {
+  leon: "León", megane: "Mégane", i10: "i10", i20: "i20", i30: "i30", i30n: "i30 N", i40: "i40", ix20: "ix20",
+  ix1: "iX1", ix2: "iX2", i4: "i4", bz4x: "bZ4X", "ds5": "DS 5", "santa-fe": "Santa Fe",
+};
 function nombreFamilia(f) {
+  if (FAMILIAS[f]) return FAMILIAS[f];
   if (/^(clase|serie|model|range|grand|santa|mustang)-/.test(f)) {
     return f.split("-").map((p, i) => (i && p.length <= 2 ? p.toUpperCase() : bonito(p))).join(" ");
   }

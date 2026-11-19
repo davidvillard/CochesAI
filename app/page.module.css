@@ -286,6 +286,55 @@
   color: var(--suave);
 }
 
+/* Arrastrar y Ctrl+V solo tienen sentido con ratón; en móvil se habla de la cámara */
+.soloTactil {
+  display: none;
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .soloRaton {
+    display: none;
+  }
+
+  .soloTactil {
+    display: block;
+  }
+}
+
+/* Instalar la app: en la portada solo en móvil (en ordenador está en el menú) */
+.instalar,
+.instalarAyuda {
+  display: none;
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .instalar {
+    display: block;
+    margin: 16px auto 0;
+    padding: 12px 20px;
+    border: 1px solid var(--color);
+    border-radius: 12px;
+    background: var(--tenue);
+    color: var(--color);
+    font: 600 1rem var(--font-text), system-ui, sans-serif;
+    cursor: pointer;
+  }
+
+  .instalar:focus-visible {
+    outline: 3px solid var(--color);
+    outline-offset: 2px;
+  }
+
+  .instalarAyuda {
+    display: block;
+    margin: 16px auto 0;
+    max-width: 34ch;
+    color: var(--suave);
+    font-size: 0.9375rem;
+    text-align: center;
+  }
+}
+
 .acciones {
   display: flex;
   flex-wrap: wrap;
