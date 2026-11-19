@@ -1,36 +1,45 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+<img src="public/logo-quecochees.svg" alt="¿Qué coche es?" width="72">
 
-## Getting Started
+# ¿Qué coche es?
 
-First, run the development server:
+**[quecochees.es](https://quecochees.es)** · Identifica cualquier coche por foto desde el navegador, sin instalar apps: modelo, ficha técnica y precio de segunda mano.
+
+Además del identificador, la web reúne herramientas para comprar o vender un coche en España: matrícula y etiqueta, última matrícula de hoy, decodificador de bastidor (VIN), coches más vendidos según la DGT, comparador, checklist de compra, calculadora de ITP, coste de la transferencia, contrato de compraventa y cuándo toca la ITV.
+
+## Tecnología
+
+- **Next.js** (App Router) + **TypeScript**, estilos con CSS Modules y Tailwind CSS
+- **Gemini API** para reconocer el coche de la foto, con varios modelos de respaldo (`GEMINI_MODELS`) por si uno se queda sin cuota
+- **Upstash Redis** para limitar peticiones por IP y por día, y para las estadísticas
+- **Zod** para validar las respuestas del modelo
+- PWA instalable, publicada en **Vercel**
+- **GitHub Actions** (`.github/workflows/datos-dgt.yml`) actualiza cada lunes los datos de matrículas y ventas de la DGT
+
+## Arrancar
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Abre http://localhost:3000.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Variables de entorno
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Crea un `.env.local` (no se sube al repositorio):
 
-## Learn More
+| Variable | Para qué |
+|---|---|
+| `GEMINI_API_KEY` | Clave de la API de Gemini |
+| `GEMINI_MODELS` | Opcional: modelos a probar en orden, separados por comas |
+| `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN` | Redis de Upstash (también valen `KV_REST_API_URL` / `KV_REST_API_TOKEN`) |
+| `LIMITE_POR_IP` / `LIMITE_DIARIO_GLOBAL` | Opcional: límites de identificaciones |
+| `STATS_KEY` | Clave del panel de estadísticas |
 
-To learn more about Next.js, take a look at the following resources:
+### Datos de la DGT
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+npm run matriculas   # actualiza las fechas de matrículas y las ventas por modelo
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Los datos proceden de la DGT según sus condiciones de reutilización; la web no tiene relación oficial con la DGT.
