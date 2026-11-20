@@ -41,6 +41,18 @@
   font: 500 1rem var(--font-text), system-ui, sans-serif;
 }
 
+.buscar {
+  width: 100%;
+  min-height: 44px;
+  padding: 0 14px;
+  border: 1px solid var(--linea);
+  border-radius: 12px;
+  background: var(--fondo, var(--superficie));
+  color: var(--tinta);
+  font: 400 1rem var(--font-text), system-ui, sans-serif;
+}
+
+.buscar:focus-visible,
 .select:focus-visible {
   outline: 3px solid var(--color);
   outline-offset: 2px;

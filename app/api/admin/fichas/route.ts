@@ -4,7 +4,7 @@ import { leerFicha, registrarModelo } from "../../../lib/fichas";
 import { POR_PUESTO, marcaYModelo, modelo } from "../../../lib/ventas";
 
 // Crea por adelantado la ficha del siguiente coche más vendido que aún no tiene.
-// Uso: POST /api/admin/fichas?clave=TU_STATS_KEY&hasta=150
+// Uso: POST /api/admin/fichas?clave=TU_STATS_KEY&hasta=150 (o &solo=marca/modelo para una concreta)
 // Cada llamada crea una ficha (tarda unos segundos): se llama en bucle.
 // Sin la clave responde 404, como si no existiera.
 
@@ -20,7 +20,9 @@ export async function POST(req: Request) {
   const hasta = Math.min(Math.max(Number(url.searchParams.get("hasta")) || 150, 1), 400);
 
   // Los que faltan: sin ficha y sin un intento fallido hoy
-  const candidatos = POR_PUESTO.slice(0, hasta);
+  // solo=a/b: crea solo esa ficha (por ejemplo, una que el lote saltó), aunque esté fuera del "hasta"
+  const solo = url.searchParams.get("solo");
+  const candidatos = solo ? POR_PUESTO.filter((c) => c === solo) : POR_PUESTO.slice(0, hasta);
   const fichas = await redis.mget<unknown[]>(...candidatos.map((c) => `quecoche:ficha:${c}`));
   const intentos = await redis.mget<unknown[]>(...candidatos.map((c) => `quecoche:ficha-intento:${c}`));
   // saltar=a/b,c/d: modelos que la IA no conoce y no merece la pena reintentar

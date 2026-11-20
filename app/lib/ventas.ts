@@ -129,6 +129,13 @@ export const LISTA_PROVINCIAS = Object.entries(PROVINCIAS)
 export const provinciaPorSlug = (slug: string) => LISTA_PROVINCIAS.find((p) => p.slug === slug);
 export const provinciaPorCodigo = (codigo: string) => LISTA_PROVINCIAS.find((p) => p.codigo === codigo);
 
+// Puesto de un modelo en el ranking de cada provincia (null si no está entre los que guardamos)
+export const puestosPorProvincia = (clave: string) =>
+  LISTA_PROVINCIAS.map((p) => {
+    const i = p.ranking.findIndex(([c]) => c === clave);
+    return { slug: p.slug, nombre: p.nombre, puesto: i >= 0 ? i + 1 : null };
+  });
+
 // ---------- Formato ----------
 
 export const pct = (parte: number, total: number) =>

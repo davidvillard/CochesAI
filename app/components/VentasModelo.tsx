@@ -6,6 +6,7 @@ import {
   PERIODO,
   pct,
   provinciaPorCodigo,
+  puestosPorProvincia,
   repartoCombustible,
   unidades,
   ventasDeFicha,
@@ -79,6 +80,22 @@ export default function VentasModelo({ slug, nombre }: { slug: string; nombre: s
           </div>
         )}
       </div>
+
+      <details className={styles.provincias}>
+        <summary>Su puesto en cada provincia</summary>
+        <p className={styles.provinciasNota}>
+          Puesto del {v.nombre} entre los coches nuevos más vendidos de cada provincia. Pulsa una
+          provincia para ver su ranking completo.
+        </p>
+        <ul className={styles.provinciasLista}>
+          {puestosPorProvincia(v.clave).map((p) => (
+            <li key={p.slug}>
+              <Link href={`/mas-vendidos/${p.slug}`}>{p.nombre}</Link>{" "}
+              <span className={styles.provinciasPuesto}>{p.puesto ? `${p.puesto}º` : "fuera del top 20"}</span>
+            </li>
+          ))}
+        </ul>
+      </details>
 
       <p className={styles.fuente}>
         Incluye todas las versiones y carrocerías del modelo, nuevos y usados importados.{" "}

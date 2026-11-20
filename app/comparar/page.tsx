@@ -4,6 +4,7 @@ import { after } from "next/server";
 import { contar } from "../lib/contadores";
 import base from "../page.module.css";
 import styles from "./comparar.module.css";
+import SelectorModelo from "./SelectorModelo";
 import MarcoPagina from "../components/MarcoPagina";
 import Afiliados from "../components/Afiliados";
 import { eur } from "../lib/formato";
@@ -91,20 +92,14 @@ export default async function Comparar({ searchParams }: Props) {
     `${x.marca} ${x.modelo}`.localeCompare(`${y.marca} ${y.modelo}`, "es")
   );
 
+  const opciones = ordenados.map(({ slug, marca, modelo }) => ({ slug, marca, modelo }));
   const selector = (campo: "a" | "b", actual?: string) => (
-    <label className={styles.campo}>
-      <span className={styles.etiqueta}>{campo === "a" ? "Primer coche" : "Segundo coche"}</span>
-      <select name={campo} defaultValue={actual ?? ""} required className={styles.select}>
-        <option value="" disabled>
-          Elige un modelo
-        </option>
-        {ordenados.map((m) => (
-          <option key={m.slug} value={m.slug}>
-            {m.marca} {m.modelo}
-          </option>
-        ))}
-      </select>
-    </label>
+    <SelectorModelo
+      campo={campo}
+      etiqueta={campo === "a" ? "Primer coche" : "Segundo coche"}
+      opciones={opciones}
+      actual={actual}
+    />
   );
 
   return (
