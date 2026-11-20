@@ -40,7 +40,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const p = await datos(params);
   const primero = modelo(p.ranking[0][0])?.nombre;
   return metadatos({
-    titulo: `Coches más vendidos en ${p.nombre} ${anio}`,
+    titulo: `Coches más vendidos en ${p.nombre} ${anio}: matriculaciones DGT`,
     descripcion: `Ranking de los coches nuevos más vendidos en ${p.nombre} ${PERIODO}, elaborado con los datos abiertos de matriculaciones de la DGT. El nº 1 es el ${primero}. Además, qué porcentaje son híbridos, eléctricos o diésel.`,
     ruta: `/mas-vendidos/${p.slug}`,
   });

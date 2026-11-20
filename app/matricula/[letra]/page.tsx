@@ -38,10 +38,15 @@ function datos(letra: string) {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const r = datos((await params).letra);
-  const anios = r.hasta ? `${r.desde.anio} a ${r.hasta.anio}` : `${r.desde.anio} en adelante`;
+  const ej = subrangos(r.prefijo)
+    .slice(0, 2)
+    .map((s) => s.prefijo)
+    .join(", ");
+  // El title y la description no dan la respuesta entera: si Google ya la
+  // muestra en el resultado, nadie entra (CTR del 0,25 % en noviembre de 2026)
   return metadatos({
-    titulo: `¿De qué año es la matrícula ${r.prefijo}? (${anios})`,
-    descripcion: `${respuesta(r)} Consulta el mes exacto según la segunda letra y calcula el año y la etiqueta ambiental de cualquier matrícula.`,
+    titulo: `Matrícula ${r.prefijo}: ¿de qué año es? Mes exacto por letra`,
+    descripcion: `Tabla con el mes exacto de cada matrícula ${r.prefijo} según la segunda letra (${ej}…). Escribe la tuya y te damos año, mes y etiqueta ambiental.`,
     ruta: `/matricula/${r.prefijo.toLowerCase()}`,
   });
 }
@@ -90,6 +95,13 @@ export default async function LetraMatricula({ params }: Props) {
           </span>
           <h1 className={base.h1}>¿De qué año es la matrícula {r.prefijo}?</h1>
           <p className={base.sub}>{respuesta(r)}</p>
+          {!r.hasta && (
+            <p className={styles.ultima}>
+              <Link href="/ultima-matricula">
+                ¿Cuál es la última matrícula {r.prefijo} asignada hoy? →
+              </Link>
+            </p>
+          )}
           <ConsultaMatricula />
         </div>
       </section>

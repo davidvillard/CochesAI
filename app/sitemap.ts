@@ -1,14 +1,21 @@
 import type { MetadataRoute } from "next";
-import { agruparPorMarca, listarModelos, urlFicha } from "./lib/fichas";
+import { agruparPorMarca, listarModelos, urlFicha, type ModeloListado } from "./lib/fichas";
 import { SITE_URL } from "./lib/seo";
 import { LETRAS_USADAS } from "./lib/matricula";
 import { COMUNIDADES } from "./lib/itp";
 import { HERRAMIENTAS } from "./lib/herramientas";
-import { LISTA_PROVINCIAS } from "./lib/ventas";
+import { LISTA_PROVINCIAS, ventasDeFicha } from "./lib/ventas";
 
 // Se genera en cada petición para incluir las fichas nuevas
 // (Upstash no deja cachear sus lecturas en el build)
 export const dynamic = "force-dynamic";
+
+// Fichas que se ofrecen a Google: las que alguien ha identificado con una foto
+// o las de modelos con ventas de verdad. Las que crea la tasación de modelos
+// raros siguen accesibles, pero no se empujan para no diluir el sitio.
+const MIN_MATRICULAS_SITEMAP = 300;
+const enSitemap = (m: ModeloListado) =>
+  m.veces > 0 || (ventasDeFicha(m.slug)?.total ?? 0) >= MIN_MATRICULAS_SITEMAP;
 
 // Solo se pone lastModified cuando se conoce de verdad: si siempre es "hoy",
 // Google deja de hacerle caso
@@ -35,7 +42,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: fecha(g.modelos.map((m) => m.actualizada).filter(Boolean).sort().at(-1)),
       priority: 0.6,
     })),
-    ...modelos.map((m) => ({
+    ...modelos.filter(enSitemap).map((m) => ({
       url: `${SITE_URL}${urlFicha(m.slug)}`,
       lastModified: fecha(m.actualizada),
       priority: 0.7,

@@ -42,3 +42,6 @@ next-env.d.ts
 
 # Material de prensa (no forma parte de la web)
 /prensa/
+
+# Exportaciones de Search Console y Analytics (privadas)
+/datos-trafico/

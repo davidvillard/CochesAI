@@ -261,3 +261,13 @@
 .tabla td a:hover {
   text-decoration: underline;
 }
+
+.ultima {
+  margin: -4px auto 18px;
+  text-align: center;
+}
+
+.ultima a {
+  color: var(--color);
+  font-weight: 600;
+}
