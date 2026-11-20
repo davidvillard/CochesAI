@@ -109,6 +109,11 @@ export default function AvisoLegal() {
         pertenecen a sus respectivos propietarios y se mencionan solo para
         identificar los coches; su uso no implica relación alguna con ellos.
       </p>
+      <p>
+        Como excepción, las tablas de datos y el mapa de la{" "}
+        <a href="/prensa">página de prensa</a> se publican con licencia Creative Commons
+        Reconocimiento 4.0 (CC BY 4.0): puedes reutilizarlos citando la fuente.
+      </p>
 
       <h2>7. Enlaces</h2>
       <p>

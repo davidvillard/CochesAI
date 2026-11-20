@@ -6,8 +6,10 @@ import {
   CupStarLinearIcon,
   DocumentTextLinearIcon,
   GraphUpLinearIcon,
+  LeafLinearIcon,
   MagnifierLinearIcon,
   ScaleLinearIcon,
+  TagPriceLinearIcon,
   TransferHorizontalLinearIcon,
 } from "@solar-icons/react";
 
@@ -21,6 +23,8 @@ export const HERRAMIENTAS = [
   { href: "/checklist-compra-coche", texto: "Checklist de compra", detalle: "Qué revisar en un coche usado", Icono: ChecklistMinimalisticLinearIcon },
   { href: "/calculadora-itp", texto: "Calculadora de ITP", detalle: "El impuesto al comprar un usado", Icono: CalculatorLinearIcon },
   { href: "/coste-transferencia", texto: "Coste de la transferencia", detalle: "ITP, tasa DGT y gestoría", Icono: TransferHorizontalLinearIcon },
+  { href: "/vender-coche", texto: "Vender mi coche", detalle: "Pasos y cómo evitar estafas", Icono: TagPriceLinearIcon },
   { href: "/contrato-compraventa-coche", texto: "Contrato de compraventa", detalle: "Rellénalo e imprímelo", Icono: DocumentTextLinearIcon },
+  { href: "/zonas-bajas-emisiones", texto: "Zonas de bajas emisiones", detalle: "Webs oficiales de cada ciudad", Icono: LeafLinearIcon },
   { href: "/itv", texto: "Cuándo toca la ITV", detalle: "Según la fecha de matriculación", Icono: CalendarMarkLinearIcon },
 ];

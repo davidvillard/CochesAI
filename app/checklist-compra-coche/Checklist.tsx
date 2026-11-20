@@ -3,24 +3,35 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import styles from "./checklist.module.css";
-import { GRUPOS, TOTAL } from "./puntos";
+import type { Punto } from "./puntos";
 import { medir } from "../lib/medir";
 
-const CLAVE = "cochesai.checklist";
+type Grupo = { titulo: string; puntos: Punto[] };
 
-export default function Checklist() {
+// Lista para ir marcando en el móvil. La usan la checklist de compra y la guía de venta;
+// lo marcado se guarda en este navegador con la clave que se le pase.
+export default function Checklist({
+  grupos,
+  clave,
+  nombre,
+}: {
+  grupos: Grupo[];
+  clave: string;
+  nombre: string;
+}) {
+  const TOTAL = grupos.reduce((n, g) => n + g.puntos.length, 0);
   const [hechos, setHechos] = useState<Set<string>>(new Set());
 
   // Recupera lo marcado en este navegador (si el almacenamiento no está disponible, empieza vacío)
   useEffect(() => {
     try {
-      const guardado = JSON.parse(localStorage.getItem(CLAVE) ?? "[]");
+      const guardado = JSON.parse(localStorage.getItem(clave) ?? "[]");
       // eslint-disable-next-line react-hooks/set-state-in-effect
       if (Array.isArray(guardado)) setHechos(new Set(guardado));
     } catch {
       // sin almacenamiento: no pasa nada
     }
-  }, []);
+  }, [clave]);
 
   function cambiar(id: string) {
     const nuevo = new Set(hechos);
@@ -28,7 +39,7 @@ export default function Checklist() {
     else nuevo.add(id);
     setHechos(nuevo);
     try {
-      localStorage.setItem(CLAVE, JSON.stringify([...nuevo]));
+      localStorage.setItem(clave, JSON.stringify([...nuevo]));
     } catch {
       // sin almacenamiento: se pierde al recargar
     }
@@ -37,7 +48,7 @@ export default function Checklist() {
   function vaciar() {
     setHechos(new Set());
     try {
-      localStorage.removeItem(CLAVE);
+      localStorage.removeItem(clave);
     } catch {}
   }
 
@@ -55,7 +66,7 @@ export default function Checklist() {
         </div>
         <div className={styles.acciones}>
           <button type="button" onClick={() => {
-            medir(["imprimir", "checklist"]);
+            medir(["imprimir", nombre]);
             window.print();
           }}>
             Imprimir
@@ -66,7 +77,7 @@ export default function Checklist() {
         </div>
       </div>
 
-      {GRUPOS.map((g) => (
+      {grupos.map((g) => (
         <section key={g.titulo} className={styles.grupo}>
           <h2 className={styles.grupoT}>{g.titulo}</h2>
           <ul className={styles.puntos}>

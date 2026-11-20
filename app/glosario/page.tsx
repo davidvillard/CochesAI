@@ -61,7 +61,7 @@ const TERMINOS: { t: string; d: React.ReactNode }[] = [
       <>
         Pegatina de la DGT que clasifica el coche por lo que contamina. Decide si puedes entrar en
         las zonas de bajas emisiones de las ciudades. Los coches sin etiqueta (gasolina antes de
-        2000 y diésel antes de 2006, más o menos) son los más limitados.{" "}
+        2001 y diésel antes de 2006, más o menos) son los más limitados.{" "}
         <Link href="/matricula">Calcula la etiqueta por matrícula</Link>.
       </>
     ),

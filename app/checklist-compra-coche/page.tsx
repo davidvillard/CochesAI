@@ -3,7 +3,7 @@ import base from "../page.module.css";
 import MarcoPagina from "../components/MarcoPagina";
 import Afiliados from "../components/Afiliados";
 import Checklist from "./Checklist";
-import { TOTAL } from "./puntos";
+import { GRUPOS, TOTAL } from "./puntos";
 import { metadatos } from "../lib/seo";
 
 export const metadata: Metadata = metadatos({
@@ -26,7 +26,7 @@ export default function ChecklistCompra() {
             Llévala en el móvil y ve marcando cada punto mientras ves el coche. Se queda
             guardada en tu navegador.
           </p>
-          <Checklist />
+          <Checklist grupos={GRUPOS} clave="cochesai.checklist" nombre="checklist" />
           <div style={{ maxWidth: 820, margin: "0 auto" }}>
             <Afiliados titulo="Lo que no se ve a simple vista" />
           </div>

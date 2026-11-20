@@ -40,6 +40,21 @@ export const urlMarca = (slug: string) => `/coches/${slug.split("/")[0]}`;
 
 const lista = z.array(texto).catch([]).transform((l) => l.filter(Boolean));
 
+// Autonomía y carga de las versiones eléctricas y enchufables (vacío en el resto)
+export const ElectricoSchema = z
+  .array(
+    z.object({
+      version: texto,
+      bateriaKwh: texto,
+      autonomiaKm: texto,
+      cargaAcKw: texto,
+      cargaDcKw: texto,
+      carga10a80: texto,
+    })
+  )
+  .catch([])
+  .transform((l) => l.filter((v) => v.version && v.autonomiaKm));
+
 const FichaSchema = z.object({
   existe: z.boolean().catch(false),
   marca: texto,
@@ -71,17 +86,30 @@ const FichaSchema = z.object({
     .array(z.object({ marca: texto, modelo: texto, motivo: texto }))
     .catch([]),
   preguntas: z.array(z.object({ p: texto, r: texto })).catch([]),
+  electrico: ElectricoSchema,
 });
 
 type Datos = Omit<z.infer<typeof FichaSchema>, "existe">;
 export type Fallo = Datos["fallos"][number];
 
 // Las fichas antiguas pueden no tener "fallos": por eso es opcional al leerlas
-export type Ficha = Omit<Datos, "fallos"> & {
+export type Electrico = Datos["electrico"][number];
+export type Ficha = Omit<Datos, "fallos" | "electrico"> & {
   fallos?: Fallo[];
+  electrico?: Electrico[]; // las fichas antiguas no lo tienen
   slug: string;
   actualizada: string; // fecha ISO
 };
+
+// También la usa el script que completa las fichas antiguas
+export const REGLA_ELECTRICO = `- "electrico": solo si el modelo tiene versiones 100 % eléctricas o híbridas enchufables
+  vendidas en España; si no, []. Una fila por versión de batería, máximo 5. "version": nombre
+  comercial (por ejemplo "Long Range 82 kWh" o "1.5 PHEV"). "bateriaKwh": capacidad útil
+  (por ejemplo "77 kWh"). "autonomiaKm": autonomía eléctrica WLTP (por ejemplo "520 km").
+  "cargaAcKw": potencia máxima de carga en corriente alterna (por ejemplo "11 kW").
+  "cargaDcKw": potencia máxima de carga rápida en continua, o "No tiene" si no admite carga
+  rápida (lo normal en los enchufables). "carga10a80": tiempo de carga rápida del 10 al 80 %
+  (por ejemplo "28 min"), o "" si no tiene carga rápida o no está documentado.`;
 
 const prompt = (marca: string, modelo: string) => `Eres un periodista experto en automoción en España.
 Escribe la ficha del coche "${marca} ${modelo}" para alguien que piensa comprarlo de segunda mano.
@@ -102,7 +130,8 @@ Responde SOLO con un JSON válido (sin markdown) con esta estructura exacta:
   "puntosDebiles": string[],
   "fallos": [ { "titulo": string, "afecta": string, "detalle": string } ],
   "similares": [ { "marca": string, "modelo": string, "motivo": string } ],
-  "preguntas": [ { "p": string, "r": string } ]
+  "preguntas": [ { "p": string, "r": string } ],
+  "electrico": [ { "version": string, "bateriaKwh": string, "autonomiaKm": string, "cargaAcKw": string, "cargaDcKw": string, "carga10a80": string } ]
 }
 Reglas:
 - "existe": false si ese modelo no existe o no lo reconoces; entonces el resto vacío.
@@ -126,6 +155,7 @@ Reglas:
 - Exactamente 3 similares; "motivo": máximo 8 palabras.
 - 4 preguntas frecuentes que haría un comprador, con respuestas de 1 o 2 frases. Al menos
   dos sobre fiabilidad: qué motor da menos problemas y qué revisar antes de comprarlo.
+${REGLA_ELECTRICO}
 - No inventes datos: si dudas de una cifra, da un rango.
 - Todo en español.`;
 

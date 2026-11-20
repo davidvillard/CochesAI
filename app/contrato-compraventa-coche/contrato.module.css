@@ -43,6 +43,27 @@
   font-weight: 600;
 }
 
+.campo textarea {
+  width: 100%;
+  min-width: 0;
+  padding: 10px 12px;
+  border: 1px solid var(--linea);
+  border-radius: 12px;
+  background: var(--superficie);
+  color: var(--tinta);
+  font: inherit;
+  resize: vertical;
+}
+
+.campo textarea:focus-visible {
+  outline: 3px solid var(--color);
+  outline-offset: 2px;
+}
+
+.ancho {
+  grid-column: 1 / -1;
+}
+
 .campo input,
 .campo select {
   width: 100%;
@@ -140,13 +161,15 @@
 
 .firmas div {
   padding-top: 70px;
-  border-bottom: 1px solid #111;
   text-align: center;
 }
 
+/* Raya de la firma y, debajo, quién firma */
 .firmas span {
-  position: relative;
-  top: 28px;
+  display: block;
+  padding-top: 8px;
+  border-top: 1px solid #111;
+  line-height: 1.6;
 }
 
 .aviso {

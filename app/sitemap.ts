@@ -41,6 +41,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.7,
     })),
     { url: `${SITE_URL}/glosario`, priority: 0.5 },
+    { url: `${SITE_URL}/prensa`, priority: 0.5 },
     { url: `${SITE_URL}/metodologia`, priority: 0.4 },
     { url: `${SITE_URL}/privacidad`, priority: 0.2 },
     { url: `${SITE_URL}/aviso-legal`, priority: 0.2 },

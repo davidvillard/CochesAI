@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import base from "../page.module.css";
 import Afiliados from "../components/Afiliados";
@@ -156,7 +157,7 @@ export default function ConsultaMatricula() {
               <a href={DGT_DISTINTIVO} target="_blank" rel="noopener noreferrer">
                 Compruébala gratis en la DGT
               </a>
-              .
+              . <Link href="/zonas-bajas-emisiones">¿Dónde puede circular con esta etiqueta?</Link>
             </p>
             <Afiliados titulo="¿Vas a comprar este coche?" />
           </div>

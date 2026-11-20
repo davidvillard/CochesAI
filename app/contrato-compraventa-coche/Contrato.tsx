@@ -26,12 +26,22 @@ export default function Contrato() {
   const [km, setKm] = useState("");
   const [precio, setPrecio] = useState("");
   const [pago, setPago] = useState(PAGOS[0]);
+  const [senal, setSenal] = useState("");
+  const [fechaEntrega, setFechaEntrega] = useState("");
+  const [itv, setItv] = useState("");
+  const [llaves, setLlaves] = useState("2");
+  const [defectos, setDefectos] = useState("");
 
-  const fechaTexto = fecha
-    ? new Date(`${fecha}T12:00:00`).toLocaleDateString("es-ES", { day: "numeric", month: "long", year: "numeric" })
-    : "";
-  const precioNum = Number(precio.replace(/\./g, "").replace(",", "."));
+  const fechaLarga = (f: string) =>
+    f ? new Date(`${f}T12:00:00`).toLocaleDateString("es-ES", { day: "numeric", month: "long", year: "numeric" }) : "";
+  const fechaTexto = fechaLarga(fecha);
+  const euros = (v: string) => {
+    const n = Number(v.replace(/\./g, "").replace(",", "."));
+    return n > 0 ? n : 0;
+  };
+  const precioNum = euros(precio);
   const precioTexto = precioNum > 0 ? eurExacto(precioNum) : "";
+  const senalNum = euros(senal);
 
   const campo = (
     etiqueta: string,
@@ -61,6 +71,7 @@ export default function Contrato() {
           <legend>Lugar y fecha</legend>
           {campo("Lugar de la firma", lugar, setLugar, { placeholder: "Vigo" })}
           {campo("Fecha", fecha, setFecha, { type: "date" })}
+          {campo("Día de entrega del coche (si no es el de la firma)", fechaEntrega, setFechaEntrega, { type: "date" })}
           {campo("Hora de entrega del coche", hora, setHora, { type: "time" })}
         </fieldset>
         {persona("Vendedor", vendedor, setVendedor)}
@@ -71,7 +82,19 @@ export default function Contrato() {
           {campo("Matrícula", matricula, setMatricula, { placeholder: "1234 BCD" })}
           {campo("Número de bastidor", bastidor, setBastidor)}
           {campo("Kilómetros", km, setKm, { inputMode: "numeric" })}
-          {campo("Precio (€)", precio, setPrecio, { inputMode: "decimal" })}
+          {campo("ITV en vigor hasta", itv, setItv, { type: "date" })}
+          {campo("Llaves que se entregan", llaves, setLlaves, { inputMode: "numeric" })}
+          <label className={`${styles.campo} ${styles.ancho}`}>
+            <span>Defectos o averías conocidas (escribe «ninguno» si no hay)</span>
+            <textarea
+              value={defectos}
+              onChange={(e) => setDefectos(e.target.value)}
+              rows={3}
+              placeholder="Golpe en el paragolpes trasero, el aire acondicionado no enfría…"
+            />
+          </label>
+          {campo("Precio total (€)", precio, setPrecio, { inputMode: "decimal" })}
+          {campo("Señal ya pagada, si la hubo (€)", senal, setSenal, { inputMode: "decimal" })}
           <label className={styles.campo}>
             <span>Forma de pago</span>
             <select value={pago} onChange={(e) => setPago(e.target.value)}>
@@ -121,23 +144,39 @@ export default function Contrato() {
             {o(km, 8)} kilómetros.
           </li>
           <li>
-            El precio es de {o(precioTexto, 12)}, que el vendedor declara recibir en este acto
-            mediante {pago}, sirviendo este documento como carta de pago.
+            El precio total es de {o(precioTexto, 12)}.{" "}
+            {senalNum > 0 && senalNum < precioNum ? (
+              <>
+                El comprador ya entregó {eurExacto(senalNum)} como señal a cuenta del precio, y
+                paga en este acto los {eurExacto(precioNum - senalNum)} restantes mediante {pago}.
+              </>
+            ) : (
+              <>El vendedor declara recibirlo en este acto mediante {pago}.</>
+            )}{" "}
+            Este documento sirve como carta de pago.
           </li>
           <li>
-            El vendedor declara que es el titular del vehículo y que este no tiene cargas,
-            embargos ni reserva de dominio, y que está al corriente del impuesto de
-            circulación y sin multas pendientes.
+            El vendedor declara que es el titular del vehículo, que este no tiene cargas,
+            embargos ni reserva de dominio, que está al corriente del impuesto de circulación
+            y que no le consta ninguna multa pendiente asociada al vehículo.
           </li>
           <li>
+            El vehículo tiene la ITV en vigor hasta el {o(fechaLarga(itv), 16)}.{" "}
+            El vendedor informa de estos defectos o averías conocidos (o «ninguno»):{" "}
+            {o(defectos, 60)}.{" "}
             El comprador declara conocer el estado del vehículo, que ha examinado y probado,
             y lo acepta, sin perjuicio de la responsabilidad del vendedor por vicios ocultos
             según el Código Civil.
           </li>
           <li>
-            El vehículo se entrega el día de la firma a las {o(hora, 6)} horas. Desde ese
-            momento, el comprador se hace responsable de las sanciones, daños y obligaciones
-            que se deriven de su uso.
+            Junto con el vehículo se entregan el permiso de circulación, la ficha técnica
+            (tarjeta ITV) y {o(llaves, 3)} llave(s), además del libro de mantenimiento y las
+            facturas de reparaciones si las hay.
+          </li>
+          <li>
+            El vehículo se entrega el {o(fechaLarga(fechaEntrega) || fechaTexto, 20)} a las{" "}
+            {o(hora, 6)} horas. Desde ese momento, el comprador se hace responsable de las
+            sanciones, daños y obligaciones que se deriven de su uso.
           </li>
           <li>
             El comprador se compromete a solicitar el cambio de titularidad en la DGT en el
@@ -150,10 +189,22 @@ export default function Contrato() {
 
         <div className={styles.firmas}>
           <div>
-            <span>El vendedor</span>
+            <span>
+              El vendedor
+              <br />
+              {o(vendedor.nombre, 24)}
+              <br />
+              DNI/NIE {o(vendedor.dni, 12)}
+            </span>
           </div>
           <div>
-            <span>El comprador</span>
+            <span>
+              El comprador
+              <br />
+              {o(comprador.nombre, 24)}
+              <br />
+              DNI/NIE {o(comprador.dni, 12)}
+            </span>
           </div>
         </div>
       </article>

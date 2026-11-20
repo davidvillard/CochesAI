@@ -190,6 +190,44 @@ export default async function FichaModelo({ params }: Props) {
           </section>
         )}
 
+        {f.electrico && f.electrico.length > 0 && (
+          <section className={styles.bloque}>
+            <h2 className={styles.h2}>Autonomía y carga</h2>
+            <div className={styles.tablaCaja}>
+              <table className={styles.tabla}>
+                <thead>
+                  <tr>
+                    <th scope="col">Versión</th>
+                    <th scope="col">Batería</th>
+                    <th scope="col">Autonomía (WLTP)</th>
+                    <th scope="col">Carga en casa (AC)</th>
+                    <th scope="col">Carga rápida (DC)</th>
+                    <th scope="col">10-80 %</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {f.electrico.map((e) => (
+                    <tr key={e.version}>
+                      <td>{e.version}</td>
+                      <td>{e.bateriaKwh || "—"}</td>
+                      <td>{e.autonomiaKm}</td>
+                      <td>{e.cargaAcKw || "—"}</td>
+                      <td>{e.cargaDcKw || "—"}</td>
+                      <td>{e.carga10a80 || "—"}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <p className={styles.aviso} style={{ marginTop: 12 }}>
+              Cifras oficiales WLTP de cuando el coche era nuevo: en uso real, sobre todo en
+              autopista y con frío, la autonomía suele ser un 20-30 % menor, y en un coche usado
+              depende además del estado de la batería. Pide un informe de salud de la batería
+              antes de comprar.
+            </p>
+          </section>
+        )}
+
         {(f.puntosFuertes.length > 0 || f.puntosDebiles.length > 0) && (
           <section className={`${styles.bloque} ${styles.dosCol}`}>
             <div className={styles.caja}>
@@ -222,6 +260,10 @@ export default async function FichaModelo({ params }: Props) {
             <p>
               <Link href="/matricula" className={base.notaLink}>
                 Calcula la etiqueta de un coche concreto con su matrícula
+              </Link>
+              {" · "}
+              <Link href="/zonas-bajas-emisiones" className={base.notaLink}>
+                Dónde puede circular: zonas de bajas emisiones
               </Link>
             </p>
           </section>
