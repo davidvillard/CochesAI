@@ -62,6 +62,8 @@ export const COMBUSTIBLES: Record<string, string> = {
 };
 
 export const modelo = (clave: string) => MODELOS[clave];
+// Todas las familias de la DGT, con ventas de nuevos o solo de usados importados
+export const CLAVES_DGT = Object.keys(MODELOS);
 
 // Modelos con ventas de coches nuevos, del más vendido al menos
 export const POR_PUESTO = Object.entries(MODELOS)

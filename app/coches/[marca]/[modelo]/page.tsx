@@ -125,7 +125,12 @@ export default async function FichaModelo({ params }: Props) {
             )}
             <p className={base.precioX}>
               {f.precioNuevoEur ? `Nuevo: ${f.precioNuevoEur.replace(/\.$/, "")}. ` : ""}
-              Precios orientativos, no son una tasación.
+              Precios orientativos, no son una tasación.{" "}
+              {precio && (
+                <Link href={`/tasacion?modelo=${f.slug}`} className={base.notaLink}>
+                  Calcula el de un año y kilómetros concretos
+                </Link>
+              )}
             </p>
           </div>
         )}

@@ -10,11 +10,13 @@ import {
   MagnifierLinearIcon,
   ScaleLinearIcon,
   TagPriceLinearIcon,
+  WalletMoneyLinearIcon,
   TransferHorizontalLinearIcon,
 } from "@solar-icons/react";
 
 // Todas las herramientas gratuitas: las usan el menú, la página /herramientas y el sitemap
 export const HERRAMIENTAS = [
+  { href: "/tasacion", texto: "¿Cuánto vale este coche?", detalle: "Precio orientativo y aviso de chollos", Icono: WalletMoneyLinearIcon },
   { href: "/matricula", texto: "Año y etiqueta por matrícula", detalle: "Fecha de matriculación y etiqueta DGT", Icono: MagnifierLinearIcon },
   { href: "/ultima-matricula", texto: "Última matrícula hoy", detalle: "Y la que le toca a un coche nuevo", Icono: GraphUpLinearIcon },
   { href: "/bastidor", texto: "Decodificar bastidor (VIN)", detalle: "Fabricante, país y año", Icono: BarcodeLinearIcon },

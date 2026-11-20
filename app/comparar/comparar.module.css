@@ -41,18 +41,6 @@
   font: 500 1rem var(--font-text), system-ui, sans-serif;
 }
 
-.buscar {
-  width: 100%;
-  min-height: 44px;
-  padding: 0 14px;
-  border: 1px solid var(--linea);
-  border-radius: 12px;
-  background: var(--fondo, var(--superficie));
-  color: var(--tinta);
-  font: 400 1rem var(--font-text), system-ui, sans-serif;
-}
-
-.buscar:focus-visible,
 .select:focus-visible {
   outline: 3px solid var(--color);
   outline-offset: 2px;
@@ -144,4 +132,80 @@
 
 .crece strong {
   color: var(--tinta);
+}
+
+/* Desplegable con buscador (SelectorModelo) */
+.combo {
+  position: relative;
+}
+
+.combo .select {
+  padding-right: 40px;
+  cursor: text;
+}
+
+.flecha {
+  position: absolute;
+  top: 50%;
+  right: 16px;
+  width: 8px;
+  height: 8px;
+  border-right: 2px solid var(--suave);
+  border-bottom: 2px solid var(--suave);
+  transform: translateY(-70%) rotate(45deg);
+  pointer-events: none;
+}
+
+.lista {
+  position: absolute;
+  z-index: 30;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  max-height: 320px;
+  margin: 0;
+  padding: 6px;
+  overflow-y: auto;
+  list-style: none;
+  border: 1px solid var(--linea);
+  border-radius: 14px;
+  background: var(--superficie);
+  box-shadow: var(--sombra);
+  text-align: left;
+}
+
+.opcion {
+  padding: 10px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.opcionActiva {
+  background: var(--tenue);
+}
+
+.opcion[aria-selected="true"] {
+  color: var(--color);
+  font-weight: 600;
+}
+
+.opcionMarca {
+  color: var(--suave);
+}
+
+.vacia {
+  padding: 10px 12px;
+  color: var(--suave);
+}
+
+.vaciaMas {
+  display: block;
+  margin-top: 6px;
+  color: var(--tinta);
+}
+
+.vaciaMas a {
+  color: var(--color);
+  font-weight: 600;
+  text-decoration: underline;
 }
