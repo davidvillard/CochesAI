@@ -6,6 +6,7 @@ import {
   CupStarLinearIcon,
   DollarMinimalisticLinearIcon,
   DocumentTextLinearIcon,
+  GamepadLinearIcon,
   GraphUpLinearIcon,
   LeafLinearIcon,
   MagnifierLinearIcon,
@@ -19,6 +20,7 @@ import {
 export const HERRAMIENTAS = [
   { href: "/tasacion", texto: "¿Cuánto vale este coche?", detalle: "Precio orientativo y aviso de chollos", Icono: WalletMoneyLinearIcon },
   { href: "/coste-total-coche", texto: "¿Eléctrico o híbrido?", detalle: "Coste total en varios años", Icono: DollarMinimalisticLinearIcon },
+  { href: "/adivina", texto: "Adivina el coche del día", detalle: "Un juego nuevo cada día", Icono: GamepadLinearIcon },
   { href: "/matricula", texto: "Año y etiqueta por matrícula", detalle: "Fecha de matriculación y etiqueta DGT", Icono: MagnifierLinearIcon },
   { href: "/ultima-matricula", texto: "Última matrícula hoy", detalle: "Y la que le toca a un coche nuevo", Icono: GraphUpLinearIcon },
   { href: "/bastidor", texto: "Decodificar bastidor (VIN)", detalle: "Fabricante, país y año", Icono: BarcodeLinearIcon },

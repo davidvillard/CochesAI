@@ -1,0 +1,215 @@
+.juego {
+  max-width: 860px;
+  margin: 36px auto 0;
+  text-align: left;
+}
+
+/* ---------- Pistas ---------- */
+
+.pistas {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pistas li {
+  padding: 14px 18px;
+  border: 1px solid var(--linea);
+  border-radius: 16px;
+  background: var(--superficie);
+  color: var(--tinta);
+}
+
+.pistas li.nueva {
+  border-color: var(--color);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color) 18%, transparent);
+}
+
+.pistaN {
+  display: block;
+  margin-bottom: 2px;
+  color: var(--color);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* ---------- Intento ---------- */
+
+.form {
+  display: grid;
+  gap: 12px;
+  align-items: end;
+  margin-top: 20px;
+}
+
+@media (min-width: 640px) {
+  .form {
+    grid-template-columns: 1fr auto;
+  }
+}
+
+.boton,
+.botonSec {
+  min-height: 50px;
+  padding: 0 22px;
+  border: 0;
+  border-radius: 14px;
+  background: var(--color);
+  color: #fff;
+  font: 700 1rem var(--font-text), system-ui, sans-serif;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.boton:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.botonSec {
+  background: transparent;
+  border: 1px solid var(--linea);
+  color: var(--tinta);
+}
+
+.error {
+  margin: 12px 0 0;
+  color: #c0392b;
+  font-weight: 600;
+}
+
+/* ---------- Final ---------- */
+
+.final {
+  margin-top: 20px;
+  padding: 20px 22px;
+  border: 1px solid var(--linea);
+  border-radius: 20px;
+  background: var(--superficie);
+}
+
+.final.ganado {
+  border-color: #16a34a;
+  background: color-mix(in srgb, #16a34a 8%, var(--superficie));
+}
+
+.finalTit {
+  margin: 0;
+  color: var(--tinta);
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 1.5rem;
+}
+
+.finalTxt {
+  margin: 6px 0 0;
+  color: var(--suave);
+}
+
+.finalTxt a {
+  color: var(--color);
+  font-weight: 700;
+}
+
+.acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+/* ---------- Tabla de intentos ---------- */
+
+.tablaCaja {
+  margin-top: 20px;
+  overflow-x: auto;
+  border: 1px solid var(--linea);
+  border-radius: 16px;
+  background: var(--superficie);
+}
+
+.tabla {
+  width: 100%;
+  min-width: 640px;
+  border-collapse: separate;
+  border-spacing: 4px;
+  font-size: 0.875rem;
+}
+
+.tabla th {
+  padding: 6px 8px;
+  color: var(--suave);
+  font-weight: 600;
+  text-align: left;
+}
+
+.tabla tbody th {
+  color: var(--tinta);
+  font-weight: 700;
+}
+
+.tabla td {
+  padding: 10px 8px;
+  border-radius: 10px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.ok {
+  background: #16a34a;
+  color: #fff;
+}
+
+.cerca {
+  background: #eab308;
+  color: #1f1a00;
+}
+
+.no {
+  background: color-mix(in srgb, var(--suave) 16%, transparent);
+  color: var(--tinta);
+}
+
+.flecha {
+  font-weight: 800;
+}
+
+.leyenda {
+  margin: 14px 0 0;
+  color: var(--suave);
+  font-size: 0.875rem;
+}
+
+.muestra {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  vertical-align: -1px;
+}
+
+/* ---------- Texto ---------- */
+
+.texto {
+  max-width: 760px;
+  color: var(--suave);
+  line-height: 1.6;
+}
+
+.texto li {
+  margin: 6px 0;
+}
+
+.h2 {
+  margin: 0 0 12px;
+  color: var(--tinta);
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-size: 1.5rem;
+}
