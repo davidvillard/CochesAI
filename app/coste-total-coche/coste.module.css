@@ -1,0 +1,238 @@
+.caja {
+  max-width: 980px;
+}
+
+.coches {
+  display: grid;
+  align-items: start;
+  gap: 20px;
+}
+
+@media (min-width: 760px) {
+  .coches {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.coche,
+.uso {
+  display: grid;
+  align-content: start;
+  gap: 14px;
+  min-width: 0;
+  margin: 0;
+  padding: 18px;
+  border: 1px solid var(--linea);
+  border-radius: 20px;
+}
+
+.uso {
+  margin-top: 20px;
+}
+
+.leyenda {
+  padding: 0 6px;
+  color: var(--tinta);
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 1.125rem;
+}
+
+.usoCampos,
+.masCampos {
+  display: grid;
+  gap: 14px;
+}
+
+@media (min-width: 640px) {
+  .usoCampos {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 900px) {
+  .usoCampos {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.masCampos {
+  margin-top: 14px;
+}
+
+.mas summary {
+  cursor: pointer;
+  color: var(--color);
+  font-weight: 600;
+}
+
+.conSufijo {
+  position: relative;
+  display: block;
+}
+
+.conSufijo input {
+  padding-right: 96px;
+}
+
+.sufijo {
+  position: absolute;
+  top: 50%;
+  right: 14px;
+  transform: translateY(-50%);
+  color: var(--suave);
+  font-size: 0.875rem;
+  pointer-events: none;
+}
+
+.ayuda {
+  color: var(--suave);
+  font-size: 0.8125rem;
+}
+
+/* ---------- Resultado ---------- */
+
+.resultado {
+  margin-top: 24px;
+  padding: 22px 24px;
+  border-radius: 20px;
+  background: var(--fondo);
+  border: 1px solid var(--linea);
+}
+
+.titular {
+  margin: 0;
+  color: var(--tinta);
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: clamp(1.3rem, 4vw, 1.75rem);
+  line-height: 1.2;
+}
+
+.cruce {
+  margin: 8px 0 0;
+  color: var(--suave);
+}
+
+.cols {
+  display: grid;
+  gap: 24px;
+  margin-top: 20px;
+}
+
+@media (min-width: 760px) {
+  .cols {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.col {
+  min-width: 0;
+}
+
+.colNombre {
+  margin: 0;
+  color: var(--suave);
+  font-weight: 600;
+}
+
+.total {
+  margin: 2px 0 0;
+  color: var(--tinta);
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 2rem;
+  line-height: 1.1;
+}
+
+.porKm {
+  margin: 2px 0 12px;
+  color: var(--suave);
+  font-size: 0.9375rem;
+}
+
+.barra {
+  display: flex;
+  gap: 2px;
+  min-width: 40px;
+  height: 14px;
+  overflow: hidden;
+  border-radius: 7px;
+}
+
+.barra span {
+  min-width: 2px;
+}
+
+.lista {
+  display: grid;
+  gap: 6px;
+  margin: 14px 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.9375rem;
+}
+
+.lista li {
+  display: grid;
+  grid-template-columns: 10px 1fr auto;
+  align-items: center;
+  gap: 8px;
+}
+
+.punto {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+}
+
+.cifra {
+  color: var(--tinta);
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
+.reventa,
+.notaRes {
+  margin: 12px 0 0;
+  color: var(--suave);
+  font-size: 0.875rem;
+}
+
+.notaRes {
+  margin-top: 20px;
+}
+
+/* Colores del reparto: el principal de la web y tonos que se distinguen bien */
+.p1 {
+  background: var(--color);
+}
+
+.p2 {
+  background: #f59e0b;
+}
+
+.p3 {
+  background: #10b981;
+}
+
+.p4 {
+  background: #8b5cf6;
+}
+
+.p5 {
+  background: #94a3b8;
+}
+
+/* En el móvil, menos margen: hay cajas dentro de cajas */
+@media (max-width: 520px) {
+  .caja {
+    padding: 14px;
+  }
+
+  .coche,
+  .uso,
+  .resultado {
+    padding: 14px;
+  }
+}

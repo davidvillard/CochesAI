@@ -228,7 +228,10 @@ export default async function FichaModelo({ params }: Props) {
               Cifras oficiales WLTP de cuando el coche era nuevo: en uso real, sobre todo en
               autopista y con frío, la autonomía suele ser un 20-30 % menor, y en un coche usado
               depende además del estado de la batería. Pide un informe de salud de la batería
-              antes de comprar.
+              antes de comprar.{" "}
+              <Link href="/coste-total-coche" className={base.notaLink}>
+                ¿Te sale a cuenta frente a un híbrido o gasolina?
+              </Link>
             </p>
           </section>
         )}

@@ -24,6 +24,8 @@ const EVENTOS = new Set([
   "foto", // cómo se sube la foto: camara, galeria, arrastrar, pegar
   "compartir", // whatsapp o copiar
   "imprimir", // checklist o contrato
+  "coste", // tipos comparados en el coste total (hibrido-vs-electrico)
+  "km-anio", // tramo de km al año en el coste total
   "404", // página que no existe
 ]);
 
@@ -32,7 +34,7 @@ const SECCIONES = new Set([
   "", "matricula", "ultima-matricula", "bastidor", "coches", "comparar",
   "calculadora-itp", "coste-transferencia", "itv", "checklist-compra-coche",
   "contrato-compraventa-coche", "herramientas", "mas-vendidos", "metodologia", "r", "privacidad", "aviso-legal",
-  "vender-coche", "glosario", "zonas-bajas-emisiones", "prensa", "tasacion",
+  "vender-coche", "glosario", "zonas-bajas-emisiones", "prensa", "tasacion", "coste-total-coche",
 ]);
 
 // Texto libre -> valor corto y seguro: "Comunidad de Madrid" -> "comunidad-de-madrid"
